@@ -8,17 +8,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(EXAMPLES
-    h3
-    kafka
-    rabbitMQ
-    utils
-    error
-    algorithms
-    blockchain
-    database
-)
-
 set(DEPENDENCIES
      app_h3::app_h3
      app_kafka::app_kafka
@@ -39,7 +28,8 @@ foreach(pack ${PACKAGES})
      find_package(${pack} CONFIG REQUIRED)
 endforeach()  
 
-add_executable(${PROJECT_NAME} ./src/main.cpp)
+file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 foreach(dep ${DEPENDENCIES})
      target_link_libraries(${PROJECT_NAME} ${dep})
