@@ -1,5 +1,8 @@
 #pragma once
+
 #include <iostream>
+#include <memory>
+#include <string>
 
 #include <database/index.h>
 #include <utils/index.h>
@@ -14,10 +17,11 @@ namespace uber_backend
         ~uber_database();
 
         void initalizeDatabase();
+        void addDriver(std::string);
 
     private:
-        database::MySQLDatabase *database;
-        utils::FileLogger *fileLogger = new utils::FileLogger();
+        std::unique_ptr<database::MySQLDatabase> database;
+        std::unique_ptr<utils::FileLogger> fileLogger;
 
         const std::string host = uber_backend::uber_utils::secrets_database::HOST;
         const std::string user = uber_backend::uber_utils::secrets_database::USERNAME;

@@ -1,37 +1,42 @@
 #include <iostream>
+#include <filesystem>
 
 #include "./database.h"
 #include <database/index.h>
 
-uber_backend::uber_database::uber_database() {};
+namespace fs = std::filesystem;
+
+uber_backend::uber_database::uber_database() : database(std::make_unique<database::MySQLDatabase>()), fileLogger(std::make_unique<utils::FileLogger>()) {};
 
 uber_backend::uber_database::~uber_database() {};
 
 void uber_backend::uber_database::initalizeDatabase()
 {
-    database::MySQLDatabase database;
+    fileLogger->logMeta(utils::FileLogger::INFO, "Connecting to database...", __FILE__, __LINE__, __func__);
 
-    fileLogger->logMeta(utils::FileLogger::INFO, "connecting Database........", __FILE__, __LINE__, __func__);
-
-
-    if (!database.connect(
-            host,
-            user,
-            password,
-            "",
-            port))
+    if (!database->connect(host, user, password, "", port))
     {
         fileLogger->logMeta(utils::FileLogger::ERROR, "Database connection failed.", __FILE__, __LINE__, __func__);
         return;
     }
 
-    // execute initial SQL script to initialize the database for the application
-    fileLogger->logMeta(utils::FileLogger::INFO, "Initializing Database........", __FILE__, __LINE__, __func__);
-    std::string pathToScript = "/home/pasan/PROJECTS/cpp/uber/sql_scripts/database._init.sql";
+    fileLogger->logMeta(utils::FileLogger::INFO, "Connected to database.", __FILE__, __LINE__, __func__);
 
-    database.runSqlScript(pathToScript);
-    fileLogger->logMeta(utils::FileLogger::INFO, "Database has initializeed.", __FILE__, __LINE__, __func__);
+    // ✅ Build relative path safely
+    fs::path sourcePath(__FILE__);
+    fs::path scriptPath = sourcePath.parent_path() / "../../sql_scripts/database_init.sql";
+    scriptPath = scriptPath.lexically_normal(); // Clean up ../ in path
 
-    bool isConnect = database.isConnected();
-    fileLogger->logMeta(utils::FileLogger::INFO, "Database connected.", __FILE__, __LINE__, __func__);
+    // ✅ Check if the file exists
+    if (!fs::exists(scriptPath))
+    {
+        fileLogger->logMeta(utils::FileLogger::ERROR, "SQL script file not found at: " + scriptPath.string(), __FILE__, __LINE__, __func__);
+        return;
+    }
+
+    // ✅ Run the script
+    fileLogger->logMeta(utils::FileLogger::INFO, "Running SQL script: " + scriptPath.string(), __FILE__, __LINE__, __func__);
+    database->runSqlScript(scriptPath.string());
+
+    fileLogger->logMeta(utils::FileLogger::INFO, "Database initialized successfully.", __FILE__, __LINE__, __func__);
 };
