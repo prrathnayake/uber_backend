@@ -1,6 +1,6 @@
 # 🚗 Uber Backend Clone
 
-A **modular backend system** built in modern **C++**, inspired by Uber's architecture. This clone demonstrates core backend features such as database integration, multithreaded task execution, and centralized logging—designed for educational, portfolio, or experimental use.
+A **modular backend system** built in modern **C++**, inspired by Uber's architecture. This clone showcases core backend features, including database integration, multithreaded task execution, and centralized logging, designed for educational, portfolio, or experimental use.
 
 ---
 
