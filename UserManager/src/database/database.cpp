@@ -1,7 +1,7 @@
 #include <iostream>
 #include <filesystem>
 
-#include "./database.h"
+#include "../../include/database/database.h"
 #include <database/index.h>
 
 namespace fs = std::filesystem;
