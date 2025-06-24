@@ -2,7 +2,7 @@ from conan import ConanFile
 from conan.tools.cmake import CMake, cmake_layout
 
 class BaseRecipe(ConanFile):
-    name = "uber"
+    name = "uberBackend"
     version = "1.0"
     
     settings = "os", "compiler", "build_type", "arch"
@@ -11,7 +11,9 @@ class BaseRecipe(ConanFile):
     def requirements(self):
         self.requires("app_utils/1.0@pasan/testing")
         self.requires("app_kafka/1.0@pasan/testing")
+        self.requires("app_rabbitmq/1.0@pasan/testing")
         self.requires("app_h3/1.0@pasan/testing")
+        self.requires("app_blockchain/1.0@pasan/testing")
         self.requires("app_algorithms/1.0@pasan/testing")
         self.requires("app_database/1.0@pasan/testing")
         
