@@ -30,31 +30,27 @@ A **modular backend system** built in modern **C++**, inspired by Uber's archite
 ---
 
 ## 📁 Project Structure
+```plaintext
 uber-backend/
-│
-├── include/ # Project headers
-│ ├── server.h
-│ └── database/
-│ └── database.h
-│
-├── src/ # Source files
-│ ├── main.cpp
-│ ├── server.cpp
-│ └── database/
-│ └── database.cpp
-│
-├── utils/ # From cpp_base (or integrated)
-│ ├── log/
-│ │ └── singletonLogger.{h,cpp}
-│ └── threadpool/
-│ └── threadpool.{h,cpp}
-│
-├── sql_scripts/ # SQL for database initialization
-│
-├── log/ # Log output directory
-│
+├── include/                 # Project headers
+│   ├── server.h
+│   └── database/
+│       └── database.h
+├── src/                     # Source files
+│   ├── main.cpp
+│   ├── server.cpp
+│   └── database/
+│       └── database.cpp
+├── utils/                   # From cpp_base (or integrated)
+│   ├── log/
+│   │   └── singletonLogger.{h,cpp}
+│   └── threadpool/
+│       └── threadpool.{h,cpp}
+├── sql_scripts/             # SQL for database initialization
+├── log/                     # Log output directory
 ├── CMakeLists.txt
 └── README.md
+```
 
 ## 🚀 Getting Started
 
@@ -66,6 +62,6 @@ cd build
 cmake ..
 cmake --build .
 ./bin/uber-backend
-
+```
 
 
