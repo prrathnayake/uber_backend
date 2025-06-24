@@ -14,7 +14,7 @@ public:
 private:
     std::unique_ptr<uber_backend::uber_database> database_;
     std::unique_ptr<utils::ThreadPool> thread_pool_;
-    std::unique_ptr<utils::FileLogger> fileLogger_;
+    // Remove this: std::unique_ptr<utils::FileLogger> fileLogger_;
 };
 
 }

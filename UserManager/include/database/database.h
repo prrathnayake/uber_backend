@@ -21,7 +21,6 @@ namespace uber_backend
 
     private:
         std::unique_ptr<database::MySQLDatabase> database;
-        std::unique_ptr<utils::FileLogger> fileLogger;
 
         const std::string host = uber_backend::uber_utils::secrets_database::HOST;
         const std::string user = uber_backend::uber_utils::secrets_database::USERNAME;
