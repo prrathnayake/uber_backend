@@ -1,5 +1,5 @@
 #include <iostream>
-#include <future>  // For std::future
+#include <future> // For std::future
 
 #include <utils/index.h>
 #include "../include/server.h"
@@ -11,7 +11,7 @@ using namespace uber_backend;
 Server::Server()
     : logger_(SingletonLogger::instance())
 {
-    thread_pool_ = std::make_unique<ThreadPool>(64);  // initialize thread pool with 64 threads
+    thread_pool_ = std::make_unique<ThreadPool>(64); // initialize thread pool with 64 threads
     httpServerHandler_ = std::make_unique<uber_backend::HttpService>();
 
     logger_.logMeta(SingletonLogger::INFO, "Server initialized", __FILE__, __LINE__, __func__);
@@ -19,10 +19,9 @@ Server::Server()
 
 void Server::initiateDatabase()
 {
-    logger_.logMeta(SingletonLogger::INFO, "Creating database instance.", __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::INFO, "Creating database instance.....", __FILE__, __LINE__, __func__);
 
     database_ = std::make_unique<uber_database>(host, user, password, databaseName, port);
-
     database_->runSQLScript("../../sql_scripts/database_init.sql");
 }
 
@@ -33,9 +32,8 @@ void Server::startHttpServers()
     httpServerHandler_->createServer();
 
     // Launch the HTTP server asynchronously on the thread pool, store the future
-    httpServerFuture_ = thread_pool_->enqueue([this]() {
-        httpServerHandler_->initiateServers();
-    });
+    httpServerFuture_ = thread_pool_->enqueue([this]()
+                                              { httpServerHandler_->initiateServers(); });
 
     logger_.logMeta(SingletonLogger::INFO, "HTTP server started", __FILE__, __LINE__, __func__);
 }

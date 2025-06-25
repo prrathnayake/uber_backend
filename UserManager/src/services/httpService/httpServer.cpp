@@ -40,3 +40,9 @@ void HttpServer::Get(const std::string &path, httplib::Server::Handler handler)
 {
     server_->Get(path.c_str(), handler);
 }
+
+void HttpServer::Post(const std::string &path, httplib::Server::Handler handler)
+{
+    server_->Post(path.c_str(), handler);
+}
+

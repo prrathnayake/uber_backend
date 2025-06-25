@@ -13,7 +13,6 @@ set(DEPENDENCIES
     app_h3::app_h3
     h3::h3
     app_database::app_database
-    app_http::app_http
 )
 
 # Packages we need to find
@@ -23,7 +22,6 @@ set(PACKAGES
     app_h3
     h3
     app_database
-    app_http
 )
 
 # Find required packages
