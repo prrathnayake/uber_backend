@@ -4,28 +4,34 @@
 #include <memory>
 #include <string>
 
-#include <database/index.h>
+#include <database/MySQLDatabase.h>
 #include <utils/index.h>
-#include "../utils/secrets.h"
 
-namespace uber_backend
-{
-    class uber_database
-    {
+namespace uber_backend {
+
+    class uber_database {
     public:
-        uber_database();
+        uber_database(const std::string &host,
+                      const std::string &user,
+                      const std::string &password,
+                      const std::string &databaseName,
+                      unsigned int port = 3306);
+
         ~uber_database();
 
-        void initalizeDatabase();
-        void addDriver(std::string);
+        void connectDatabase();
+        void disconnectDatabase();
+        void runSQLScript(const std::string &relativePath);
 
     private:
         std::unique_ptr<database::MySQLDatabase> database;
+        utils::SingletonLogger &logger_;
 
-        const std::string host = uber_backend::uber_utils::secrets_database::HOST;
-        const std::string user = uber_backend::uber_utils::secrets_database::USERNAME;
-        const std::string password = uber_backend::uber_utils::secrets_database::PASSWORD;
-        const std::string databaseName = uber_backend::uber_utils::secrets_database::DATABASE_NAME;
-        unsigned int port = uber_backend::uber_utils::secrets_database::DATABASE_PORT;
+        std::string host;
+        std::string user;
+        std::string password;
+        std::string databaseName;
+        unsigned int port;
     };
+
 }

@@ -3,7 +3,6 @@
 #include <utils/index.h>
 #include "../include/server.h"
 
-
 using namespace utils;
 using namespace uber_backend;
 
@@ -15,11 +14,10 @@ Server::Server() : logger_(SingletonLogger::instance()) // initialize reference 
 
 void Server::initiateDatabase()
 {
-    auto result = thread_pool_->enqueue([](int x)
-                                        { return x * x; }, 8);
+    logger_.logMeta(SingletonLogger::INFO, "Creating database instance.", __FILE__, __LINE__, __func__);
 
-    logger_.logMeta(SingletonLogger::ERROR, "Creating database instance.", __FILE__, __LINE__, __func__);
+    // Now create database instance passing those variables
+    database_ = std::make_unique<uber_database>(host, user, password, databaseName, port);
 
-    database_ = std::make_unique<uber_database>();
-    database_->initalizeDatabase();
+    database_->runSQLScript("../../sql_scripts/database_init.sql");
 }
