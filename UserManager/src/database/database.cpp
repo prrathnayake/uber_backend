@@ -1,51 +1,80 @@
-#include <iostream>
-#include <filesystem>
-
 #include "../../include/database/database.h"
-#include <database/index.h>
-#include <utils/log/singletonLogger.h>  // Make sure this include points to your singleton logger header
+#include <filesystem>
+#include <utils/index.h>
 
 namespace fs = std::filesystem;
 
-uber_backend::uber_database::uber_database()
-    : database(std::make_unique<database::MySQLDatabase>())
+namespace uber_backend
 {
-    // No local fileLogger instance anymore
-    // Just ensure singleton logger is initialized (optional)
-    auto& logger = utils::SingletonLogger::instance();  
-};
 
-uber_backend::uber_database::~uber_database() {};
-
-void uber_backend::uber_database::initalizeDatabase()
-{
-    auto& logger = utils::SingletonLogger::instance();
-
-    logger.logMeta(utils::SingletonLogger::INFO, "Connecting to database...", __FILE__, __LINE__, __func__);
-
-    if (!database->connect(host, user, password, "", port))
+    uber_database::uber_database(const std::string &host_,
+                                 const std::string &user_,
+                                 const std::string &password_,
+                                 const std::string &databaseName_,
+                                 unsigned int port_)
+        : logger_(utils::SingletonLogger::instance()),
+          host(host_), user(user_), password(password_), databaseName(databaseName_), port(port_)
     {
-        logger.logMeta(utils::SingletonLogger::ERROR, "Database connection failed.", __FILE__, __LINE__, __func__);
-        return;
+        database = std::make_unique<database::MySQLDatabase>(host, user, password, port);
     }
 
-    logger.logMeta(utils::SingletonLogger::INFO, "Connected to database.", __FILE__, __LINE__, __func__);
-
-    // Build relative path safely
-    fs::path sourcePath(__FILE__);
-    fs::path scriptPath = sourcePath.parent_path() / "../../sql_scripts/database_init.sql";
-    scriptPath = scriptPath.lexically_normal(); // Clean up ../ in path
-
-    // Check if the file exists
-    if (!fs::exists(scriptPath))
+    uber_database::~uber_database()
     {
-        logger.logMeta(utils::SingletonLogger::ERROR, "SQL script file not found at: " + scriptPath.string(), __FILE__, __LINE__, __func__);
-        return;
+        disconnectDatabase();
     }
 
-    // Run the script
-    logger.logMeta(utils::SingletonLogger::INFO, "Running SQL script: " + scriptPath.string(), __FILE__, __LINE__, __func__);
-    database->runSqlScript(scriptPath.string());
+    void uber_database::connectDatabase()
+    {
+        logger_.logMeta(utils::SingletonLogger::INFO, "Connecting to database...", __FILE__, __LINE__, __func__);
 
-    logger.logMeta(utils::SingletonLogger::INFO, "Database initialized successfully.", __FILE__, __LINE__, __func__);
-};
+        if (!database->initializeDatabase(databaseName))
+        {
+            logger_.logMeta(utils::SingletonLogger::ERROR, "Database initialization failed.", __FILE__, __LINE__, __func__);
+            return;
+        }
+
+        logger_.logMeta(utils::SingletonLogger::INFO, "Connected to database.", __FILE__, __LINE__, __func__);
+    }
+
+    void uber_database::disconnectDatabase()
+    {
+        logger_.logMeta(utils::SingletonLogger::INFO, "Disconnecting from database...", __FILE__, __LINE__, __func__);
+
+        if (database)
+        {
+            database->getConnection()->disconnect();
+            if (!database->getConnection()->isConnected())
+            {
+                logger_.logMeta(utils::SingletonLogger::INFO, "Disconnected from database.", __FILE__, __LINE__, __func__);
+            }
+        }
+    }
+
+    void uber_database::runSQLScript(const std::string &relativePath)
+    {
+        fs::path sourcePath(__FILE__);
+        fs::path scriptPath = sourcePath.parent_path() / relativePath;
+        scriptPath = scriptPath.lexically_normal();
+
+        if (!fs::exists(scriptPath))
+        {
+            logger_.logMeta(utils::SingletonLogger::ERROR, "SQL script file not found at: " + scriptPath.string(), __FILE__, __LINE__, __func__);
+            return;
+        }
+
+        connectDatabase();
+
+        logger_.logMeta(utils::SingletonLogger::INFO, "Running SQL script: " + scriptPath.string(), __FILE__, __LINE__, __func__);
+        if (!database->runSqlScript(scriptPath.string()))
+        {
+            logger_.logMeta(utils::SingletonLogger::ERROR, "Failed to run SQL script.", __FILE__, __LINE__, __func__);
+        }
+        else
+        {
+            logger_.logMeta(utils::SingletonLogger::INFO, "Database initialized successfully.", __FILE__, __LINE__, __func__);
+        }
+
+        disconnectDatabase();
+    }
+
+}
