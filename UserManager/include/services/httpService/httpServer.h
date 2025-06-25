@@ -18,6 +18,7 @@ namespace uber_backend
 
             // Expose route registration
             void Get(const std::string &path, httplib::Server::Handler handler);
+            void Post(const std::string &path, httplib::Server::Handler handler);
 
         private:
             std::string host_;
