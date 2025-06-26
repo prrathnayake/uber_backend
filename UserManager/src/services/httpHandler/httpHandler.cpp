@@ -1,23 +1,24 @@
 #include <iostream>
 #include <vector>
-#include <httplib.h>
 
 #include <utils/index.h>
-#include "../../../include/services/httpService/httpService.h"
+
+#include "../../../../shared/httplib.h"
+#include "../../../include/services/httpHandler/httpHandler.h"
 
 using namespace utils;
 using namespace uber_backend;
 
-HttpService::HttpService()
+HttpHandler::HttpHandler()
     : logger_(SingletonLogger::instance()) {}
 
-HttpService::~HttpService()
+HttpHandler::~HttpHandler()
 {
     // Optionally ensure all servers stop when the service is destroyed
     stopServers();
 }
 
-void HttpService::createServer()
+void HttpHandler::createServer()
 {
     logger_.logMeta(SingletonLogger::INFO, "Creating a lightweight HTTP server.", __FILE__, __LINE__, __func__);
 
@@ -39,7 +40,7 @@ void HttpService::createServer()
     servers.push_back(std::move(simpleServer));
 }
 
-void HttpService::initiateServers()
+void HttpHandler::initiateServers()
 {
     logger_.logMeta(SingletonLogger::INFO, "Initiating servers...", __FILE__, __LINE__, __func__);
 
@@ -51,7 +52,7 @@ void HttpService::initiateServers()
     logger_.logMeta(SingletonLogger::INFO, "All servers have been initiated.", __FILE__, __LINE__, __func__);
 }
 
-void HttpService::stopServers()
+void HttpHandler::stopServers()
 {
     logger_.logMeta(SingletonLogger::INFO, "Stopping servers...", __FILE__, __LINE__, __func__);
 

@@ -3,7 +3,7 @@
 
 #include <utils/index.h>
 #include "../include/server.h"
-#include "../include/services/httpService/httpService.h"
+#include "../include/services/httpHandler/httpHandler.h"
 
 using namespace utils;
 using namespace uber_backend;
@@ -12,7 +12,7 @@ Server::Server()
     : logger_(SingletonLogger::instance())
 {
     thread_pool_ = std::make_unique<ThreadPool>(64); // initialize thread pool with 64 threads
-    httpServerHandler_ = std::make_unique<uber_backend::HttpService>();
+    httpServerHandler_ = std::make_unique<uber_backend::HttpHandler>();
 
     logger_.logMeta(SingletonLogger::INFO, "Server initialized", __FILE__, __LINE__, __func__);
 }
