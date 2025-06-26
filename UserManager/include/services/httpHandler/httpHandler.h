@@ -2,21 +2,22 @@
 
 #include <memory>
 #include <vector>
-#include <httplib.h>
 
 #include <utils/index.h>
 #include <database/database.h>
+
+#include "../../../../shared/httplib.h"
 #include "../include/utils/secrets.h"
 #include "./httpServer.h"
 
 namespace uber_backend
 {
 
-    class HttpService
+    class HttpHandler
     {
     public:
-        HttpService();
-        ~HttpService();
+        HttpHandler();
+        ~HttpHandler();
 
         void createServer();    // Create and store a new HTTP server
         void initiateServers(); // Start all stored servers

@@ -1,4 +1,4 @@
-#include "../../../include/services/httpService/httpClient.h"
+#include "../../../include/services/httpHandler/httpClient.h"
 
 uber_backend::HttpClient::HttpClient(const std::string& host, int port)
     : client(host, port) {}

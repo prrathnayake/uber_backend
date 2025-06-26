@@ -6,7 +6,7 @@
 #include <database/database.h>
 
 #include "../include/utils/secrets.h"
-#include "./services/httpService/httpService.h"
+#include "./services/httpHandler/httpHandler.h"
 
 namespace uber_backend
 {
@@ -22,7 +22,7 @@ namespace uber_backend
         std::unique_ptr<uber_backend::uber_database> database_;
         std::unique_ptr<utils::ThreadPool> thread_pool_;
         utils::SingletonLogger &logger_;
-        std::unique_ptr<uber_backend::HttpService> httpServerHandler_;
+        std::unique_ptr<uber_backend::HttpHandler> httpServerHandler_;
 
         std::future<void> httpServerFuture_; // Future to track async HTTP server task
 
