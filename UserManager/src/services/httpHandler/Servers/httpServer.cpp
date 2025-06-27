@@ -1,4 +1,4 @@
-#include "../include/services/httpHandler/httpServer.h"
+#include "../include/services/httpHandler/servers/httpServer.h"
 
 using namespace uber_backend;
 
@@ -35,14 +35,3 @@ void HttpServer::stop()
 
     is_running_ = false;
 }
-
-void HttpServer::Get(const std::string &path, httplib::Server::Handler handler)
-{
-    server_->Get(path.c_str(), handler);
-}
-
-void HttpServer::Post(const std::string &path, httplib::Server::Handler handler)
-{
-    server_->Post(path.c_str(), handler);
-}
-

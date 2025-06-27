@@ -5,7 +5,7 @@
 #include <utils/index.h>
 #include <database/database.h>
 
-#include "../include/utils/secrets.h"
+#include "../include/utils/config.h"
 #include "./services/httpHandler/httpHandler.h"
 
 namespace uber_backend
@@ -26,10 +26,10 @@ namespace uber_backend
 
         std::future<void> httpServerFuture_; // Future to track async HTTP server task
 
-        const std::string host = uber_utils::secrets_database::HOST;
-        const std::string user = uber_utils::secrets_database::USERNAME;
-        const std::string password = uber_utils::secrets_database::PASSWORD;
-        const std::string databaseName = uber_utils::secrets_database::DATABASE_NAME;
-        const unsigned int port = uber_utils::secrets_database::DATABASE_PORT;
+        const std::string host = uber_utils::CONFIG::HOST;
+        const std::string user = uber_utils::CONFIG::USERNAME;
+        const std::string password = uber_utils::CONFIG::PASSWORD;
+        const std::string databaseName = uber_utils::CONFIG::DATABASE_NAME;
+        const unsigned int port = uber_utils::CONFIG::DATABASE_PORT;
     };
 };

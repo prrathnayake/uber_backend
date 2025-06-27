@@ -7,8 +7,7 @@
 #include <database/database.h>
 
 #include "../../../../shared/httplib.h"
-#include "../include/utils/secrets.h"
-#include "./httpServer.h"
+#include "./servers/httpServer.h"
 
 namespace uber_backend
 {
