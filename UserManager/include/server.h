@@ -19,7 +19,7 @@ namespace uber_backend
         void stopHttpServers();
 
     private:
-        std::unique_ptr<uber_backend::uber_database> database_;
+        std::shared_ptr<uber_backend::uber_database> database_;
         std::unique_ptr<utils::ThreadPool> thread_pool_;
         utils::SingletonLogger &logger_;
         std::unique_ptr<uber_backend::HttpHandler> httpServerHandler_;

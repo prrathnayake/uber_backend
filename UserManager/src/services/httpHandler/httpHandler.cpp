@@ -14,6 +14,10 @@ using namespace uber_backend;
 HttpHandler::HttpHandler()
     : logger_(SingletonLogger::instance()) {}
 
+HttpHandler::HttpHandler(std::shared_ptr<uber_database> db)
+    : database_(db), logger_(SingletonLogger::instance()) {}
+
+
 HttpHandler::~HttpHandler()
 {
     // Optionally ensure all servers stop when the service is destroyed
@@ -23,13 +27,11 @@ HttpHandler::~HttpHandler()
 void HttpHandler::createServer()
 {
     logger_.logMeta(SingletonLogger::INFO, "Creating a lightweight HTTP server.", __FILE__, __LINE__, __func__);
-
-    auto httpUserHandler = std::make_unique<uber_backend::HttpUserServer>("localhost", uber_utils::CONFIG::HTTP_USER_HANDLER_PORT);
-
+    
+    auto httpUserHandler = std::make_unique<uber_backend::HttpUserServer>("localhost", uber_utils::CONFIG::HTTP_USER_HANDLER_PORT, database_);
     httpUserHandler->createServerMethods();
 
     logger_.logMeta(SingletonLogger::INFO, "Added lightweight server to vector.", __FILE__, __LINE__, __func__);
-
     servers.push_back(std::move(httpUserHandler));
 }
 

@@ -12,7 +12,6 @@ Server::Server()
     : logger_(SingletonLogger::instance())
 {
     thread_pool_ = std::make_unique<ThreadPool>(64); // initialize thread pool with 64 threads
-    httpServerHandler_ = std::make_unique<uber_backend::HttpHandler>();
 
     logger_.logMeta(SingletonLogger::INFO, "Server initialized", __FILE__, __LINE__, __func__);
 }
@@ -21,12 +20,14 @@ void Server::initiateDatabase()
 {
     logger_.logMeta(SingletonLogger::INFO, "Creating database instance.....", __FILE__, __LINE__, __func__);
 
-    database_ = std::make_unique<uber_database>(host, user, password, databaseName, port);
+    database_ = std::make_shared<uber_database>(host, user, password, databaseName, port);
     database_->runSQLScript("../../sql_scripts/database_init.sql");
 }
 
 void Server::startHttpServers()
 {
+    httpServerHandler_ = std::make_unique<uber_backend::HttpHandler>(database_);
+
     logger_.logMeta(SingletonLogger::INFO, "Starting HTTP Servers.", __FILE__, __LINE__, __func__);
 
     httpServerHandler_->createServer();

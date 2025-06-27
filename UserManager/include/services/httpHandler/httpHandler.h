@@ -16,6 +16,7 @@ namespace uber_backend
     {
     public:
         HttpHandler();
+        HttpHandler(std::shared_ptr<uber_backend::uber_database> db);
         ~HttpHandler();
 
         void createServer();    // Create and store a new HTTP server
@@ -25,6 +26,8 @@ namespace uber_backend
     private:
         utils::SingletonLogger &logger_;
         std::vector<std::unique_ptr<uber_backend::HttpServer>> servers;
+        std::shared_ptr<uber_backend::uber_database> database_;
+
     };
 
 }
