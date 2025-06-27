@@ -37,7 +37,6 @@ void UserDBManager::addUserToDB(const std::string &firstName,
                         database_->escapeString(role) + "');";
 
     logger_.logMeta(SingletonLogger::INFO, "Quert printed successfully", __FILE__, __LINE__, __func__);
-    std::cerr << query + "\n";
     database_->executeInsert(query);
 }
 
