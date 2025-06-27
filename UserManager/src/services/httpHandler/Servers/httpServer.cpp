@@ -1,9 +1,15 @@
+#include <utils/index.h>
+
 #include "../include/services/httpHandler/servers/httpServer.h"
 
 using namespace uber_backend;
+using namespace utils;
 
-HttpServer::HttpServer(const std::string &host, int port)
-    : host_(host), port_(port), is_running_(false), server_(std::make_unique<httplib::Server>())
+HttpServer::HttpServer(const std::string &host, int port, std::shared_ptr<uber_database> db)
+    : host_(host), port_(port), is_running_(false),
+      server_(std::make_unique<httplib::Server>()),
+      logger_(SingletonLogger::instance()),
+      database_(db) // Add this member to the class if it doesn't exist
 {
 }
 

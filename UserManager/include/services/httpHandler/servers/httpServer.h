@@ -5,12 +5,16 @@
 #include <thread>
 #include <httplib.h>
 
+#include <utils/index.h>
+
+#include "../../../database/database.h"
+
 namespace uber_backend
 {
     class HttpServer
     {
     public:
-        HttpServer(const std::string &host, int port);
+        HttpServer(const std::string &host, int port, std::shared_ptr<uber_backend::uber_database> db);
         ~HttpServer();
 
         void start();
@@ -20,6 +24,9 @@ namespace uber_backend
         virtual void createServerMethods() = 0;
 
     protected:
+        utils::SingletonLogger &logger_;
+        std::shared_ptr<uber_backend::uber_database> database_;
+
         std::string host_;
         int port_;
         std::unique_ptr<httplib::Server> server_;

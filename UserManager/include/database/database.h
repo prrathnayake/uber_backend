@@ -7,9 +7,11 @@
 #include <database/MySQLDatabase.h>
 #include <utils/index.h>
 
-namespace uber_backend {
+namespace uber_backend
+{
 
-    class uber_database {
+    class uber_database
+    {
     public:
         uber_database(const std::string &host,
                       const std::string &user,
@@ -22,9 +24,15 @@ namespace uber_backend {
         void connectDatabase();
         void disconnectDatabase();
         void runSQLScript(const std::string &relativePath);
+        void executeInsert(const std::string &query);
+        void executeUpdate(const std::string &query);
+        void executeDelete(const std::string &query);
+        void executeSelect(const std::string &query);
+
+        std::string escapeString(const std::string &input);
 
     private:
-        std::unique_ptr<database::MySQLDatabase> database;
+        std::shared_ptr<database::MySQLDatabase> database;
         utils::SingletonLogger &logger_;
 
         std::string host;
