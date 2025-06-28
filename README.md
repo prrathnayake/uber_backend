@@ -2,6 +2,9 @@
 
 A **modular backend system** built in modern **C++**, inspired by Uber's architecture. This clone showcases core backend features, including database integration, multithreaded task execution, and centralized logging, designed for educational, portfolio, or experimental use.
 
+![Untitled Diagram(10)](https://github.com/user-attachments/assets/02bb3d93-590f-4973-9c9c-e2b3b13d0ac0)
+
+
 ---
 
 ## 📦 Features
