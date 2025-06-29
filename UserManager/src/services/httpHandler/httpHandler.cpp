@@ -3,7 +3,7 @@
 
 #include <utils/index.h>
 
-#include "../../../../shared/httplib.h"
+#include "../../../../sharedResources/include/httplib.h"
 #include "../../../include/services/httpHandler/httpHandler.h"
 #include "../../../include/services/httpHandler/servers/httpUserServer.h"
 #include "../../../include/utils/config.h"
