@@ -7,12 +7,13 @@
 
 #include "paymentDetails.h"
 #include "bankDetails.h"
+#include "user.h"
 
 using namespace utils;
 
 namespace uber_backend
 {
-    class Driver
+    class Driver : public User
     {
     public:
         Driver();

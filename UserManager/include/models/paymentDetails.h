@@ -21,7 +21,6 @@ namespace uber_backend
 
     ~PaymentDetails();
 
-    // Getters
     std::string getUserId() const;
     std::string getPaymentType() const;
     std::string getCardNumberMasked() const;
@@ -29,7 +28,6 @@ namespace uber_backend
     std::string getProvider() const;
     bool isDefaultMethod() const;
 
-    // Setters
     void setUserId(const std::string &id);
     void setPaymentType(const std::string &type);
     void setCardNumberMasked(const std::string &masked);
