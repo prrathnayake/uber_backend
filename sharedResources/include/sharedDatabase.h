@@ -24,14 +24,14 @@ namespace uber_backend
 
         virtual ~SharedDatabase();
 
-        virtual void connectDatabase() = 0;
-        virtual void disconnectDatabase() = 0;
-        virtual void runSQLScript(const std::string &relativePath) = 0;
-        virtual void executeInsert(const std::string &query) = 0;
-        virtual void executeUpdate(const std::string &query) = 0;
-        virtual void executeDelete(const std::string &query) = 0;
-        virtual void executeSelect(const std::string &query) = 0;
-        virtual std::string escapeString(const std::string &input) = 0;
+        virtual void connectDatabase();
+        virtual void disconnectDatabase();
+        virtual void runSQLScript(const std::string &relativePath);
+        virtual void executeInsert(const std::string &query);
+        virtual void executeUpdate(const std::string &query);
+        virtual void executeDelete(const std::string &query);
+        virtual void executeSelect(const std::string &query);
+        virtual std::string escapeString(const std::string &input);
 
     protected:
         std::shared_ptr<MySQLDatabase> database_;
