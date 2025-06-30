@@ -10,7 +10,7 @@
 namespace uber_backend
 {
 
-    class uber_database
+    class uber_database : public SharedDatabase
     {
     public:
         uber_database(const std::string &host,
