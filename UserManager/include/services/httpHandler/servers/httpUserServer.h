@@ -5,24 +5,22 @@
 #include <thread>
 #include <httplib.h>
 
-#include "httpServer.h"
-
+#include "../../../../../sharedResources/include/sharedHTTPServer.h"
 #include "../../../database/userDBManager.h"
 
-namespace uber_backend
+namespace UberBackend
 {
-    class HttpUserServer : public HttpServer
+    class HttpUserServer : public SharedHttpServer
     {
     public:
-        HttpUserServer(const std::string &host, int port, std::shared_ptr<uber_database> db);
-        ~HttpUserServer();
-
-        void start();
-        void stop();
+    HttpUserServer(const std::string& name,
+               const std::string& host,
+               int port,
+               std::shared_ptr<SharedDatabase> db);
 
         void createServerMethods() override;
 
     private:
-        std::shared_ptr<uber_backend::UserDBManager> userDBManager_;
+        std::shared_ptr<UberBackend::UserDBManager> userDBManager_;
     };
-} // namespace uber_backend
+}

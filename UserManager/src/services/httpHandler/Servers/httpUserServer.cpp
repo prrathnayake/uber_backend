@@ -5,16 +5,17 @@
 
 #include "../include/services/httpHandler/servers/httpUserServer.h"
 
-using namespace uber_backend;
+using namespace UberBackend;
 using namespace utils;
 
-HttpUserServer::HttpUserServer(const std::string &host, int port, std::shared_ptr<uber_database> db)
-    : HttpServer(host, port, db)
-{ 
+HttpUserServer::HttpUserServer(const std::string &name,
+                               const std::string &host,
+                               int port,
+                               std::shared_ptr<SharedDatabase> db)
+    : SharedHttpServer(name, host, port, db)
+{
     userDBManager_ = std::make_shared<UserDBManager>(db);
 }
-
-HttpUserServer::~HttpUserServer() {}
 
 void HttpUserServer::createServerMethods()
 {
@@ -63,6 +64,7 @@ void HttpUserServer::createServerMethods()
                     std::string passwordHash = algorithms::hashComputation(algorithms::toBinary(jsonData["password"]));
                     std::string role = jsonData["role"];
 
+                    logger_.logMeta(SingletonLogger::INFO, "Run : userDBManager_->addUserToDB()", __FILE__, __LINE__, __func__);
                     userDBManager_->addUserToDB(firstName, middleName, lastName, mobileNumber, address, email, username, passwordHash, role);
 
                     res.set_content("Signup successful", "text/plain");

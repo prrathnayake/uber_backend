@@ -11,7 +11,7 @@
 
 using namespace utils;
 
-namespace uber_backend
+namespace UberBackend
 {
     class Rider : public User
     {

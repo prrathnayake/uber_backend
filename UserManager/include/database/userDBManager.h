@@ -6,16 +6,20 @@
 
 #include <utils/index.h>
 
-#include "../models/user/user.h"
+#include "../models/user.h"
 #include "database.h"
 
-namespace uber_backend
+using namespace UberBackend;
+using namespace utils;
+
+
+namespace UberBackend
 {
 
     class UserDBManager
     {
     public:
-        UserDBManager(std::shared_ptr<uber_backend::uber_database> db);
+        UserDBManager(std::shared_ptr<SharedDatabase> db);
         ~UserDBManager();
 
         void addUserToDB(const std::string &firstName,
@@ -31,8 +35,8 @@ namespace uber_backend
         void getUserByID();
 
     private:
-        utils::SingletonLogger &logger_;
-        std::shared_ptr<uber_backend::uber_database> database_;
+        SingletonLogger &logger_;
+        std::shared_ptr<SharedDatabase> database_;
     };
 
 }

@@ -6,28 +6,20 @@
 #include <utils/index.h>
 #include <database/database.h>
 
-#include "../../../../shared/httplib.h"
+#include "../../../../sharedResources/include/httplib.h"
+#include "../../../../sharedResources/include/sharedHTTPHandler.h"
 #include "./servers/httpServer.h"
 
-namespace uber_backend
+using namespace UberBackend;
+
+namespace UberBackend
 {
 
-    class HttpHandler
+    class HttpHandler : public SharedHttpHandler
     {
     public:
-        HttpHandler();
-        HttpHandler(std::shared_ptr<uber_backend::uber_database> db);
-        ~HttpHandler();
-
-        void createServer();    // Create and store a new HTTP server
-        void initiateServers(); // Start all stored servers
-        void stopServers();     // Stop all stored servers
-
-    private:
-        utils::SingletonLogger &logger_;
-        std::vector<std::unique_ptr<uber_backend::HttpServer>> servers;
-        std::shared_ptr<uber_backend::uber_database> database_;
-
+        HttpHandler(std::shared_ptr<SharedDatabase> db);
+        void createServers() override;
     };
 
 }

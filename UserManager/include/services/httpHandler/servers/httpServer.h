@@ -7,30 +7,13 @@
 
 #include <utils/index.h>
 
-#include "../../../database/database.h"
+#include "../../../../../sharedResources/include/sharedHTTPServer.h"
 
-namespace uber_backend
+namespace UberBackend
 {
-    class HttpServer
+    class HttpServer : public SharedHttpServer
     {
     public:
-        HttpServer(const std::string &host, int port, std::shared_ptr<uber_backend::uber_database> db);
-        ~HttpServer();
-
-        void start();
-        void stop();
-
-        // Expose route registration
-        virtual void createServerMethods() = 0;
-
-    protected:
-        utils::SingletonLogger &logger_;
-        std::shared_ptr<uber_backend::uber_database> database_;
-
-        std::string host_;
-        int port_;
-        std::unique_ptr<httplib::Server> server_;
-        std::thread server_thread_;
-        bool is_running_;
+        void createServerMethods() override;
     };
-} // namespace uber_backend
+}

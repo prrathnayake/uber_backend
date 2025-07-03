@@ -34,12 +34,14 @@ endforeach()
 # Collect source files
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
 
+file(GLOB_RECURSE SHARED_RESOURCES CONFIGURE_DEPENDS ../sharedResources/src/*.cpp)
+
 
 # Include directories
 include_directories(include)
 
 # Create executable target
-add_executable(${PROJECT_NAME} ${SRC_FILES})
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${SHARED_RESOURCES})
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCIES})

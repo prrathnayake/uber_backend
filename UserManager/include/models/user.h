@@ -10,7 +10,7 @@
 
 using namespace utils;
 
-namespace uber_backend
+namespace UberBackend
 {
     class User
     {
@@ -24,7 +24,8 @@ namespace uber_backend
              const std::string &address,
              const std::string &email,
              const std::string &username,
-             const std::string &passwordHash);
+             const std::string &passwordHash,
+             const std::string &role);
 
         ~User();
 

@@ -7,7 +7,7 @@
 
 using namespace utils;
 
-namespace uber_backend
+namespace UberBackend
 {
     class SharedHttpClient
     {
@@ -15,11 +15,11 @@ namespace uber_backend
         SharedHttpClient(const std::string &host, int port);
         virtual ~SharedHttpClient();
 
-        // Pure virtual methods
         virtual std::string get(const std::string &path) = 0;
         virtual std::string post(const std::string &path, const std::string &body, const std::string &content_type = "text/plain") = 0;
 
     protected:
+        std::string httpClientName_;
         SingletonLogger &logger_;
         httplib::Client client_;
     };

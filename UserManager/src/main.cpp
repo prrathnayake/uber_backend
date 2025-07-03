@@ -1,26 +1,44 @@
 #include <iostream>
 
-#include "server.h"
+#include "../include/server.h"
+#include "../../sharedUtils/config.h"
 
 using namespace utils;
-using namespace uber_backend;
+using namespace UberBackend;
+
+auto &logger_ = SingletonLogger::instance("log/UserServerLog.txt");
+
+std::unique_ptr<Server> server_ = std::make_unique<Server>("UserManager",
+                                                           UberUtils::CONFIG::USER_MANAGER_HOST,
+                                                           UberUtils::CONFIG::USER_MANAGER_USERNAME,
+                                                           UberUtils::CONFIG::USER_MANAGER_PASSWORD,
+                                                           UberUtils::CONFIG::USER_MANAGER_DATABASE_NAME,
+                                                           UberUtils::CONFIG::USER_MANAGER_DATABASE_PORT);
+
+void startApplication()
+{
+    logger_.logMeta(SingletonLogger::INFO, "Starting Uber User Manager Server......", __FILE__, __LINE__, __func__);
+    std::string path = "../../UserManager/sql_scripts/database_init.sql";
+
+    logger_.logMeta(SingletonLogger::DEBUG, "creating server instance for user Manager", __FILE__, __LINE__, __func__);
+
+    server_->initiateDatabase(path);
+    server_->createHttpServers();
+    logger_.logMeta(SingletonLogger::DEBUG, "run : server_->startHttpServers();", __FILE__, __LINE__, __func__);
+    server_->startHttpServers();
+}
+
+void stopApplication()
+{
+    logger_.logMeta(SingletonLogger::INFO, "Stoping Uber User Manager Server......", __FILE__, __LINE__, __func__);
+    server_->stopHttpServers();
+}
 
 int main()
 {
-    // Get singleton logger to use same instance everywhere
-    auto &logger_ = SingletonLogger::instance("log/UserServerLog.txt");
-
-    logger_.logMeta(SingletonLogger::INFO, "Main started", __FILE__, __LINE__, __func__);
-
-    std::unique_ptr<Server> server = std::make_unique<Server>(); // create a server for the application
-    server->initiateDatabase(); // initiate aplication database
-    server->startHttpServers(); // start HTTP servers
-
+    startApplication();
     std::cout << "Press Enter to stop server...\n";
     std::cin.get();
-
-    server->stopHttpServers(); // stop HTTP servers
-
-    logger_.logMeta(SingletonLogger::INFO, "Main ended", __FILE__, __LINE__, __func__);
+    stopApplication();
     return 0;
 }

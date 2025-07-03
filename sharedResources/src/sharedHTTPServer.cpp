@@ -1,37 +1,37 @@
 #include <utils/index.h>
 
-#include "../include/services/httpHandler/servers/httpServer.h"
+#include "../include/sharedHTTPServer.h"
 
-using namespace uber_backend;
+using namespace UberBackend;
 using namespace utils;
 
-HttpServer::HttpServer(const std::string &serverName, const std::string &host, int port, std::shared_ptr<uber_database> db)
+SharedHttpServer::SharedHttpServer(const std::string &serverName, const std::string &host, int port, std::shared_ptr<SharedDatabase> db)
     : host_(host), port_(port), is_running_(false),
       server_(std::make_unique<httplib::Server>()),
       logger_(SingletonLogger::instance()),
       database_(db),
       serverName_(serverName)
 {
-    if (serverName_ = nullptr || "")
+    if (serverName_.empty())
     {
         logger_.logMeta(SingletonLogger::ERROR, "No HTTP server name.", __FILE__, __LINE__, __func__);
     }
-    if (port_ = nullptr || "")
+    if (port_ == 0)
     {
         logger_.logMeta(SingletonLogger::ERROR, "No HTTP server port.", __FILE__, __LINE__, __func__);
     }
-    if (host_ = nullptr || "")
+    if (host_.empty())
     {
         logger_.logMeta(SingletonLogger::ERROR, "No HTTP server host.", __FILE__, __LINE__, __func__);
     }
 }
 
-HttpServer::~HttpServer()
+SharedHttpServer::~SharedHttpServer()
 {
     stop();
 }
 
-void HttpServer::start()
+void SharedHttpServer::start()
 {
     logger_.logMeta(SingletonLogger::INFO, "Starting HTTP server : " + serverName_, __FILE__, __LINE__, __func__);
 
@@ -45,7 +45,7 @@ void HttpServer::start()
     is_running_ = false;
 }
 
-void HttpServer::stop()
+void SharedHttpServer::stop()
 {
     logger_.logMeta(SingletonLogger::INFO, "Stoping HTTP server : " + serverName_, __FILE__, __LINE__, __func__);
 

@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS uber_database;
-USE uber_database;
+CREATE DATABASE IF NOT EXISTS userManagerDatabase;
+USE userManagerDatabase;
 
 -- =============================
 -- Users (Riders and Drivers)

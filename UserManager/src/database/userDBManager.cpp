@@ -5,10 +5,10 @@
 
 #include "../../include/database/userDBManager.h"
 
-using namespace uber_backend;
+using namespace UberBackend;
 using namespace utils;
 
-UserDBManager::UserDBManager(std::shared_ptr<uber_backend::uber_database> db)
+UserDBManager::UserDBManager(std::shared_ptr<UberBackend::SharedDatabase> db)
     : database_(db), logger_(SingletonLogger::instance())
 {
 }
@@ -25,6 +25,7 @@ void UserDBManager::addUserToDB(const std::string &firstName,
                                 const std::string &password,
                                 const std::string &role)
 {
+    logger_.logMeta(SingletonLogger::INFO, "Inside : userDBManager_->addUserToDB()", __FILE__, __LINE__, __func__);
     std::string query = "INSERT INTO users (first_name, middle_name, last_name, phone, email, username, password_hash, address, role ) VALUES ('" +
                         database_->escapeString(firstName) + "', '" +
                         database_->escapeString(middleName) + "', '" +
