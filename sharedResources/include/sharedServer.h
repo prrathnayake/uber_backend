@@ -1,39 +1,45 @@
 #pragma once
 
-#include <iostreaam>
+#include <iostream>
 #include <string>
 #include <memory>
 #include <future>
+
 #include <utils/index.h>
 #include <database/database.h>
 
-#include "sharedHttpHandler.h"
+#include "sharedHTTPHandler.h"
+#include "sharedDatabase.h"
 
-using namespace utils :
+using namespace utils;
 
-    namespace uber_backend
+namespace UberBackend
 {
     class SharedServer
     {
     public:
-        sharedServer(const std::string &host,
+        SharedServer(const std::string &serverName,
+                     const std::string &host,
                      const std::string &user,
                      const std::string &password,
                      const std::string &databaseName,
                      unsigned int port = 3306);
-        ~sharedServer();
+        ~SharedServer();
 
-        virtual void initiateDatabase() = 0;
-        virtual void startHttpServers() = 0;
-        virtual void stopHttpServers() = 0;
+        virtual void initiateDatabase(const std::string &path);
+        virtual void createHttpServers() = 0;
+        virtual void startHttpServers();
+        virtual void stopHttpServers();
+        virtual std::shared_ptr<SharedDatabase> getDatabase();
 
     protected:
         SingletonLogger &logger_;
-        std::shared_ptr<uber_backend::SharedDatabase> database_;
+        std::shared_ptr<SharedDatabase> database_;
         std::unique_ptr<ThreadPool> thread_pool_;
-        std::unique_ptr<uber_backend::SharedHttpHandler> httpServerHandler_;
+        std::unique_ptr<SharedHttpHandler> httpServerHandler_;
         std::future<void> httpServerFuture_;
 
+        const std::string serverName_;
         const std::string host_;
         const std::string user_;
         const std::string password_;

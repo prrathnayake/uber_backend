@@ -1,1 +1,1 @@
-DROP DATABASE IF EXISTS uber_database;
+DROP DATABASE IF EXISTS userManagerDatabase;

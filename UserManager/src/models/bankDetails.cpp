@@ -1,9 +1,10 @@
-#include "../../../include/models/bankDetails.h"
+#include "../../include/models/bankDetails.h"
 
-using namespace uber_backend;
+using namespace UberBackend;
 using namespace utils;
 
-BankDetails::BankDetails() = default;
+BankDetails::BankDetails()
+    : logger_(SingletonLogger::instance()) {}
 
 BankDetails::BankDetails(const std::string &userId,
                          const std::string &bankName,

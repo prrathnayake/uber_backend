@@ -10,9 +10,8 @@
 using namespace database;
 using namespace utils;
 
-namespace uber_backend
+namespace UberBackend
 {
-
     class SharedDatabase
     {
     public:
@@ -37,10 +36,10 @@ namespace uber_backend
         std::shared_ptr<MySQLDatabase> database_;
         SingletonLogger &logger_;
 
+        std::string databaseName_;
         std::string host_;
         std::string user_;
         std::string password_;
-        std::string databaseName_;
         unsigned int port_;
     };
 

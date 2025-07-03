@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -7,29 +8,33 @@
 #include <database/database.h>
 
 #include "httplib.h"
-#include "sharedHttpServer.h"
+#include "sharedHTTPServer.h"
+#include "sharedDatabase.h"
 
 using namespace utils;
+using namespace UberBackend;
 
-namespace uber_backend
+namespace UberBackend
 {
 
     class SharedHttpHandler
     {
     public:
         SharedHttpHandler(int port);
-        SharedHttpHandler(std::shared_ptr<uber_backend::sharedDatanase> db, int port_);
+        SharedHttpHandler(std::shared_ptr<SharedDatabase> db);
         ~SharedHttpHandler();
 
 
-        virtual void createServer() = 0;
+        virtual void createServers();
         virtual void initiateServers();     
-        virtual void stopServers();          
+        virtual void stopServers();  
+        
+        virtual bool servers_isEmpty();
 
     protected:
         SingletonLogger &logger_;
-        std::vector<std::unique_ptr<uber_backend::SharedHttpServer>> servers_;
-        std::shared_ptr<uber_backend::sharedDatabase> database_;
+        std::vector<std::unique_ptr<SharedHttpServer>> servers_;
+        std::shared_ptr<SharedDatabase> database_;
 
         int port_;
     };

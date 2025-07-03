@@ -2,7 +2,7 @@
 FROM cpp_base:1.0
 
 # Set working directory
-WORKDIR /uber_backend
+WORKDIR /UberBackend
 
 # Copy all your source code into container
 COPY . .

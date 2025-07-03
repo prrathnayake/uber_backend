@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <memory>
 #include <thread>
@@ -7,17 +8,16 @@
 
 #include <utils/index.h>
 
-
 #include "sharedDatabase.h"
 
 using namespace utils;
 
-namespace uber_backend
+namespace UberBackend
 {
     class SharedHttpServer
     {
     public:
-        SharedHttpServer(const std::string &serverName, const std::string &host, int port, std::shared_ptr<uber_backend::SharedDatabase> db);
+        SharedHttpServer(const std::string &serverName, const std::string &host, int port, std::shared_ptr<UberBackend::SharedDatabase> db);
         ~SharedHttpServer();
 
         virtual void start();
@@ -27,7 +27,7 @@ namespace uber_backend
 
     protected:
         SingletonLogger &logger_;
-        std::shared_ptr<uber_backend::SharedDatabase> database_;
+        std::shared_ptr<UberBackend::SharedDatabase> database_;
 
         std::string serverName_;
         std::string host_;

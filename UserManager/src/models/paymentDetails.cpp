@@ -1,9 +1,10 @@
-#include "PaymentDetails.h"
+#include "../../include/models/paymentDetails.h"
 
-using namespace uber_backend;
+using namespace UberBackend;
 using namespace utils;
 
-PaymentDetails::PaymentDetails() = default;
+PaymentDetails::PaymentDetails()
+    : logger_(SingletonLogger::instance()) {}
 
 PaymentDetails::PaymentDetails(const std::string &userId,
                                const std::string &paymentType,

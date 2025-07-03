@@ -5,7 +5,9 @@
 
 #include <utils/index.h>
 
-namespace uber_backend
+using namespace utils;
+
+namespace UberBackend
 {
     class BankDetails
     {

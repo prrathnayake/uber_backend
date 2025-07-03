@@ -2,7 +2,7 @@
 #include <httplib.h>
 #include <string>
 
-namespace uber_backend
+namespace UberBackend
 {
     class HttpClient
     {

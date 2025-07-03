@@ -1,6 +1,6 @@
-#include "../../../include/models/user.h"
+#include "../../include/models/vehicleDetails.h"
 
-using namespace uber_backend;
+using namespace UberBackend;
 using namespace utils;
 
 VehicleDetails::VehicleDetails()

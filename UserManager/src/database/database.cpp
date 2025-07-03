@@ -4,4 +4,12 @@
 
 namespace fs = std::filesystem;
 
-using namespace uber_backend;
+using namespace UberBackend;
+
+uber_database::uber_database(const std::string &host,
+                             const std::string &user,
+                             const std::string &password,
+                             const std::string &dbName,
+                             unsigned int port)
+    : SharedDatabase(host, user, password, dbName, port) {
+}

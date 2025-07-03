@@ -1,35 +1,29 @@
 #pragma once
 
 #include <memory>
-#include <future> // for std::future
+#include <future>
+
 #include <utils/index.h>
 #include <database/database.h>
 
-#include "../include/utils/config.h"
 #include "./services/httpHandler/httpHandler.h"
+#include "../../sharedResources/include/sharedServer.h"
 
-namespace uber_backend
+namespace UberBackend
 {
-    class Server
+    class Server : public SharedServer
     {
     public:
-        Server();
-        void initiateDatabase();
-        void startHttpServers();
-        void stopHttpServers();
+        Server(const std::string &serverName,
+               const std::string &host,
+               const std::string &user,
+               const std::string &password,
+               const std::string &dbName,
+               unsigned int port);
+
+        void createHttpServers() override;
 
     private:
-        std::shared_ptr<uber_backend::uber_database> database_;
-        std::unique_ptr<utils::ThreadPool> thread_pool_;
-        utils::SingletonLogger &logger_;
-        std::unique_ptr<uber_backend::HttpHandler> httpServerHandler_;
-
-        std::future<void> httpServerFuture_; // Future to track async HTTP server task
-
-        const std::string host = uber_utils::CONFIG::HOST;
-        const std::string user = uber_utils::CONFIG::USERNAME;
-        const std::string password = uber_utils::CONFIG::PASSWORD;
-        const std::string databaseName = uber_utils::CONFIG::DATABASE_NAME;
-        const unsigned int port = uber_utils::CONFIG::DATABASE_PORT;
     };
+
 };
