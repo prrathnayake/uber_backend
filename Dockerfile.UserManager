@@ -1,0 +1,16 @@
+# Dockerfile
+FROM uber_base:latest
+
+# Set working directory
+WORKDIR /UberBackend
+
+# Copy all your source code into container
+COPY . .
+
+# Add and set entrypoint
+COPY entrypointUserManager.sh /entrypointUserManager.sh
+RUN chmod +x /entrypointUserManager.sh
+
+EXPOSE 8081
+
+ENTRYPOINT ["/entrypointUserManager.sh"]

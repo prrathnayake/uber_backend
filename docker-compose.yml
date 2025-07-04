@@ -3,67 +3,94 @@ version: "3.9"
 services:
   mysql_userManagerDatabase:
     image: mysql:8
-    container_name: mysql
+    container_name: userManagerDatabase
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: userManagerDatabase
-      MYSQL_USER: pasan
-      MYSQL_PASSWORD: pasan
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${USERMANAGER_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "${USERMANAGER_PORT}:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_user_data:/var/lib/mysql
     networks:
-      - database
+      - userManagerNetwork
 
-  mysql_rideManagerDatabase:
-    image: mysql:8
-    container_name: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: rideManagerDatabase
-      MYSQL_USER: pasan
-      MYSQL_PASSWORD: pasan
-    ports:
-      - "3307:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - database
+  # mysql_rideManagerDatabase:
+  #   image: mysql:8
+  #   container_name: rideManagerDatabase
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #     MYSQL_DATABASE: ${RIDEMANAGER_DB}
+  #     MYSQL_USER: ${MYSQL_USER}
+  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  #   ports:
+  #     - "${RIDEMANAGER_PORT}:3306"
+  #   volumes:
+  #     - mysql_ride_data:/var/lib/mysql
+  #   networks:
+  #     - rideManagerNetwork
 
-  mysql_locationManagerDatabase:
-    image: mysql:8
-    container_name: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: locationManagerDatabase
-      MYSQL_USER: pasan
-      MYSQL_PASSWORD: pasan
-    ports:
-      - "3308:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    networks:
-      - database
+  # mysql_locationManagerDatabase:
+  #   image: mysql:8
+  #   container_name: locationManagerDatabase
+  #   restart: always
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  #     MYSQL_DATABASE: ${LOCATIONMANAGER_DB}
+  #     MYSQL_USER: ${MYSQL_USER}
+  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  #   ports:
+  #     - "${LOCATIONMANAGER_PORT}:3306"
+  #   volumes:
+  #     - mysql_location_data:/var/lib/mysql
+  #   networks:
+  #     - locationManagerNetwork
 
-  UberBackend:
-    build:
-      context: .
-    container_name: UberBackend
+  UserManager:
+    image: usermanager
+    container_name: UserManager
     depends_on:
-      - mysql
+      - mysql_userManagerDatabase
     ports:
-      - "8081:8081"
+      - "${USERMANAGER_APP_PORT}:8081"
     volumes:
       - .:/app
     networks:
-      - database
+      - userManagerNetwork
+
+  # RideManager:
+  #   image: ridemanager
+  #   container_name: RideManager
+  #   depends_on:
+  #     - mysql_rideManagerDatabase
+  #   ports:
+  #     - "${RIDEMANAGER_APP_PORT}:8081"
+  #   volumes:
+  #     - .:/app
+  #   networks:
+  #     - rideManagerNetwork
+
+  # LocationManager:
+  #   image: locationmanager
+  #   container_name: LocationManager
+  #   depends_on:
+  #     - mysql_locationManagerDatabase
+  #   ports:
+  #     - "${LOCATIONMANAGER_APP_PORT}:8081"
+  #   volumes:
+  #     - .:/app
+  #   networks:
+  #     - locationManagerNetwork
 
 networks:
-  database:
+  userManagerNetwork:
+  # rideManagerNetwork:
+  # locationManagerNetwork:
 
 volumes:
-  mysql_data:
+  mysql_user_data:
+  # mysql_ride_data:
+  # mysql_location_data:

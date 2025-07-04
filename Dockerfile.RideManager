@@ -1,0 +1,16 @@
+# Dockerfile
+FROM uber_base:latest
+
+# Set working directory
+WORKDIR /UberBackend
+
+# Copy all your source code into container
+COPY . .
+
+# Add and set entrypoint
+COPY entrypointRideManager.sh /entrypointRideManager.sh
+RUN chmod +x /entrypointRideManager.sh
+
+EXPOSE 8082
+
+ENTRYPOINT ["/entrypointRideManager.sh"]
