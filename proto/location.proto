@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package UberBackend;
+
+service LocationService {
+  rpc SendLocation(UserLocation) returns (LocationAck);
+  rpc GetNearbyUsers(NearbyRequest) returns (NearbyUsers);
+}
+
+message UserLocation {
+  string user_id = 1;
+  double latitude = 2;
+  double longitude = 3;
+  int64 timestamp = 4;
+}
+
+message LocationAck {
+  string message = 1;
+}
+
+message NearbyRequest {
+  double latitude = 1;
+  double longitude = 2;
+  double radius_km = 3;
+}
+
+message UserInfo {
+  string user_id = 1;
+  double latitude = 2;
+  double longitude = 3;
+}
+
+message NearbyUsers {
+  repeated UserInfo users = 1;
+}

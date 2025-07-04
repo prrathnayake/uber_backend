@@ -25,6 +25,10 @@ RUN apt-get update && apt-get install -y \
     librabbitmq-dev \
     librdkafka-dev \
     libcurl4-openssl-dev \
+    autoconf \
+    libtool \
+    unzip \
+    protobuf-compiler \
     && rm -rf /var/lib/apt/lists/*
 
 # Install latest CMake (>= 3.25 required)
@@ -83,6 +87,31 @@ RUN git clone https://github.com/CopernicaMarketingSoftware/AMQP-CPP.git && \
 
 RUN cp /amqpcpp/build/libamqpcpp.so /usr/local/lib
 
+# Fix header path so Conan builds can find AMQPcpp.h
+RUN mkdir -p /usr/local/include/rabbitmq-c && \
+    ln -sf /usr/local/include/AMQPcpp.h /usr/local/include/rabbitmq-c/AMQPcpp.h
+
+# --- Install gRPC and Protobuf ---
+WORKDIR /tmp
+
+# Clone gRPC with submodules
+RUN git clone --recurse-submodules -b v1.63.0 https://github.com/grpc/grpc && \
+    cd grpc && \
+    mkdir -p cmake/build && cd cmake/build && \
+    cmake ../.. \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DgRPC_INSTALL=ON \
+        -DgRPC_BUILD_TESTS=OFF \
+        -DgRPC_PROTOBUF_PROVIDER=package \
+        -DgRPC_ZLIB_PROVIDER=package \
+        -DgRPC_CARES_PROVIDER=package \
+        -DgRPC_ABSL_PROVIDER=package \
+        -DgRPC_RE2_PROVIDER=package && \
+    make -j$(nproc) && \
+    make install && \
+    ldconfig && \
+    cd / && rm -rf /tmp/grpc
+
 # Ensure the system finds installed libraries
 RUN ldconfig
 
@@ -92,10 +121,6 @@ ENV CMAKE_MODULE_PATH=/usr/local/lib/cmake
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig
 ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/usr/lib/x86_64-linux-gnu
 ENV CPLUS_INCLUDE_PATH=/usr/local/include:/usr/local/include/rabbitmq-c
-
-# Fix header path so Conan builds can find AMQPcpp.h
-RUN mkdir -p /usr/local/include/rabbitmq-c && \
-    ln -sf /usr/local/include/AMQPcpp.h /usr/local/include/rabbitmq-c/AMQPcpp.h
 
 # Install Conan
 RUN pip3 install conan
