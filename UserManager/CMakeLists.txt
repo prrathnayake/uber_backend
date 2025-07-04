@@ -14,6 +14,8 @@ set(DEPENDENCIES
     h3::h3
     app_database::app_database
     app_algorithms::app_algorithms
+    gRPC::grpc++
+    protobuf::libprotobuf
 )
 
 # Packages we need to find
@@ -36,12 +38,13 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
 
 file(GLOB_RECURSE SHARED_RESOURCES CONFIGURE_DEPENDS ../sharedResources/src/*.cpp)
 
+file(GLOB_RECURSE PROTO CONFIGURE_DEPENDS ../proto/*.grpc.pb.cc)
 
 # Include directories
 include_directories(include)
 
 # Create executable target
-add_executable(${PROJECT_NAME} ${SRC_FILES} ${SHARED_RESOURCES})
+add_executable(${PROJECT_NAME} ${SRC_FILES} ${SHARED_RESOURCES} ${PROTO})
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCIES})
