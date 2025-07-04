@@ -2,4 +2,3 @@ build
 CMakeUserPresets.json
 .vscode
 log
-notes.txt

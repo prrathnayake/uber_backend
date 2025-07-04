@@ -1,0 +1,34 @@
+Server :
+When the a microserver starts, it first initializes the database dedicated to this server. 
+After successful initialization, Then the microserver launches the HTTP server handler, which 
+manages all HTTP servers and clients associated with this service. 
+Finally, the server starts the Kafka handler, responsible for managing all Kafka consumers and producers 
+to facilitate data transfer between microservices.
+
+Database:
+A dedicated database instance for the microserver that stores and retrieves persistent data 
+relevant to the service's domain. It is initialized when the server starts and provides a data layer for business logic operations.
+
+HTTP Handler:
+A controller module that initializes and manages HTTP-related components. It routes incoming 
+HTTP requests to appropriate handlers and manages HTTP server and client lifecycles.
+
+HTTP Server:
+An interface that listens for incoming HTTP requests from external clients or other microservices. 
+It processes requests and returns responses based on the server’s API logic.
+
+HTTP Client:
+A component responsible for making outgoing HTTP requests to other services. It is used for 
+inter-service communication when data or actions are required from other microservices over HTTP.
+
+Kafka Handler:
+A central coordinator for Kafka operations within the microserver. It initializes and manages 
+both producers and consumers, ensuring reliable message flow between services.
+Kafka Consumer:
+
+A component that subscribes to Kafka topics and listens for incoming messages from other 
+microservices. It processes received data and integrates it into the microservice's workflow.
+
+Kafka Producer:
+A component responsible for publishing messages to Kafka topics. It sends events or data 
+updates to other microservices asynchronously for further processing.
