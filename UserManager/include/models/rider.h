@@ -19,20 +19,18 @@ namespace UberBackend
         Rider();
 
         Rider(const std::string &firstName,
-             const std::string &middleName,
-             const std::string &lastName,
-             const std::string &mobileNumber,
-             const std::string &address,
-             const std::string &email,
-             const std::string &username,
-             const std::string &passwordHash,
-             const std::string &role); 
+              const std::string &middleName,
+              const std::string &lastName,
+              const std::string &countryCode,
+              const std::string &mobileNumber,
+              const std::string &address,
+              const std::string &email,
+              const std::string &username,
+              const std::string &passwordHash,
+              const std::string &preferredLanguage = "en",
+              const std::string &currency = "USD",
+              const std::string &country = "");
 
         ~Rider();
-
-    private:
-        SingletonLogger &logger_;
-
-        std::string role_ = "driver";
     };
 }

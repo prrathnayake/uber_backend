@@ -83,3 +83,17 @@ CREATE TABLE IF NOT EXISTS ride_history (
     currency VARCHAR(5),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS bank_details (
+    bank_detail_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    bank_name VARCHAR(100) NOT NULL,
+    account_holder_name VARCHAR(100) NOT NULL,
+    account_number VARCHAR(30) NOT NULL,
+    bsb_code VARCHAR(20),
+    bank_country VARCHAR(100) NOT NULL,
+    iban VARCHAR(34),
+    swift_code VARCHAR(11),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);

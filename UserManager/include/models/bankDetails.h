@@ -13,6 +13,7 @@ namespace UberBackend
     {
     public:
         BankDetails();
+
         BankDetails(const std::string &userId,
                     const std::string &bankName,
                     const std::string &accountHolderName,
@@ -22,7 +23,7 @@ namespace UberBackend
 
         ~BankDetails();
 
-        
+        // Getters
         std::string getUserId() const;
         std::string getBankName() const;
         std::string getAccountHolderName() const;
@@ -30,7 +31,7 @@ namespace UberBackend
         std::string getBsbCode() const;
         std::string getBankCountry() const;
 
-        
+        // Setters
         void setUserId(const std::string &userId);
         void setBankName(const std::string &bankName);
         void setAccountHolderName(const std::string &name);
@@ -41,11 +42,11 @@ namespace UberBackend
     private:
         SingletonLogger &logger_;
 
-        std::string userId_;           
-        std::string bankName_;            
-        std::string accountHolderName_;   
-        std::string accountNumber_;       
-        std::string bsbCode_;             
-        std::string bankCountry_;         
+        std::string userId_;
+        std::string bankName_;
+        std::string accountHolderName_;
+        std::string accountNumber_;
+        std::string bsbCode_;
+        std::string bankCountry_;
     };
 }
