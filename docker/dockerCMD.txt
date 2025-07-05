@@ -1,0 +1,9 @@
+docker build -f docker/Dockerfile.base -t uber_base:latest .
+
+docker build -f docker/Dockerfile.UserManager -t usermanager:latest .
+
+docker build -f docker/Dockerfile.RideManager -t ridemanager:latest .
+
+docker build -f docker/Dockerfile.LocationManager -t locationmanager:latest .
+
+docker compose --env-file .env up -d
