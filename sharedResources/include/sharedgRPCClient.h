@@ -3,7 +3,9 @@
 #include <memory>
 #include <string>
 #include <grpcpp/grpcpp.h>
-#include "location.grpc.pb.h"
+
+#include "../../proto/location.grpc.pb.h"
+#include "../../proto/location.pb.h"
 
 #include <utils/index.h>
 
@@ -21,7 +23,7 @@ namespace UberBackend
 
     private:
         SingletonLogger &logger_;
-        std::unique_ptr<Location::Stub> stub_;
+        std::unique_ptr<UberBackend::LocationService::Stub> stub_;  // ✅ Correct type
     };
 
 }

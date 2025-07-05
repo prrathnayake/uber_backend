@@ -14,157 +14,148 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
-extern PROTOBUF_INTERNAL_EXPORT_location_2eproto ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_UserInfo_location_2eproto;
+
+PROTOBUF_PRAGMA_INIT_SEG
+
+namespace _pb = ::PROTOBUF_NAMESPACE_ID;
+namespace _pbi = _pb::internal;
+
 namespace UberBackend {
-class UserLocationDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<UserLocation> _instance;
-} _UserLocation_default_instance_;
-class LocationAckDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<LocationAck> _instance;
-} _LocationAck_default_instance_;
-class NearbyRequestDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<NearbyRequest> _instance;
-} _NearbyRequest_default_instance_;
-class UserInfoDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<UserInfo> _instance;
-} _UserInfo_default_instance_;
-class NearbyUsersDefaultTypeInternal {
- public:
-  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<NearbyUsers> _instance;
-} _NearbyUsers_default_instance_;
+PROTOBUF_CONSTEXPR UserLocation::UserLocation(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.user_id_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.latitude_)*/0
+  , /*decltype(_impl_.longitude_)*/0
+  , /*decltype(_impl_.timestamp_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct UserLocationDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR UserLocationDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~UserLocationDefaultTypeInternal() {}
+  union {
+    UserLocation _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UserLocationDefaultTypeInternal _UserLocation_default_instance_;
+PROTOBUF_CONSTEXPR LocationAck::LocationAck(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.message_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct LocationAckDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR LocationAckDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~LocationAckDefaultTypeInternal() {}
+  union {
+    LocationAck _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 LocationAckDefaultTypeInternal _LocationAck_default_instance_;
+PROTOBUF_CONSTEXPR NearbyRequest::NearbyRequest(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.latitude_)*/0
+  , /*decltype(_impl_.longitude_)*/0
+  , /*decltype(_impl_.radius_km_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct NearbyRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR NearbyRequestDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~NearbyRequestDefaultTypeInternal() {}
+  union {
+    NearbyRequest _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 NearbyRequestDefaultTypeInternal _NearbyRequest_default_instance_;
+PROTOBUF_CONSTEXPR UserInfo::UserInfo(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.user_id_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
+  , /*decltype(_impl_.latitude_)*/0
+  , /*decltype(_impl_.longitude_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct UserInfoDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR UserInfoDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~UserInfoDefaultTypeInternal() {}
+  union {
+    UserInfo _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UserInfoDefaultTypeInternal _UserInfo_default_instance_;
+PROTOBUF_CONSTEXPR NearbyUsers::NearbyUsers(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.users_)*/{}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct NearbyUsersDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR NearbyUsersDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~NearbyUsersDefaultTypeInternal() {}
+  union {
+    NearbyUsers _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 NearbyUsersDefaultTypeInternal _NearbyUsers_default_instance_;
 }  // namespace UberBackend
-static void InitDefaultsscc_info_LocationAck_location_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
+static ::_pb::Metadata file_level_metadata_location_2eproto[5];
+static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_location_2eproto = nullptr;
+static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_location_2eproto = nullptr;
 
-  {
-    void* ptr = &::UberBackend::_LocationAck_default_instance_;
-    new (ptr) ::UberBackend::LocationAck();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::UberBackend::LocationAck::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_LocationAck_location_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_LocationAck_location_2eproto}, {}};
-
-static void InitDefaultsscc_info_NearbyRequest_location_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::UberBackend::_NearbyRequest_default_instance_;
-    new (ptr) ::UberBackend::NearbyRequest();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::UberBackend::NearbyRequest::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_NearbyRequest_location_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_NearbyRequest_location_2eproto}, {}};
-
-static void InitDefaultsscc_info_NearbyUsers_location_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::UberBackend::_NearbyUsers_default_instance_;
-    new (ptr) ::UberBackend::NearbyUsers();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::UberBackend::NearbyUsers::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<1> scc_info_NearbyUsers_location_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 1, 0, InitDefaultsscc_info_NearbyUsers_location_2eproto}, {
-      &scc_info_UserInfo_location_2eproto.base,}};
-
-static void InitDefaultsscc_info_UserInfo_location_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::UberBackend::_UserInfo_default_instance_;
-    new (ptr) ::UberBackend::UserInfo();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::UberBackend::UserInfo::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_UserInfo_location_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_UserInfo_location_2eproto}, {}};
-
-static void InitDefaultsscc_info_UserLocation_location_2eproto() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
-  {
-    void* ptr = &::UberBackend::_UserLocation_default_instance_;
-    new (ptr) ::UberBackend::UserLocation();
-    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
-  }
-  ::UberBackend::UserLocation::InitAsDefaultInstance();
-}
-
-::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_UserLocation_location_2eproto =
-    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_UserLocation_location_2eproto}, {}};
-
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_location_2eproto[5];
-static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_location_2eproto = nullptr;
-static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_location_2eproto = nullptr;
-
-const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_location_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+const uint32_t TableStruct_location_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::UberBackend::UserLocation, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::UberBackend::UserLocation, user_id_),
-  PROTOBUF_FIELD_OFFSET(::UberBackend::UserLocation, latitude_),
-  PROTOBUF_FIELD_OFFSET(::UberBackend::UserLocation, longitude_),
-  PROTOBUF_FIELD_OFFSET(::UberBackend::UserLocation, timestamp_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::UberBackend::UserLocation, _impl_.user_id_),
+  PROTOBUF_FIELD_OFFSET(::UberBackend::UserLocation, _impl_.latitude_),
+  PROTOBUF_FIELD_OFFSET(::UberBackend::UserLocation, _impl_.longitude_),
+  PROTOBUF_FIELD_OFFSET(::UberBackend::UserLocation, _impl_.timestamp_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::UberBackend::LocationAck, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::UberBackend::LocationAck, message_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::UberBackend::LocationAck, _impl_.message_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyRequest, latitude_),
-  PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyRequest, longitude_),
-  PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyRequest, radius_km_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyRequest, _impl_.latitude_),
+  PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyRequest, _impl_.longitude_),
+  PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyRequest, _impl_.radius_km_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::UberBackend::UserInfo, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::UberBackend::UserInfo, user_id_),
-  PROTOBUF_FIELD_OFFSET(::UberBackend::UserInfo, latitude_),
-  PROTOBUF_FIELD_OFFSET(::UberBackend::UserInfo, longitude_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::UberBackend::UserInfo, _impl_.user_id_),
+  PROTOBUF_FIELD_OFFSET(::UberBackend::UserInfo, _impl_.latitude_),
+  PROTOBUF_FIELD_OFFSET(::UberBackend::UserInfo, _impl_.longitude_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyUsers, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyUsers, users_),
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::UberBackend::NearbyUsers, _impl_.users_),
 };
-static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::UberBackend::UserLocation)},
-  { 9, -1, sizeof(::UberBackend::LocationAck)},
-  { 15, -1, sizeof(::UberBackend::NearbyRequest)},
-  { 23, -1, sizeof(::UberBackend::UserInfo)},
-  { 31, -1, sizeof(::UberBackend::NearbyUsers)},
+static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  { 0, -1, -1, sizeof(::UberBackend::UserLocation)},
+  { 10, -1, -1, sizeof(::UberBackend::LocationAck)},
+  { 17, -1, -1, sizeof(::UberBackend::NearbyRequest)},
+  { 26, -1, -1, sizeof(::UberBackend::UserInfo)},
+  { 35, -1, -1, sizeof(::UberBackend::NearbyUsers)},
 };
 
-static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::UberBackend::_UserLocation_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::UberBackend::_LocationAck_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::UberBackend::_NearbyRequest_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::UberBackend::_UserInfo_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::UberBackend::_NearbyUsers_default_instance_),
+static const ::_pb::Message* const file_default_instances[] = {
+  &::UberBackend::_UserLocation_default_instance_._instance,
+  &::UberBackend::_LocationAck_default_instance_._instance,
+  &::UberBackend::_NearbyRequest_default_instance_._instance,
+  &::UberBackend::_UserInfo_default_instance_._instance,
+  &::UberBackend::_NearbyUsers_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_location_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -182,170 +173,179 @@ const char descriptor_table_protodef_location_2eproto[] PROTOBUF_SECTION_VARIABL
   "arbyUsers\022\032.UberBackend.NearbyRequest\032\030."
   "UberBackend.NearbyUsersb\006proto3"
   ;
-static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_location_2eproto_deps[1] = {
+static ::_pbi::once_flag descriptor_table_location_2eproto_once;
+const ::_pbi::DescriptorTable descriptor_table_location_2eproto = {
+    false, false, 511, descriptor_table_protodef_location_2eproto,
+    "location.proto",
+    &descriptor_table_location_2eproto_once, nullptr, 0, 5,
+    schemas, file_default_instances, TableStruct_location_2eproto::offsets,
+    file_level_metadata_location_2eproto, file_level_enum_descriptors_location_2eproto,
+    file_level_service_descriptors_location_2eproto,
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_location_2eproto_sccs[5] = {
-  &scc_info_LocationAck_location_2eproto.base,
-  &scc_info_NearbyRequest_location_2eproto.base,
-  &scc_info_NearbyUsers_location_2eproto.base,
-  &scc_info_UserInfo_location_2eproto.base,
-  &scc_info_UserLocation_location_2eproto.base,
-};
-static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_location_2eproto_once;
-const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_location_2eproto = {
-  false, false, descriptor_table_protodef_location_2eproto, "location.proto", 511,
-  &descriptor_table_location_2eproto_once, descriptor_table_location_2eproto_sccs, descriptor_table_location_2eproto_deps, 5, 0,
-  schemas, file_default_instances, TableStruct_location_2eproto::offsets,
-  file_level_metadata_location_2eproto, 5, file_level_enum_descriptors_location_2eproto, file_level_service_descriptors_location_2eproto,
-};
+PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_location_2eproto_getter() {
+  return &descriptor_table_location_2eproto;
+}
 
 // Force running AddDescriptors() at dynamic initialization time.
-static bool dynamic_init_dummy_location_2eproto = (static_cast<void>(::PROTOBUF_NAMESPACE_ID::internal::AddDescriptors(&descriptor_table_location_2eproto)), true);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_location_2eproto(&descriptor_table_location_2eproto);
 namespace UberBackend {
 
 // ===================================================================
 
-void UserLocation::InitAsDefaultInstance() {
-}
 class UserLocation::_Internal {
  public:
 };
 
-UserLocation::UserLocation(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+UserLocation::UserLocation(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:UberBackend.UserLocation)
 }
 UserLocation::UserLocation(const UserLocation& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  UserLocation* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.user_id_){}
+    , decltype(_impl_.latitude_){}
+    , decltype(_impl_.longitude_){}
+    , decltype(_impl_.timestamp_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  user_id_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  _impl_.user_id_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.user_id_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_user_id().empty()) {
-    user_id_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_user_id(),
-      GetArena());
+    _this->_impl_.user_id_.Set(from._internal_user_id(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&latitude_, &from.latitude_,
-    static_cast<size_t>(reinterpret_cast<char*>(&timestamp_) -
-    reinterpret_cast<char*>(&latitude_)) + sizeof(timestamp_));
+  ::memcpy(&_impl_.latitude_, &from._impl_.latitude_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.timestamp_) -
+    reinterpret_cast<char*>(&_impl_.latitude_)) + sizeof(_impl_.timestamp_));
   // @@protoc_insertion_point(copy_constructor:UberBackend.UserLocation)
 }
 
-void UserLocation::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_UserLocation_location_2eproto.base);
-  user_id_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  ::memset(&latitude_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&timestamp_) -
-      reinterpret_cast<char*>(&latitude_)) + sizeof(timestamp_));
+inline void UserLocation::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.user_id_){}
+    , decltype(_impl_.latitude_){0}
+    , decltype(_impl_.longitude_){0}
+    , decltype(_impl_.timestamp_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.user_id_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.user_id_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 UserLocation::~UserLocation() {
   // @@protoc_insertion_point(destructor:UberBackend.UserLocation)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void UserLocation::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
-  user_id_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+inline void UserLocation::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.user_id_.Destroy();
 }
 
-void UserLocation::ArenaDtor(void* object) {
-  UserLocation* _this = reinterpret_cast< UserLocation* >(object);
-  (void)_this;
-}
-void UserLocation::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void UserLocation::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
-const UserLocation& UserLocation::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_UserLocation_location_2eproto.base);
-  return *internal_default_instance();
-}
-
 
 void UserLocation::Clear() {
 // @@protoc_insertion_point(message_clear_start:UberBackend.UserLocation)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  user_id_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  ::memset(&latitude_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&timestamp_) -
-      reinterpret_cast<char*>(&latitude_)) + sizeof(timestamp_));
+  _impl_.user_id_.ClearToEmpty();
+  ::memset(&_impl_.latitude_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.timestamp_) -
+      reinterpret_cast<char*>(&_impl_.latitude_)) + sizeof(_impl_.timestamp_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* UserLocation::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* UserLocation::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // string user_id = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
           auto str = _internal_mutable_user_id();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "UberBackend.UserLocation.user_id"));
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-        } else goto handle_unusual;
+          CHK_(::_pbi::VerifyUTF8(str, "UberBackend.UserLocation.user_id"));
+        } else
+          goto handle_unusual;
         continue;
       // double latitude = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 17)) {
-          latitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 17)) {
+          _impl_.latitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
-        } else goto handle_unusual;
+        } else
+          goto handle_unusual;
         continue;
       // double longitude = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 25)) {
-          longitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 25)) {
+          _impl_.longitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
-        } else goto handle_unusual;
+        } else
+          goto handle_unusual;
         continue;
       // int64 timestamp = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
-          timestamp_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
+          _impl_.timestamp_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
-        } else goto handle_unusual;
+        } else
+          goto handle_unusual;
         continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
+      default:
+        goto handle_unusual;
     }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
   }  // while
-success:
+message_done:
   return ptr;
 failure:
   ptr = nullptr;
-  goto success;
+  goto message_done;
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* UserLocation::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+uint8_t* UserLocation::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:UberBackend.UserLocation)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // string user_id = 1;
-  if (this->user_id().size() > 0) {
+  if (!this->_internal_user_id().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_user_id().data(), static_cast<int>(this->_internal_user_id().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
@@ -355,25 +355,33 @@ failure:
   }
 
   // double latitude = 2;
-  if (!(this->latitude() <= 0 && this->latitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_latitude = this->_internal_latitude();
+  uint64_t raw_latitude;
+  memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
+  if (raw_latitude != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_latitude(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_latitude(), target);
   }
 
   // double longitude = 3;
-  if (!(this->longitude() <= 0 && this->longitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_longitude = this->_internal_longitude();
+  uint64_t raw_longitude;
+  memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
+  if (raw_longitude != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_longitude(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(3, this->_internal_longitude(), target);
   }
 
   // int64 timestamp = 4;
-  if (this->timestamp() != 0) {
+  if (this->_internal_timestamp() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt64ToArray(4, this->_internal_timestamp(), target);
+    target = ::_pbi::WireFormatLite::WriteInt64ToArray(4, this->_internal_timestamp(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:UberBackend.UserLocation)
@@ -384,84 +392,79 @@ size_t UserLocation::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:UberBackend.UserLocation)
   size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // string user_id = 1;
-  if (this->user_id().size() > 0) {
+  if (!this->_internal_user_id().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_user_id());
   }
 
   // double latitude = 2;
-  if (!(this->latitude() <= 0 && this->latitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_latitude = this->_internal_latitude();
+  uint64_t raw_latitude;
+  memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
+  if (raw_latitude != 0) {
     total_size += 1 + 8;
   }
 
   // double longitude = 3;
-  if (!(this->longitude() <= 0 && this->longitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_longitude = this->_internal_longitude();
+  uint64_t raw_longitude;
+  memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
+  if (raw_longitude != 0) {
     total_size += 1 + 8;
   }
 
   // int64 timestamp = 4;
-  if (this->timestamp() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int64Size(
-        this->_internal_timestamp());
+  if (this->_internal_timestamp() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timestamp());
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void UserLocation::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:UberBackend.UserLocation)
-  GOOGLE_DCHECK_NE(&from, this);
-  const UserLocation* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<UserLocation>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:UberBackend.UserLocation)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:UberBackend.UserLocation)
-    MergeFrom(*source);
-  }
-}
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData UserLocation::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    UserLocation::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*UserLocation::GetClassData() const { return &_class_data_; }
 
-void UserLocation::MergeFrom(const UserLocation& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.UserLocation)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void UserLocation::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<UserLocation*>(&to_msg);
+  auto& from = static_cast<const UserLocation&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.UserLocation)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.user_id().size() > 0) {
-    _internal_set_user_id(from._internal_user_id());
+  if (!from._internal_user_id().empty()) {
+    _this->_internal_set_user_id(from._internal_user_id());
   }
-  if (!(from.latitude() <= 0 && from.latitude() >= 0)) {
-    _internal_set_latitude(from._internal_latitude());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_latitude = from._internal_latitude();
+  uint64_t raw_latitude;
+  memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
+  if (raw_latitude != 0) {
+    _this->_internal_set_latitude(from._internal_latitude());
   }
-  if (!(from.longitude() <= 0 && from.longitude() >= 0)) {
-    _internal_set_longitude(from._internal_longitude());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_longitude = from._internal_longitude();
+  uint64_t raw_longitude;
+  memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
+  if (raw_longitude != 0) {
+    _this->_internal_set_longitude(from._internal_longitude());
   }
-  if (from.timestamp() != 0) {
-    _internal_set_timestamp(from._internal_timestamp());
+  if (from._internal_timestamp() != 0) {
+    _this->_internal_set_timestamp(from._internal_timestamp());
   }
-}
-
-void UserLocation::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:UberBackend.UserLocation)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void UserLocation::CopyFrom(const UserLocation& from) {
@@ -477,134 +480,147 @@ bool UserLocation::IsInitialized() const {
 
 void UserLocation::InternalSwap(UserLocation* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  user_id_.Swap(&other->user_id_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.user_id_, lhs_arena,
+      &other->_impl_.user_id_, rhs_arena
+  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(UserLocation, timestamp_)
-      + sizeof(UserLocation::timestamp_)
-      - PROTOBUF_FIELD_OFFSET(UserLocation, latitude_)>(
-          reinterpret_cast<char*>(&latitude_),
-          reinterpret_cast<char*>(&other->latitude_));
+      PROTOBUF_FIELD_OFFSET(UserLocation, _impl_.timestamp_)
+      + sizeof(UserLocation::_impl_.timestamp_)
+      - PROTOBUF_FIELD_OFFSET(UserLocation, _impl_.latitude_)>(
+          reinterpret_cast<char*>(&_impl_.latitude_),
+          reinterpret_cast<char*>(&other->_impl_.latitude_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata UserLocation::GetMetadata() const {
-  return GetMetadataStatic();
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_location_2eproto_getter, &descriptor_table_location_2eproto_once,
+      file_level_metadata_location_2eproto[0]);
 }
-
 
 // ===================================================================
 
-void LocationAck::InitAsDefaultInstance() {
-}
 class LocationAck::_Internal {
  public:
 };
 
-LocationAck::LocationAck(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+LocationAck::LocationAck(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:UberBackend.LocationAck)
 }
 LocationAck::LocationAck(const LocationAck& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  LocationAck* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.message_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  _impl_.message_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.message_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_message().empty()) {
-    message_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_message(),
-      GetArena());
+    _this->_impl_.message_.Set(from._internal_message(), 
+      _this->GetArenaForAllocation());
   }
   // @@protoc_insertion_point(copy_constructor:UberBackend.LocationAck)
 }
 
-void LocationAck::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_LocationAck_location_2eproto.base);
-  message_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+inline void LocationAck::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.message_){}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.message_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.message_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 LocationAck::~LocationAck() {
   // @@protoc_insertion_point(destructor:UberBackend.LocationAck)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void LocationAck::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
-  message_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+inline void LocationAck::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.message_.Destroy();
 }
 
-void LocationAck::ArenaDtor(void* object) {
-  LocationAck* _this = reinterpret_cast< LocationAck* >(object);
-  (void)_this;
-}
-void LocationAck::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void LocationAck::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
-const LocationAck& LocationAck::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_LocationAck_location_2eproto.base);
-  return *internal_default_instance();
-}
-
 
 void LocationAck::Clear() {
 // @@protoc_insertion_point(message_clear_start:UberBackend.LocationAck)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  message_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  _impl_.message_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* LocationAck::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* LocationAck::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // string message = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
           auto str = _internal_mutable_message();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "UberBackend.LocationAck.message"));
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-        } else goto handle_unusual;
+          CHK_(::_pbi::VerifyUTF8(str, "UberBackend.LocationAck.message"));
+        } else
+          goto handle_unusual;
         continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
+      default:
+        goto handle_unusual;
     }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
   }  // while
-success:
+message_done:
   return ptr;
 failure:
   ptr = nullptr;
-  goto success;
+  goto message_done;
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* LocationAck::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+uint8_t* LocationAck::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:UberBackend.LocationAck)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // string message = 1;
-  if (this->message().size() > 0) {
+  if (!this->_internal_message().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_message().data(), static_cast<int>(this->_internal_message().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
@@ -614,7 +630,7 @@ failure:
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:UberBackend.LocationAck)
@@ -625,58 +641,39 @@ size_t LocationAck::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:UberBackend.LocationAck)
   size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // string message = 1;
-  if (this->message().size() > 0) {
+  if (!this->_internal_message().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_message());
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void LocationAck::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:UberBackend.LocationAck)
-  GOOGLE_DCHECK_NE(&from, this);
-  const LocationAck* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<LocationAck>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:UberBackend.LocationAck)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:UberBackend.LocationAck)
-    MergeFrom(*source);
-  }
-}
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData LocationAck::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    LocationAck::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*LocationAck::GetClassData() const { return &_class_data_; }
 
-void LocationAck::MergeFrom(const LocationAck& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.LocationAck)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void LocationAck::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<LocationAck*>(&to_msg);
+  auto& from = static_cast<const LocationAck&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.LocationAck)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.message().size() > 0) {
-    _internal_set_message(from._internal_message());
+  if (!from._internal_message().empty()) {
+    _this->_internal_set_message(from._internal_message());
   }
-}
-
-void LocationAck::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:UberBackend.LocationAck)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void LocationAck::CopyFrom(const LocationAck& from) {
@@ -692,158 +689,181 @@ bool LocationAck::IsInitialized() const {
 
 void LocationAck::InternalSwap(LocationAck* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  message_.Swap(&other->message_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.message_, lhs_arena,
+      &other->_impl_.message_, rhs_arena
+  );
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata LocationAck::GetMetadata() const {
-  return GetMetadataStatic();
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_location_2eproto_getter, &descriptor_table_location_2eproto_once,
+      file_level_metadata_location_2eproto[1]);
 }
-
 
 // ===================================================================
 
-void NearbyRequest::InitAsDefaultInstance() {
-}
 class NearbyRequest::_Internal {
  public:
 };
 
-NearbyRequest::NearbyRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+NearbyRequest::NearbyRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:UberBackend.NearbyRequest)
 }
 NearbyRequest::NearbyRequest(const NearbyRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  NearbyRequest* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.latitude_){}
+    , decltype(_impl_.longitude_){}
+    , decltype(_impl_.radius_km_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&latitude_, &from.latitude_,
-    static_cast<size_t>(reinterpret_cast<char*>(&radius_km_) -
-    reinterpret_cast<char*>(&latitude_)) + sizeof(radius_km_));
+  ::memcpy(&_impl_.latitude_, &from._impl_.latitude_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.radius_km_) -
+    reinterpret_cast<char*>(&_impl_.latitude_)) + sizeof(_impl_.radius_km_));
   // @@protoc_insertion_point(copy_constructor:UberBackend.NearbyRequest)
 }
 
-void NearbyRequest::SharedCtor() {
-  ::memset(&latitude_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&radius_km_) -
-      reinterpret_cast<char*>(&latitude_)) + sizeof(radius_km_));
+inline void NearbyRequest::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.latitude_){0}
+    , decltype(_impl_.longitude_){0}
+    , decltype(_impl_.radius_km_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 NearbyRequest::~NearbyRequest() {
   // @@protoc_insertion_point(destructor:UberBackend.NearbyRequest)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void NearbyRequest::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
+inline void NearbyRequest::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
 }
 
-void NearbyRequest::ArenaDtor(void* object) {
-  NearbyRequest* _this = reinterpret_cast< NearbyRequest* >(object);
-  (void)_this;
-}
-void NearbyRequest::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void NearbyRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
-const NearbyRequest& NearbyRequest::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_NearbyRequest_location_2eproto.base);
-  return *internal_default_instance();
-}
-
 
 void NearbyRequest::Clear() {
 // @@protoc_insertion_point(message_clear_start:UberBackend.NearbyRequest)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&latitude_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&radius_km_) -
-      reinterpret_cast<char*>(&latitude_)) + sizeof(radius_km_));
+  ::memset(&_impl_.latitude_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.radius_km_) -
+      reinterpret_cast<char*>(&_impl_.latitude_)) + sizeof(_impl_.radius_km_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* NearbyRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* NearbyRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // double latitude = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 9)) {
-          latitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 9)) {
+          _impl_.latitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
-        } else goto handle_unusual;
+        } else
+          goto handle_unusual;
         continue;
       // double longitude = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 17)) {
-          longitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 17)) {
+          _impl_.longitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
-        } else goto handle_unusual;
+        } else
+          goto handle_unusual;
         continue;
       // double radius_km = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 25)) {
-          radius_km_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 25)) {
+          _impl_.radius_km_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
-        } else goto handle_unusual;
+        } else
+          goto handle_unusual;
         continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
+      default:
+        goto handle_unusual;
     }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
   }  // while
-success:
+message_done:
   return ptr;
 failure:
   ptr = nullptr;
-  goto success;
+  goto message_done;
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* NearbyRequest::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+uint8_t* NearbyRequest::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:UberBackend.NearbyRequest)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // double latitude = 1;
-  if (!(this->latitude() <= 0 && this->latitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_latitude = this->_internal_latitude();
+  uint64_t raw_latitude;
+  memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
+  if (raw_latitude != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(1, this->_internal_latitude(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(1, this->_internal_latitude(), target);
   }
 
   // double longitude = 2;
-  if (!(this->longitude() <= 0 && this->longitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_longitude = this->_internal_longitude();
+  uint64_t raw_longitude;
+  memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
+  if (raw_longitude != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_longitude(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_longitude(), target);
   }
 
   // double radius_km = 3;
-  if (!(this->radius_km() <= 0 && this->radius_km() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_radius_km = this->_internal_radius_km();
+  uint64_t raw_radius_km;
+  memcpy(&raw_radius_km, &tmp_radius_km, sizeof(tmp_radius_km));
+  if (raw_radius_km != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_radius_km(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(3, this->_internal_radius_km(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:UberBackend.NearbyRequest)
@@ -854,72 +874,77 @@ size_t NearbyRequest::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:UberBackend.NearbyRequest)
   size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // double latitude = 1;
-  if (!(this->latitude() <= 0 && this->latitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_latitude = this->_internal_latitude();
+  uint64_t raw_latitude;
+  memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
+  if (raw_latitude != 0) {
     total_size += 1 + 8;
   }
 
   // double longitude = 2;
-  if (!(this->longitude() <= 0 && this->longitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_longitude = this->_internal_longitude();
+  uint64_t raw_longitude;
+  memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
+  if (raw_longitude != 0) {
     total_size += 1 + 8;
   }
 
   // double radius_km = 3;
-  if (!(this->radius_km() <= 0 && this->radius_km() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_radius_km = this->_internal_radius_km();
+  uint64_t raw_radius_km;
+  memcpy(&raw_radius_km, &tmp_radius_km, sizeof(tmp_radius_km));
+  if (raw_radius_km != 0) {
     total_size += 1 + 8;
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void NearbyRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:UberBackend.NearbyRequest)
-  GOOGLE_DCHECK_NE(&from, this);
-  const NearbyRequest* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<NearbyRequest>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:UberBackend.NearbyRequest)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:UberBackend.NearbyRequest)
-    MergeFrom(*source);
-  }
-}
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData NearbyRequest::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    NearbyRequest::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*NearbyRequest::GetClassData() const { return &_class_data_; }
 
-void NearbyRequest::MergeFrom(const NearbyRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.NearbyRequest)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void NearbyRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<NearbyRequest*>(&to_msg);
+  auto& from = static_cast<const NearbyRequest&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.NearbyRequest)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!(from.latitude() <= 0 && from.latitude() >= 0)) {
-    _internal_set_latitude(from._internal_latitude());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_latitude = from._internal_latitude();
+  uint64_t raw_latitude;
+  memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
+  if (raw_latitude != 0) {
+    _this->_internal_set_latitude(from._internal_latitude());
   }
-  if (!(from.longitude() <= 0 && from.longitude() >= 0)) {
-    _internal_set_longitude(from._internal_longitude());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_longitude = from._internal_longitude();
+  uint64_t raw_longitude;
+  memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
+  if (raw_longitude != 0) {
+    _this->_internal_set_longitude(from._internal_longitude());
   }
-  if (!(from.radius_km() <= 0 && from.radius_km() >= 0)) {
-    _internal_set_radius_km(from._internal_radius_km());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_radius_km = from._internal_radius_km();
+  uint64_t raw_radius_km;
+  memcpy(&raw_radius_km, &tmp_radius_km, sizeof(tmp_radius_km));
+  if (raw_radius_km != 0) {
+    _this->_internal_set_radius_km(from._internal_radius_km());
   }
-}
-
-void NearbyRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:UberBackend.NearbyRequest)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void NearbyRequest::CopyFrom(const NearbyRequest& from) {
@@ -935,156 +960,167 @@ bool NearbyRequest::IsInitialized() const {
 
 void NearbyRequest::InternalSwap(NearbyRequest* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(NearbyRequest, radius_km_)
-      + sizeof(NearbyRequest::radius_km_)
-      - PROTOBUF_FIELD_OFFSET(NearbyRequest, latitude_)>(
-          reinterpret_cast<char*>(&latitude_),
-          reinterpret_cast<char*>(&other->latitude_));
+      PROTOBUF_FIELD_OFFSET(NearbyRequest, _impl_.radius_km_)
+      + sizeof(NearbyRequest::_impl_.radius_km_)
+      - PROTOBUF_FIELD_OFFSET(NearbyRequest, _impl_.latitude_)>(
+          reinterpret_cast<char*>(&_impl_.latitude_),
+          reinterpret_cast<char*>(&other->_impl_.latitude_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata NearbyRequest::GetMetadata() const {
-  return GetMetadataStatic();
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_location_2eproto_getter, &descriptor_table_location_2eproto_once,
+      file_level_metadata_location_2eproto[2]);
 }
-
 
 // ===================================================================
 
-void UserInfo::InitAsDefaultInstance() {
-}
 class UserInfo::_Internal {
  public:
 };
 
-UserInfo::UserInfo(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+UserInfo::UserInfo(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:UberBackend.UserInfo)
 }
 UserInfo::UserInfo(const UserInfo& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
+  UserInfo* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.user_id_){}
+    , decltype(_impl_.latitude_){}
+    , decltype(_impl_.longitude_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  user_id_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  _impl_.user_id_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.user_id_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   if (!from._internal_user_id().empty()) {
-    user_id_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_user_id(),
-      GetArena());
+    _this->_impl_.user_id_.Set(from._internal_user_id(), 
+      _this->GetArenaForAllocation());
   }
-  ::memcpy(&latitude_, &from.latitude_,
-    static_cast<size_t>(reinterpret_cast<char*>(&longitude_) -
-    reinterpret_cast<char*>(&latitude_)) + sizeof(longitude_));
+  ::memcpy(&_impl_.latitude_, &from._impl_.latitude_,
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.longitude_) -
+    reinterpret_cast<char*>(&_impl_.latitude_)) + sizeof(_impl_.longitude_));
   // @@protoc_insertion_point(copy_constructor:UberBackend.UserInfo)
 }
 
-void UserInfo::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_UserInfo_location_2eproto.base);
-  user_id_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  ::memset(&latitude_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&longitude_) -
-      reinterpret_cast<char*>(&latitude_)) + sizeof(longitude_));
+inline void UserInfo::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.user_id_){}
+    , decltype(_impl_.latitude_){0}
+    , decltype(_impl_.longitude_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+  _impl_.user_id_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    _impl_.user_id_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 }
 
 UserInfo::~UserInfo() {
   // @@protoc_insertion_point(destructor:UberBackend.UserInfo)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void UserInfo::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
-  user_id_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+inline void UserInfo::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.user_id_.Destroy();
 }
 
-void UserInfo::ArenaDtor(void* object) {
-  UserInfo* _this = reinterpret_cast< UserInfo* >(object);
-  (void)_this;
-}
-void UserInfo::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void UserInfo::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
-const UserInfo& UserInfo::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_UserInfo_location_2eproto.base);
-  return *internal_default_instance();
-}
-
 
 void UserInfo::Clear() {
 // @@protoc_insertion_point(message_clear_start:UberBackend.UserInfo)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  user_id_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-  ::memset(&latitude_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&longitude_) -
-      reinterpret_cast<char*>(&latitude_)) + sizeof(longitude_));
+  _impl_.user_id_.ClearToEmpty();
+  ::memset(&_impl_.latitude_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&_impl_.longitude_) -
+      reinterpret_cast<char*>(&_impl_.latitude_)) + sizeof(_impl_.longitude_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* UserInfo::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* UserInfo::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // string user_id = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
           auto str = _internal_mutable_user_id();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "UberBackend.UserInfo.user_id"));
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-        } else goto handle_unusual;
+          CHK_(::_pbi::VerifyUTF8(str, "UberBackend.UserInfo.user_id"));
+        } else
+          goto handle_unusual;
         continue;
       // double latitude = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 17)) {
-          latitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 17)) {
+          _impl_.latitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
-        } else goto handle_unusual;
+        } else
+          goto handle_unusual;
         continue;
       // double longitude = 3;
       case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 25)) {
-          longitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 25)) {
+          _impl_.longitude_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
-        } else goto handle_unusual;
+        } else
+          goto handle_unusual;
         continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
+      default:
+        goto handle_unusual;
     }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
   }  // while
-success:
+message_done:
   return ptr;
 failure:
   ptr = nullptr;
-  goto success;
+  goto message_done;
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* UserInfo::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+uint8_t* UserInfo::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:UberBackend.UserInfo)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // string user_id = 1;
-  if (this->user_id().size() > 0) {
+  if (!this->_internal_user_id().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_user_id().data(), static_cast<int>(this->_internal_user_id().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
@@ -1094,19 +1130,27 @@ failure:
   }
 
   // double latitude = 2;
-  if (!(this->latitude() <= 0 && this->latitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_latitude = this->_internal_latitude();
+  uint64_t raw_latitude;
+  memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
+  if (raw_latitude != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_latitude(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_latitude(), target);
   }
 
   // double longitude = 3;
-  if (!(this->longitude() <= 0 && this->longitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_longitude = this->_internal_longitude();
+  uint64_t raw_longitude;
+  memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
+  if (raw_longitude != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_longitude(), target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(3, this->_internal_longitude(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:UberBackend.UserInfo)
@@ -1117,74 +1161,71 @@ size_t UserInfo::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:UberBackend.UserInfo)
   size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // string user_id = 1;
-  if (this->user_id().size() > 0) {
+  if (!this->_internal_user_id().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_user_id());
   }
 
   // double latitude = 2;
-  if (!(this->latitude() <= 0 && this->latitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_latitude = this->_internal_latitude();
+  uint64_t raw_latitude;
+  memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
+  if (raw_latitude != 0) {
     total_size += 1 + 8;
   }
 
   // double longitude = 3;
-  if (!(this->longitude() <= 0 && this->longitude() >= 0)) {
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_longitude = this->_internal_longitude();
+  uint64_t raw_longitude;
+  memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
+  if (raw_longitude != 0) {
     total_size += 1 + 8;
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void UserInfo::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:UberBackend.UserInfo)
-  GOOGLE_DCHECK_NE(&from, this);
-  const UserInfo* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<UserInfo>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:UberBackend.UserInfo)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:UberBackend.UserInfo)
-    MergeFrom(*source);
-  }
-}
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData UserInfo::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    UserInfo::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*UserInfo::GetClassData() const { return &_class_data_; }
 
-void UserInfo::MergeFrom(const UserInfo& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.UserInfo)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void UserInfo::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<UserInfo*>(&to_msg);
+  auto& from = static_cast<const UserInfo&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.UserInfo)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.user_id().size() > 0) {
-    _internal_set_user_id(from._internal_user_id());
+  if (!from._internal_user_id().empty()) {
+    _this->_internal_set_user_id(from._internal_user_id());
   }
-  if (!(from.latitude() <= 0 && from.latitude() >= 0)) {
-    _internal_set_latitude(from._internal_latitude());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_latitude = from._internal_latitude();
+  uint64_t raw_latitude;
+  memcpy(&raw_latitude, &tmp_latitude, sizeof(tmp_latitude));
+  if (raw_latitude != 0) {
+    _this->_internal_set_latitude(from._internal_latitude());
   }
-  if (!(from.longitude() <= 0 && from.longitude() >= 0)) {
-    _internal_set_longitude(from._internal_longitude());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_longitude = from._internal_longitude();
+  uint64_t raw_longitude;
+  memcpy(&raw_longitude, &tmp_longitude, sizeof(tmp_longitude));
+  if (raw_longitude != 0) {
+    _this->_internal_set_longitude(from._internal_longitude());
   }
-}
-
-void UserInfo::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:UberBackend.UserInfo)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void UserInfo::CopyFrom(const UserInfo& from) {
@@ -1200,93 +1241,97 @@ bool UserInfo::IsInitialized() const {
 
 void UserInfo::InternalSwap(UserInfo* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  user_id_.Swap(&other->user_id_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &_impl_.user_id_, lhs_arena,
+      &other->_impl_.user_id_, rhs_arena
+  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(UserInfo, longitude_)
-      + sizeof(UserInfo::longitude_)
-      - PROTOBUF_FIELD_OFFSET(UserInfo, latitude_)>(
-          reinterpret_cast<char*>(&latitude_),
-          reinterpret_cast<char*>(&other->latitude_));
+      PROTOBUF_FIELD_OFFSET(UserInfo, _impl_.longitude_)
+      + sizeof(UserInfo::_impl_.longitude_)
+      - PROTOBUF_FIELD_OFFSET(UserInfo, _impl_.latitude_)>(
+          reinterpret_cast<char*>(&_impl_.latitude_),
+          reinterpret_cast<char*>(&other->_impl_.latitude_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata UserInfo::GetMetadata() const {
-  return GetMetadataStatic();
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_location_2eproto_getter, &descriptor_table_location_2eproto_once,
+      file_level_metadata_location_2eproto[3]);
 }
-
 
 // ===================================================================
 
-void NearbyUsers::InitAsDefaultInstance() {
-}
 class NearbyUsers::_Internal {
  public:
 };
 
-NearbyUsers::NearbyUsers(::PROTOBUF_NAMESPACE_ID::Arena* arena)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena),
-  users_(arena) {
-  SharedCtor();
-  RegisterArenaDtor(arena);
+NearbyUsers::NearbyUsers(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
   // @@protoc_insertion_point(arena_constructor:UberBackend.NearbyUsers)
 }
 NearbyUsers::NearbyUsers(const NearbyUsers& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      users_(from.users_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  NearbyUsers* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.users_){from._impl_.users_}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   // @@protoc_insertion_point(copy_constructor:UberBackend.NearbyUsers)
 }
 
-void NearbyUsers::SharedCtor() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_NearbyUsers_location_2eproto.base);
+inline void NearbyUsers::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.users_){arena}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
 }
 
 NearbyUsers::~NearbyUsers() {
   // @@protoc_insertion_point(destructor:UberBackend.NearbyUsers)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
   SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-void NearbyUsers::SharedDtor() {
-  GOOGLE_DCHECK(GetArena() == nullptr);
+inline void NearbyUsers::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.users_.~RepeatedPtrField();
 }
 
-void NearbyUsers::ArenaDtor(void* object) {
-  NearbyUsers* _this = reinterpret_cast< NearbyUsers* >(object);
-  (void)_this;
-}
-void NearbyUsers::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
 void NearbyUsers::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
+  _impl_._cached_size_.Set(size);
 }
-const NearbyUsers& NearbyUsers::default_instance() {
-  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_NearbyUsers_location_2eproto.base);
-  return *internal_default_instance();
-}
-
 
 void NearbyUsers::Clear() {
 // @@protoc_insertion_point(message_clear_start:UberBackend.NearbyUsers)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  users_.Clear();
+  _impl_.users_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* NearbyUsers::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* NearbyUsers::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    CHK_(ptr);
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
       // repeated .UberBackend.UserInfo users = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
           ptr -= 1;
           do {
             ptr += 1;
@@ -1294,46 +1339,48 @@ const char* NearbyUsers::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID
             CHK_(ptr);
             if (!ctx->DataAvailable(ptr)) break;
           } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
-        } else goto handle_unusual;
+        } else
+          goto handle_unusual;
         continue;
-      default: {
-      handle_unusual:
-        if ((tag & 7) == 4 || tag == 0) {
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
+      default:
+        goto handle_unusual;
     }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
   }  // while
-success:
+message_done:
   return ptr;
 failure:
   ptr = nullptr;
-  goto success;
+  goto message_done;
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* NearbyUsers::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+uint8_t* NearbyUsers::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:UberBackend.NearbyUsers)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   // repeated .UberBackend.UserInfo users = 1;
-  for (unsigned int i = 0,
-      n = static_cast<unsigned int>(this->_internal_users_size()); i < n; i++) {
-    target = stream->EnsureSpace(target);
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_users_size()); i < n; i++) {
+    const auto& repfield = this->_internal_users(i);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(1, this->_internal_users(i), target, stream);
+        InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:UberBackend.NearbyUsers)
@@ -1344,56 +1391,37 @@ size_t NearbyUsers::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:UberBackend.NearbyUsers)
   size_t total_size = 0;
 
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // repeated .UberBackend.UserInfo users = 1;
   total_size += 1UL * this->_internal_users_size();
-  for (const auto& msg : this->users_) {
+  for (const auto& msg : this->_impl_.users_) {
     total_size +=
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-void NearbyUsers::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_merge_from_start:UberBackend.NearbyUsers)
-  GOOGLE_DCHECK_NE(&from, this);
-  const NearbyUsers* source =
-      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<NearbyUsers>(
-          &from);
-  if (source == nullptr) {
-  // @@protoc_insertion_point(generalized_merge_from_cast_fail:UberBackend.NearbyUsers)
-    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
-  } else {
-  // @@protoc_insertion_point(generalized_merge_from_cast_success:UberBackend.NearbyUsers)
-    MergeFrom(*source);
-  }
-}
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData NearbyUsers::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    NearbyUsers::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*NearbyUsers::GetClassData() const { return &_class_data_; }
 
-void NearbyUsers::MergeFrom(const NearbyUsers& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.NearbyUsers)
-  GOOGLE_DCHECK_NE(&from, this);
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+
+void NearbyUsers::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<NearbyUsers*>(&to_msg);
+  auto& from = static_cast<const NearbyUsers&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:UberBackend.NearbyUsers)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  users_.MergeFrom(from.users_);
-}
-
-void NearbyUsers::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-// @@protoc_insertion_point(generalized_copy_from_start:UberBackend.NearbyUsers)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
+  _this->_impl_.users_.MergeFrom(from._impl_.users_);
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void NearbyUsers::CopyFrom(const NearbyUsers& from) {
@@ -1409,31 +1437,37 @@ bool NearbyUsers::IsInitialized() const {
 
 void NearbyUsers::InternalSwap(NearbyUsers* other) {
   using std::swap;
-  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  users_.InternalSwap(&other->users_);
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.users_.InternalSwap(&other->_impl_.users_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata NearbyUsers::GetMetadata() const {
-  return GetMetadataStatic();
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_location_2eproto_getter, &descriptor_table_location_2eproto_once,
+      file_level_metadata_location_2eproto[4]);
 }
-
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace UberBackend
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::UberBackend::UserLocation* Arena::CreateMaybeMessage< ::UberBackend::UserLocation >(Arena* arena) {
+template<> PROTOBUF_NOINLINE ::UberBackend::UserLocation*
+Arena::CreateMaybeMessage< ::UberBackend::UserLocation >(Arena* arena) {
   return Arena::CreateMessageInternal< ::UberBackend::UserLocation >(arena);
 }
-template<> PROTOBUF_NOINLINE ::UberBackend::LocationAck* Arena::CreateMaybeMessage< ::UberBackend::LocationAck >(Arena* arena) {
+template<> PROTOBUF_NOINLINE ::UberBackend::LocationAck*
+Arena::CreateMaybeMessage< ::UberBackend::LocationAck >(Arena* arena) {
   return Arena::CreateMessageInternal< ::UberBackend::LocationAck >(arena);
 }
-template<> PROTOBUF_NOINLINE ::UberBackend::NearbyRequest* Arena::CreateMaybeMessage< ::UberBackend::NearbyRequest >(Arena* arena) {
+template<> PROTOBUF_NOINLINE ::UberBackend::NearbyRequest*
+Arena::CreateMaybeMessage< ::UberBackend::NearbyRequest >(Arena* arena) {
   return Arena::CreateMessageInternal< ::UberBackend::NearbyRequest >(arena);
 }
-template<> PROTOBUF_NOINLINE ::UberBackend::UserInfo* Arena::CreateMaybeMessage< ::UberBackend::UserInfo >(Arena* arena) {
+template<> PROTOBUF_NOINLINE ::UberBackend::UserInfo*
+Arena::CreateMaybeMessage< ::UberBackend::UserInfo >(Arena* arena) {
   return Arena::CreateMessageInternal< ::UberBackend::UserInfo >(arena);
 }
-template<> PROTOBUF_NOINLINE ::UberBackend::NearbyUsers* Arena::CreateMaybeMessage< ::UberBackend::NearbyUsers >(Arena* arena) {
+template<> PROTOBUF_NOINLINE ::UberBackend::NearbyUsers*
+Arena::CreateMaybeMessage< ::UberBackend::NearbyUsers >(Arena* arena) {
   return Arena::CreateMessageInternal< ::UberBackend::NearbyUsers >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
