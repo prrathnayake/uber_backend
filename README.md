@@ -1,57 +1,65 @@
-# 🚗 Uber Backend Clone
+# 🚗 Uber Backend Clone (C++ Microservices)
 
-A **modular backend system** built in modern **C++**, inspired by Uber's architecture. This clone showcases core backend features, including database integration, multithreaded task execution, and centralized logging, designed for educational, portfolio, or experimental use.
-
-![Untitled Diagram(10)](https://github.com/user-attachments/assets/02bb3d93-590f-4973-9c9c-e2b3b13d0ac0)
-
+A **modular C++ backend system** inspired by Uber’s architecture. This clone simulates microservices for handling user, ride, and location data. It integrates logging, database management, multithreading, and secure service configuration.
 
 ---
 
 ## 📦 Features
 
-- 🔧 **Modular architecture** with clearly separated concerns (e.g., server, database, logging).
-- 💾 **MySQL** integration using a custom database wrapper.
-- 🧵 **Thread pool** for task queuing and background execution.
-- 🪵 **Centralized singleton logger** for uniform log handling across all modules.
-- 📂 Environment variables and secrets management for secure configs.
-- 🧱 Built using a **custom utility library: [`cpp_base`](https://github.com/prrathnayake/cpp-base)**, offering:
-  - Singleton logger
-  - Thread pool
-  - Secrets/config loader
-  - General utility modules
+- 🧩 **Microservice architecture**:
+  - `UserManager`, `RideManager`, and `LocationManager` are independent services.
+- 💾 **Database support** for MySQL, PostgreSQL, and SQLite (per-service).
+- 🧵 **Thread pool** for background execution of tasks.
+- 🪵 **Singleton-based logger** for consistent, colored logging.
+- 🧱 **Shared utilities** via [`cpp_base`](https://github.com/prrathnayake/cpp-base).
+- 🛡️ **Secure configuration** via environment variables and `.env` file.
+- 🐳 **Docker-ready** with separate entrypoints for each microservice.
 
 ---
 
-## 🏗️ Built With
+## 🏗️ Tech Stack
 
-- **C++17/20**
-- [cpp_base](https://github.com/prrathnayake/cpp-base) (custom utility library)
-- **MySQL Connector/C++**
-- **CMake**
-- **Conan** (for dependency and build management)
+- **C++17 / C++20**
+- **MySQL Connector/C++**, PostgreSQL, SQLite
+- **gRPC** + Protobuf
+- **CMake**, **Conan**
+- **Docker**, **GitHub Actions**
 
 ---
 
-## 📁 Project Structure
+## 🗂️ Project Structure
+
 ```plaintext
 uber-backend/
-├── include/                 # Project headers
-│   ├── server.h
-│   └── database/
-│       └── database.h
-├── src/                     # Source files
-│   ├── main.cpp
-│   ├── server.cpp
-│   └── database/
-│       └── database.cpp
-├── utils/                   # From cpp_base (or integrated)
-│   ├── log/
-│   │   └── singletonLogger.{h,cpp}
-│   └── threadpool/
-│       └── threadpool.{h,cpp}
-├── sql_scripts/             # SQL for database initialization
-├── log/                     # Log output directory
+├── UserManager/                     # User service
+│   ├── include/
+│   │   ├── database/
+│   │   ├── models/
+│   │   ├── services/
+│   │   └── server.h
+│   ├── src/
+│   │   ├── database/
+│   │   ├── models/
+│   │   ├── services/
+│   │   ├── main.cpp
+│   │   └── server.cpp
+│   └── sql_scripts/
+│
+├── RideManager/                     # Ride service
+├── LocationManager/                 # Location service
+│
+├── sharedUtils/                     # Logger, thread pool, config loader
+├── sharedResources/                 # Shared components (e.g., gRPC setup)
+├── proto/                           # gRPC protobuf definitions
+├── docker/                          # Dockerfiles for each service
+│
+├── entrypointUserManager.sh         # Entrypoint for UserManager
+├── entrypointRideManager.sh         # Entrypoint for RideManager
+├── entrypointLocationManager.sh     # Entrypoint for LocationManager
+│
+├── .env                             # Environment config
 ├── CMakeLists.txt
+├── conanfile.py
 └── README.md
 ```
 
@@ -60,11 +68,12 @@ uber-backend/
 1. **Install dependencies** via Conan:
 
 ```bash
-conan install . --output-folder=build --build=missing
-cd build
-cmake ..
-cmake --build .
-./bin/uber-backend
+conan build . --output-folder=build --build=missing
 ```
 
+## 🚀 Getting Started
+
+```bash
+docker-compose up --build
+```
 
