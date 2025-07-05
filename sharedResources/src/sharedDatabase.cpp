@@ -78,28 +78,28 @@ void SharedDatabase::runSQLScript(const std::string &relativePath)
     }
 }
 
-void SharedDatabase::executeInsert(const std::string &query)
+bool SharedDatabase::executeInsert(const std::string &query)
 {
     logger_.logMeta(SingletonLogger::INFO, "Database executeInsert() successfully.", __FILE__, __LINE__, __func__);
-    database_->executeInsert(query);
+    return database_->executeInsert(query);
 }
 
-void SharedDatabase::executeUpdate(const std::string &query)
+bool SharedDatabase::executeUpdate(const std::string &query)
 {
     logger_.logMeta(SingletonLogger::INFO, "Database executeUpdate() successfully.", __FILE__, __LINE__, __func__);
-    database_->executeUpdate(query);
+    return database_->executeUpdate(query);
 }
 
-void SharedDatabase::executeDelete(const std::string &query)
+bool SharedDatabase::executeDelete(const std::string &query)
 {
     logger_.logMeta(SingletonLogger::INFO, "Database executeDelete() successfully.", __FILE__, __LINE__, __func__);
-    database_->executeDelete(query);
+    return database_->executeDelete(query);
 }
 
-void SharedDatabase::executeSelect(const std::string &query)
+bool SharedDatabase::executeSelect(const std::string &query)
 {
     logger_.logMeta(SingletonLogger::INFO, "Database executeSelect() successfully.", __FILE__, __LINE__, __func__);
-    database_->executeSelect(query);
+    return database_->executeSelect(query);
 }
 
 std::string SharedDatabase::escapeString(const std::string &input)

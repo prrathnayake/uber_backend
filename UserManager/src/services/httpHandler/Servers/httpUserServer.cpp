@@ -31,10 +31,13 @@ void HttpUserServer::createServerMethods()
 
             if (!userData.empty()) {
                 std::string storedHash = userData["password_hash"];
+                logger_.logMeta(SingletonLogger::DEBUG, "password : " + passwordInput , __FILE__, __LINE__, __func__);
                 std::string hashedInput = algorithms::hashComputation(algorithms::toBinary(passwordInput));
+                logger_.logMeta(SingletonLogger::DEBUG, "storedHash: " + storedHash , __FILE__, __LINE__, __func__);
+                logger_.logMeta(SingletonLogger::DEBUG, "hashedInput: " + hashedInput, __FILE__, __LINE__, __func__);
 
                 if (storedHash == hashedInput) {
-                    std::string userId = userData["id"];
+                    std::string userId = userData["user_id"];
                     std::string token = jwt_.generateToken(userId);
 
                     logger_.logMeta(SingletonLogger::INFO, "Login successful, token generated", __FILE__, __LINE__, __func__);

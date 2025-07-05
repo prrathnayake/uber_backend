@@ -26,10 +26,10 @@ namespace UberBackend
         virtual void connectDatabase();
         virtual void disconnectDatabase();
         virtual void runSQLScript(const std::string &relativePath);
-        virtual void executeInsert(const std::string &query);
-        virtual void executeUpdate(const std::string &query);
-        virtual void executeDelete(const std::string &query);
-        virtual void executeSelect(const std::string &query);
+        virtual bool executeInsert(const std::string &query);
+        virtual bool executeUpdate(const std::string &query);
+        virtual bool executeDelete(const std::string &query);
+        virtual bool executeSelect(const std::string &query);
         virtual std::string escapeString(const std::string &input);
         virtual std::vector<std::map<std::string, std::string>> fetchRows(const std::string &query);
 

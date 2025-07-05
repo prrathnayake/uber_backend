@@ -9,6 +9,7 @@
 #include <database/database.h>
 
 #include "sharedHTTPHandler.h"
+#include "sharedKafkaHandler.h"
 #include "sharedDatabase.h"
 
 using namespace utils;
@@ -35,9 +36,9 @@ namespace UberBackend
     protected:
         SingletonLogger &logger_;
         std::shared_ptr<SharedDatabase> database_;
-        std::unique_ptr<ThreadPool> thread_pool_;
+        std::shared_ptr<ThreadPool> thread_pool_;
+        std::shared_ptr<SharedKafkaHandler> sharedKafkaHandler_;
         std::unique_ptr<SharedHttpHandler> httpServerHandler_;
-        std::future<void> httpServerFuture_;
 
         const std::string serverName_;
         const std::string host_;

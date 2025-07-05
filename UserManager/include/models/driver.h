@@ -34,10 +34,6 @@ namespace UberBackend
 
         ~Driver();
 
-        // Vehicle Details
-        VehicleDetails getVehicleDetails() const;
-        void setVehicleDetails(const VehicleDetails &vehicleDetails);
-
     private:
         VehicleDetails vehicleDetails_;
     };

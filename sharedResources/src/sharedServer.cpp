@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "../include/sharedServer.h"
 
 using namespace utils;
@@ -20,18 +19,25 @@ SharedServer::SharedServer(
       databaseName_(databaseName),
       port_(port)
 {
-
     if (serverName_.empty())
     {
-        logger_.logMeta(SingletonLogger::ERROR, "Server initialization failed... Please enter a servername", __FILE__, __LINE__, __func__);
+        logger_.logMeta(SingletonLogger::ERROR, "Server initialization failed: Server name is required", __FILE__, __LINE__, __func__);
+        return;
     }
-    logger_.logMeta(SingletonLogger::INFO, "Creating database instance.....", __FILE__, __LINE__, __func__);
+
+    logger_.logMeta(SingletonLogger::INFO, "Creating database instance...", __FILE__, __LINE__, __func__);
     database_ = std::make_shared<SharedDatabase>(host_, user_, password_, databaseName_, port_);
-    thread_pool_ = std::make_unique<ThreadPool>(64);
+
+    logger_.logMeta(SingletonLogger::INFO, "Creating Kafka handler...", __FILE__, __LINE__, __func__);
+    sharedKafkaHandler_ = std::make_shared<SharedKafkaHandler>(host_, std::to_string(port_));
+
+    logger_.logMeta(SingletonLogger::INFO, "Creating thread pool with 64 threads...", __FILE__, __LINE__, __func__);
+    thread_pool_ = std::shared_ptr<ThreadPool>(&ThreadPool::instance(64), [](ThreadPool *) {});
+
     logger_.logMeta(SingletonLogger::INFO, "SharedServer initialized", __FILE__, __LINE__, __func__);
 }
 
-UberBackend::SharedServer::~SharedServer() = default;
+SharedServer::~SharedServer() = default;
 
 void SharedServer::initiateDatabase(const std::string &path)
 {
@@ -48,31 +54,29 @@ void SharedServer::initiateDatabase(const std::string &path)
 
 void SharedServer::startHttpServers()
 {
-    if (!httpServerHandler_->servers_isEmpty())
+    if (!httpServerHandler_ || httpServerHandler_->servers_isEmpty())
     {
-        httpServerFuture_ = thread_pool_->enqueue([this]()
-                                                  { httpServerHandler_->initiateServers(); });
+        logger_.logMeta(SingletonLogger::ERROR, "No HTTP servers to initialize. Please create them first.", __FILE__, __LINE__, __func__);
+        return;
+    }
 
-        logger_.logMeta(SingletonLogger::INFO, "HTTP server handler started", __FILE__, __LINE__, __func__);
-    }
-    else
-    {
-        logger_.logMeta(SingletonLogger::ERROR, "No HTTP servers to initialized. Please create.....", __FILE__, __LINE__, __func__);
-    }
+    httpServerHandler_->initiateServers();
+
+    logger_.logMeta(SingletonLogger::INFO, "HTTP server handler started", __FILE__, __LINE__, __func__);
 }
 
 void SharedServer::stopHttpServers()
 {
-    httpServerHandler_->stopServers();
-    if (httpServerFuture_.valid())
+    if (httpServerHandler_)
     {
-        httpServerFuture_.get();
+        httpServerHandler_->stopServers();
     }
-    logger_.logMeta(SingletonLogger::INFO, "HTTP server stopped", __FILE__, __LINE__, __func__);
+
+    logger_.logMeta(SingletonLogger::INFO, "HTTP servers stopped", __FILE__, __LINE__, __func__);
 }
 
 std::shared_ptr<SharedDatabase> SharedServer::getDatabase()
 {
-    logger_.logMeta(SingletonLogger::DEBUG, "SharedDatabase SharedServer::getDatabase()", __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "SharedDatabase SharedServer::getDatabase() called", __FILE__, __LINE__, __func__);
     return database_;
 }

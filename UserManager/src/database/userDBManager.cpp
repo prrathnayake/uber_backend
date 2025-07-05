@@ -42,7 +42,7 @@ void UserDBManager::addUserToDB(const std::string &firstName,
         logger_.logMeta(SingletonLogger::DEBUG, "Preparing to add rider...", __FILE__, __LINE__, __func__);
     }
 
-    std::string query = "INSERT INTO users (first_name, middle_name, last_name, phone, email, username, password_hash, address, role ) VALUES ('" +
+    std::string query = "INSERT INTO users (first_name, middle_name, last_name, phone_number, email, username, password_hash, role ) VALUES ('" +
                         database_->escapeString(firstName) + "', '" +
                         database_->escapeString(middleName) + "', '" +
                         database_->escapeString(lastName) + "', '" +
@@ -50,10 +50,14 @@ void UserDBManager::addUserToDB(const std::string &firstName,
                         database_->escapeString(email) + "', '" +
                         database_->escapeString(username) + "', '" +
                         database_->escapeString(password) + "', '" +
-                        database_->escapeString(address) + "', '" +
                         database_->escapeString(role) + "');";
 
-    database_->executeInsert(query);
+    if(database_->executeInsert(query)){
+        // kakfka producer to send data to othe rservers
+
+    }else{
+        logger_.logMeta(SingletonLogger::ERROR, "Adding new user to database failed.", __FILE__, __LINE__, __func__);
+    }
 }
 
 nlohmann::json UserDBManager::getUserByID(int userID)

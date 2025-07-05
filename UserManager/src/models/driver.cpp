@@ -23,13 +23,4 @@ namespace UberBackend
 
     Driver::~Driver() {}
 
-    VehicleDetails Driver::getVehicleDetails() const
-    {
-        return vehicleDetails_;
-    }
-
-    void Driver::setVehicleDetails(const VehicleDetails &vehicleDetails)
-    {
-        vehicleDetails_ = vehicleDetails;
-    }
 }
