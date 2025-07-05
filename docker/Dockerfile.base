@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y \
     autoconf \
     libtool \
     protobuf-compiler \
+    libc-ares-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # --- Upgrade to latest CMake (>= 3.25) ---
@@ -62,31 +63,41 @@ RUN git clone https://github.com/nlohmann/json.git /tmp/json && \
 # --- Install httplib (single header) ---
 RUN curl -Lo /usr/local/include/httplib.h https://raw.githubusercontent.com/yhirose/cpp-httplib/master/httplib.h
 
-# --- Build and install AMQP-CPP ---
-RUN git clone https://github.com/akalend/amqpcpp.git /tmp/amqpcpp && \
-    cd /tmp/amqpcpp && mkdir build && cd build && \
+# Clone and build AMQP-CPP
+RUN git clone https://github.com/akalend/amqpcpp.git && git clone https://github.com/alanxz/rabbitmq-c.git /amqpcpp/rabbitmq-c && \
+    cd amqpcpp && mkdir build && cd build && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DAMQP-CPP_BUILD_SHARED=ON && \
+    make -j$(nproc) && make install && cp libamqpcpp.so /usr/local/lib && cp -r ../include/* /usr/local/include && \
+    cd ../.. 
+
+RUN git clone https://github.com/CopernicaMarketingSoftware/AMQP-CPP.git && \
+    cd AMQP-CPP && mkdir build && cd build && \
     cmake .. -DCMAKE_BUILD_TYPE=Release -DAMQP-CPP_BUILD_SHARED=ON && \
     make -j$(nproc) && make install && \
-    cp libamqpcpp.so /usr/local/lib && cp -r ../include/* /usr/local/include && cd / && rm -rf /tmp/amqpcpp
+    cd ../.. 
+
+RUN cp /amqpcpp/build/libamqpcpp.so /usr/local/lib
 
 # --- Fix include path for rabbitmq-c / AMQP ---
 RUN mkdir -p /usr/local/include/rabbitmq-c && \
     ln -sf /usr/local/include/AMQPcpp.h /usr/local/include/rabbitmq-c/AMQPcpp.h
 
-# --- Install gRPC and Protobuf (Protobuf from package) ---
+# Clone and build gRPC with all submodules
 WORKDIR /tmp
+
 RUN git clone --recurse-submodules -b v1.63.0 https://github.com/grpc/grpc && \
     cd grpc && mkdir -p cmake/build && cd cmake/build && \
     cmake ../.. \
         -DCMAKE_BUILD_TYPE=Release \
         -DgRPC_INSTALL=ON \
         -DgRPC_BUILD_TESTS=OFF \
-        -DgRPC_PROTOBUF_PROVIDER=package \
+        -DgRPC_PROTOBUF_PROVIDER=module \
         -DgRPC_ZLIB_PROVIDER=package \
-        -DgRPC_CARES_PROVIDER=package \
-        -DgRPC_ABSL_PROVIDER=package \
-        -DgRPC_RE2_PROVIDER=package && \
-    make -j$(nproc) && make install && cd / && rm -rf /tmp/grpc
+        -DgRPC_CARES_PROVIDER=module \
+        -DgRPC_ABSL_PROVIDER=module \
+        -DgRPC_RE2_PROVIDER=module && \
+    make -j$(nproc) && make install && \
+    cd / && rm -rf /tmp/grpc
 
 # --- Setup environment variables ---
 ENV CMAKE_PREFIX_PATH=/usr/local:/usr/local/lib/cmake:/usr/local/lib64/cmake:/usr/local/lib/cmake/RdKafka
@@ -94,6 +105,9 @@ ENV CMAKE_MODULE_PATH=/usr/local/lib/cmake
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig
 ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/usr/lib/x86_64-linux-gnu
 ENV CPLUS_INCLUDE_PATH=/usr/local/include:/usr/local/include/rabbitmq-c
+
+# Ensure the system finds installed libraries
+RUN ldconfig
 
 # --- Install Conan ---
 RUN pip3 install conan && \
