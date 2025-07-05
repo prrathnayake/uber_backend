@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
     preferred_language VARCHAR(10) DEFAULT 'en',
     currency VARCHAR(5),
     country VARCHAR(100),
+    is_active BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
