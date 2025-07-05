@@ -1,5 +1,5 @@
 # Dockerfile
-FROM uber_base:latest
+FROM pasanaa/uber_base:latest
 
 # Set working directory
 WORKDIR /UberBackend
