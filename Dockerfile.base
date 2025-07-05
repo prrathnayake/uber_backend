@@ -1,103 +1,82 @@
-# Base image
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install base development tools and libraries
+# --- Install base tools and dependencies ---
 RUN apt-get update && apt-get install -y \
     build-essential \
-    cmake \
     git \
     curl \
     wget \
+    cmake \
     pkg-config \
-    software-properties-common \
     lsb-release \
+    software-properties-common \
     python3 \
     python3-pip \
+    unzip \
+    uuid-dev \
+    libsasl2-dev \
     libssl-dev \
     libpq-dev \
     libmysqlclient-dev \
     libsqlite3-dev \
-    uuid-dev \
-    libsasl2-dev \
     zlib1g-dev \
     librabbitmq-dev \
     librdkafka-dev \
     libcurl4-openssl-dev \
     autoconf \
     libtool \
-    unzip \
     protobuf-compiler \
     && rm -rf /var/lib/apt/lists/*
 
-# Install latest CMake (>= 3.25 required)
-RUN apt-get purge --auto-remove cmake -y && \
-    curl -OL https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.sh && \
+# --- Upgrade to latest CMake (>= 3.25) ---
+RUN apt-get purge --auto-remove -y cmake && \
+    curl -LO https://github.com/Kitware/CMake/releases/download/v3.27.9/cmake-3.27.9-linux-x86_64.sh && \
     chmod +x cmake-3.27.9-linux-x86_64.sh && \
     ./cmake-3.27.9-linux-x86_64.sh --skip-license --prefix=/usr/local && \
     rm cmake-3.27.9-linux-x86_64.sh
 
-# Build and install Uber H3 manually with -fPIC support
+# --- Build and install Uber H3 ---
 RUN git clone https://github.com/uber/h3.git /tmp/h3 && \
-    cd /tmp/h3 && \
-    mkdir build && cd build && \
+    cd /tmp/h3 && mkdir build && cd build && \
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_POSITION_INDEPENDENT_CODE=ON && \
-    make -j$(nproc) && \
-    make install && \
-    ldconfig && \
-    rm -rf /tmp/h3
+    make -j$(nproc) && make install && cd / && rm -rf /tmp/h3
 
-# Install librdkafka from source (for full OpenSSL/SASL support)
-RUN git clone https://github.com/confluentinc/librdkafka.git && \
-    cd librdkafka && mkdir build && cd build && \
-    cmake .. -DCMAKE_PREFIX_PATH=/usr/local/lib/cmake/RdKafka && make && \
-    make install && cd ../..
+# --- Build librdkafka ---
+RUN git clone https://github.com/confluentinc/librdkafka.git /tmp/librdkafka && \
+    cd /tmp/librdkafka && mkdir build && cd build && \
+    cmake .. && make -j$(nproc) && make install && cd / && rm -rf /tmp/librdkafka
 
-# Install rabbitmq-c with CMake
-RUN git clone https://github.com/alanxz/rabbitmq-c.git && \
-    cd rabbitmq-c && mkdir build && cd build && \
+# --- Build rabbitmq-c ---
+RUN git clone https://github.com/alanxz/rabbitmq-c.git /tmp/rabbitmq-c && \
+    cd /tmp/rabbitmq-c && mkdir build && cd build && \
     cmake .. -DBUILD_STATIC_LIBS=ON -DBUILD_SHARED_LIBS=ON -DENABLE_SSL_SUPPORT=ON -DBUILD_TESTS=OFF && \
-    make -j$(nproc) && make install && \
-    cd ../.. 
+    make -j$(nproc) && make install && cd / && rm -rf /tmp/rabbitmq-c
 
-# Install nlohmann_json from source (modern CMake install)
-RUN git clone https://github.com/nlohmann/json.git && \
-    cd json && mkdir build && cd build && \
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local && \
-    make -j$(nproc) && make install && \
-    cd ../.. && rm -rf json
+# --- Install nlohmann_json (header-only) ---
+RUN git clone https://github.com/nlohmann/json.git /tmp/json && \
+    cd /tmp/json && mkdir build && cd build && \
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local && make install && cd / && rm -rf /tmp/json
 
-# Install httplib (single-header library)
-RUN curl -L https://raw.githubusercontent.com/yhirose/cpp-httplib/master/httplib.h -o /usr/local/include/httplib.h
+# --- Install httplib (single header) ---
+RUN curl -Lo /usr/local/include/httplib.h https://raw.githubusercontent.com/yhirose/cpp-httplib/master/httplib.h
 
-# Clone and build AMQP-CPP
-
-RUN git clone https://github.com/akalend/amqpcpp.git && git clone https://github.com/alanxz/rabbitmq-c.git /amqpcpp/rabbitmq-c && \
-    cd amqpcpp && mkdir build && cd build && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DAMQP-CPP_BUILD_SHARED=ON && \
-    make -j$(nproc) && make install && cp libamqpcpp.so /usr/local/lib && cp -r ../include/* /usr/local/include && \
-    cd ../.. 
-
-RUN git clone https://github.com/CopernicaMarketingSoftware/AMQP-CPP.git && \
-    cd AMQP-CPP && mkdir build && cd build && \
+# --- Build and install AMQP-CPP ---
+RUN git clone https://github.com/akalend/amqpcpp.git /tmp/amqpcpp && \
+    cd /tmp/amqpcpp && mkdir build && cd build && \
     cmake .. -DCMAKE_BUILD_TYPE=Release -DAMQP-CPP_BUILD_SHARED=ON && \
     make -j$(nproc) && make install && \
-    cd ../.. 
+    cp libamqpcpp.so /usr/local/lib && cp -r ../include/* /usr/local/include && cd / && rm -rf /tmp/amqpcpp
 
-RUN cp /amqpcpp/build/libamqpcpp.so /usr/local/lib
-
-# Fix header path so Conan builds can find AMQPcpp.h
+# --- Fix include path for rabbitmq-c / AMQP ---
 RUN mkdir -p /usr/local/include/rabbitmq-c && \
     ln -sf /usr/local/include/AMQPcpp.h /usr/local/include/rabbitmq-c/AMQPcpp.h
 
-# --- Install gRPC and Protobuf ---
+# --- Install gRPC and Protobuf (Protobuf from package) ---
 WORKDIR /tmp
-
-# Clone gRPC with submodules
 RUN git clone --recurse-submodules -b v1.63.0 https://github.com/grpc/grpc && \
-    cd grpc && \
-    mkdir -p cmake/build && cd cmake/build && \
+    cd grpc && mkdir -p cmake/build && cd cmake/build && \
     cmake ../.. \
         -DCMAKE_BUILD_TYPE=Release \
         -DgRPC_INSTALL=ON \
@@ -107,35 +86,28 @@ RUN git clone --recurse-submodules -b v1.63.0 https://github.com/grpc/grpc && \
         -DgRPC_CARES_PROVIDER=package \
         -DgRPC_ABSL_PROVIDER=package \
         -DgRPC_RE2_PROVIDER=package && \
-    make -j$(nproc) && \
-    make install && \
-    ldconfig && \
-    cd / && rm -rf /tmp/grpc
+    make -j$(nproc) && make install && cd / && rm -rf /tmp/grpc
 
-# Ensure the system finds installed libraries
-RUN ldconfig
-
-# Set environment for CMake and Conan to find libraries in /usr/local
+# --- Setup environment variables ---
 ENV CMAKE_PREFIX_PATH=/usr/local:/usr/local/lib/cmake:/usr/local/lib64/cmake:/usr/local/lib/cmake/RdKafka
 ENV CMAKE_MODULE_PATH=/usr/local/lib/cmake
 ENV PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig
 ENV LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/usr/lib/x86_64-linux-gnu
 ENV CPLUS_INCLUDE_PATH=/usr/local/include:/usr/local/include/rabbitmq-c
 
-# Install Conan
-RUN pip3 install conan
+# --- Install Conan ---
+RUN pip3 install conan && \
+    conan profile detect --force
 
-RUN if [ ! -f ~/.conan2/profiles/default ]; then conan profile detect; fi
-
-# Clone cpp-base and cpp-tools repositories
+# --- Clone required C++ modules ---
 RUN git clone https://github.com/prrathnayake/cpp-base.git /opt/cpp-base && \
     git clone https://github.com/prrathnayake/cpp-tools.git /opt/cpp-tools
 
-# Build cpp-tools
+# --- Build and export cpp-tools ---
 RUN conan build /opt/cpp-tools --build=missing && \
     conan export /opt/cpp-tools --user=pasan --channel=testing
 
-# Build cpp-base using the provided Python script
+# --- Build cpp-base ---
 RUN python3 /opt/cpp-tools/module/scripts/buildBase.py /opt/cpp-base
 
 CMD ["/bin/bash"]
