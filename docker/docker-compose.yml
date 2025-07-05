@@ -50,7 +50,7 @@ services:
   #     - locationManagerNetwork
 
   UserManager:
-    image: usermanager
+    image: pasanaa/usermanager
     container_name: UserManager
     depends_on:
       - mysql_userManagerDatabase
@@ -62,7 +62,7 @@ services:
       - userManagerNetwork
 
   # RideManager:
-  #   image: ridemanager
+  #   image: pasanaa/ridemanager
   #   container_name: RideManager
   #   depends_on:
   #     - mysql_rideManagerDatabase
@@ -74,7 +74,7 @@ services:
   #     - rideManagerNetwork
 
   # LocationManager:
-  #   image: locationmanager
+  #   image: pasanaa/locationmanager
   #   container_name: LocationManager
   #   depends_on:
   #     - mysql_locationManagerDatabase
