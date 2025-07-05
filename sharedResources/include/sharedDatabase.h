@@ -31,6 +31,8 @@ namespace UberBackend
         virtual void executeDelete(const std::string &query);
         virtual void executeSelect(const std::string &query);
         virtual std::string escapeString(const std::string &input);
+        virtual std::vector<std::map<std::string, std::string>> fetchRows(const std::string &query);
+
 
     protected:
         std::shared_ptr<MySQLDatabase> database_;

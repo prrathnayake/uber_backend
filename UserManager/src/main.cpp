@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "../include/server.h"
-#include "../../sharedUtils/config.h"
+#include "../../sharedUtils/include/config.h"
 
 using namespace utils;
 using namespace UberBackend;

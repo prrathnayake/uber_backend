@@ -108,3 +108,9 @@ std::string SharedDatabase::escapeString(const std::string &input)
     std::string result = database_->escapeString(input);
     return result;
 }
+
+std::vector<std::map<std::string, std::string>> SharedDatabase::fetchRows(const std::string &query)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Database fetchRows() successfully.", __FILE__, __LINE__, __func__);
+    return database_->fetchRows(query);
+}
