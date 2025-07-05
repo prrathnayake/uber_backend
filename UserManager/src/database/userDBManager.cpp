@@ -26,6 +26,22 @@ void UserDBManager::addUserToDB(const std::string &firstName,
                                 const std::string &role)
 {
     logger_.logMeta(SingletonLogger::INFO, "Inside : addUserToDB()", __FILE__, __LINE__, __func__);
+
+    if (role != "driver" && role != "rider")
+    {
+        logger_.logMeta(SingletonLogger::ERROR, "Invalid role: " + role, __FILE__, __LINE__, __func__);
+        return;
+    }
+
+    if (role == "driver")
+    {
+        logger_.logMeta(SingletonLogger::DEBUG, "Preparing to add driver...", __FILE__, __LINE__, __func__);
+    }
+    else if (role == "rider")
+    {
+        logger_.logMeta(SingletonLogger::DEBUG, "Preparing to add rider...", __FILE__, __LINE__, __func__);
+    }
+
     std::string query = "INSERT INTO users (first_name, middle_name, last_name, phone, email, username, password_hash, address, role ) VALUES ('" +
                         database_->escapeString(firstName) + "', '" +
                         database_->escapeString(middleName) + "', '" +
