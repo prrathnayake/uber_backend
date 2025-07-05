@@ -25,7 +25,7 @@ void UserDBManager::addUserToDB(const std::string &firstName,
                                 const std::string &password,
                                 const std::string &role)
 {
-    logger_.logMeta(SingletonLogger::INFO, "Inside : userDBManager_->addUserToDB()", __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::INFO, "Inside : addUserToDB()", __FILE__, __LINE__, __func__);
     std::string query = "INSERT INTO users (first_name, middle_name, last_name, phone, email, username, password_hash, address, role ) VALUES ('" +
                         database_->escapeString(firstName) + "', '" +
                         database_->escapeString(middleName) + "', '" +
@@ -37,8 +37,35 @@ void UserDBManager::addUserToDB(const std::string &firstName,
                         database_->escapeString(address) + "', '" +
                         database_->escapeString(role) + "');";
 
-    logger_.logMeta(SingletonLogger::INFO, "Quert printed successfully", __FILE__, __LINE__, __func__);
     database_->executeInsert(query);
 }
 
-void UserDBManager::getUserByID() {};
+nlohmann::json UserDBManager::getUserByID(int userID)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : getUserByID()", __FILE__, __LINE__, __func__);
+
+    std::string query = "SELECT * FROM users WHERE id = " + std::to_string(userID) + ";";
+    auto rows = database_->fetchRows(query);
+
+    if (!rows.empty())
+    {
+        return nlohmann::json(rows[0]);
+    }
+
+    return nlohmann::json(); // empty
+}
+
+nlohmann::json UserDBManager::getUserByUsername(const std::string &username)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : getUserByUsername()", __FILE__, __LINE__, __func__);
+
+    std::string query = "SELECT * FROM users WHERE username = '" + database_->escapeString(username) + "';";
+    auto rows = database_->fetchRows(query);
+
+    if (!rows.empty())
+    {
+        return nlohmann::json(rows[0]);
+    }
+
+    return nlohmann::json(); // empty
+}

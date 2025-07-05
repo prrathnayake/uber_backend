@@ -27,6 +27,8 @@ set(DEPENDENCIES
     absl::status
     absl::random_random
     absl::hash
+    jwt-cpp::jwt-cpp
+    nlohmann_json::nlohmann_json
 )
 
 # --- Packages to Find ---
@@ -40,6 +42,8 @@ set(PACKAGES
     protobuf
     gRPC
     absl
+    jwt-cpp
+    nlohmann_json
 )
 
 # --- Find Packages ---
@@ -52,12 +56,14 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
 file(GLOB_RECURSE SHARED_RESOURCES CONFIGURE_DEPENDS ../sharedResources/src/*.cpp)
 file(GLOB_RECURSE PROTO_SRCS CONFIGURE_DEPENDS ../proto/*.pb.cc ../proto/*.grpc.pb.cc)
 file(GLOB_RECURSE PROTO_HDRS CONFIGURE_DEPENDS ../proto/*.pb.h ../proto/*.grpc.pb.h)
+file(GLOB_RECURSE UTILS CONFIGURE_DEPENDS ../sharedUtils/src/*.cpp)
 
 # --- Executable ---
 add_executable(${PROJECT_NAME}
     ${SRC_FILES}
     ${SHARED_RESOURCES}
     ${PROTO_SRCS}
+    ${UTILS}
 )
 
 # --- Include Directories ---
@@ -66,6 +72,7 @@ target_include_directories(${PROJECT_NAME}
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ../sharedResources/include
         ../proto
+        ../sharedUtils/include
 )
 
 # --- Link Dependencies ---

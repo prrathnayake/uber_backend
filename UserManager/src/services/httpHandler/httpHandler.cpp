@@ -5,7 +5,7 @@
 
 #include "../../../include/services/httpHandler/httpHandler.h"
 #include "../../../include/services/httpHandler/servers/httpUserServer.h"
-#include "../../../../sharedUtils/config.h"
+#include "../../../../sharedUtils/include/config.h"
 
 using namespace utils;
 using namespace UberBackend;
