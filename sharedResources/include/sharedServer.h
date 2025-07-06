@@ -10,6 +10,7 @@
 
 #include "sharedHTTPHandler.h"
 #include "sharedKafkaHandler.h"
+#include "sharedRouteHandler.h"
 #include "sharedDatabase.h"
 
 using namespace utils;
@@ -37,8 +38,8 @@ namespace UberBackend
         SingletonLogger &logger_;
         std::shared_ptr<SharedDatabase> database_;
         std::shared_ptr<ThreadPool> thread_pool_;
-        std::shared_ptr<SharedKafkaHandler> sharedKafkaHandler_;
         std::unique_ptr<SharedHttpHandler> httpServerHandler_;
+        std::unique_ptr<SharedRouteHandler> sharedRouteHandler_;
 
         const std::string serverName_;
         const std::string host_;

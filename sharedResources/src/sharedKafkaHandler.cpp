@@ -5,7 +5,7 @@ using namespace utils;
 using namespace kafka;
 
 SharedKafkaHandler::SharedKafkaHandler(const std::string &host, const std::string &port)
-    : logger_(SingletonLogger::instance()), host_(host), port_(port)
+    : logger_(SingletonLogger::instance()), thread_pool_(&ThreadPool::instance()), host_(host), port_(port)
 {
     logger_.logMeta(SingletonLogger::INFO, "SharedKafkaHandler initialized", __FILE__, __LINE__, __func__);
 }
@@ -31,12 +31,22 @@ std::shared_ptr<SharedKafkaConsumer> SharedKafkaHandler::createConsumer(const st
     return consumer;
 }
 
-const std::vector<std::shared_ptr<SharedKafkaProducer>>& SharedKafkaHandler::getProducers() const
+const std::vector<std::shared_ptr<SharedKafkaProducer>> &SharedKafkaHandler::getProducers() const
 {
     return kafkaProducers_;
 }
 
-const std::vector<std::shared_ptr<SharedKafkaConsumer>>& SharedKafkaHandler::getConsumers() const
+const std::vector<std::shared_ptr<SharedKafkaConsumer>> &SharedKafkaHandler::getConsumers() const
 {
     return kafkaConsumers_;
+}
+
+void SharedKafkaHandler::runConsumers()
+{
+    for (auto &consumer : kafkaConsumers_)
+    {
+        kafkaServerFutures_.push_back(
+            thread_pool_->enqueue([consumer]()
+                                  { consumer->listening(); }));
+    }
 }

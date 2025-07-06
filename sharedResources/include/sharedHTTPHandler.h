@@ -31,7 +31,7 @@ namespace UberBackend
 
     protected:
         SingletonLogger &logger_;
-        ThreadPool* thread_pool_;  // ✅ now using raw pointer
+        ThreadPool* thread_pool_;
         std::future<void> httpServerFuture_;
 
         std::vector<std::unique_ptr<SharedHttpServer>> servers_;

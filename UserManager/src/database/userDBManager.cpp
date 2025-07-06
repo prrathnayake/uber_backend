@@ -15,17 +15,11 @@ UserDBManager::UserDBManager(std::shared_ptr<UberBackend::SharedDatabase> db)
 
 UserDBManager::~UserDBManager() {}
 
-void UserDBManager::addUserToDB(const std::string &firstName,
-                                const std::string &middleName,
-                                const std::string &lastName,
-                                const std::string &mobileNumber,
-                                const std::string &address,
-                                const std::string &email,
-                                const std::string &username,
-                                const std::string &password,
-                                const std::string &role)
+void UserDBManager::addUserToDB(std::shared_ptr<User> user)
 {
-    logger_.logMeta(SingletonLogger::INFO, "Inside : addUserToDB()", __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::INFO, "Inside : addUserToDB(User)", __FILE__, __LINE__, __func__);
+
+    const std::string &role = user->getRole();
 
     if (role != "driver" && role != "rider")
     {
@@ -37,28 +31,37 @@ void UserDBManager::addUserToDB(const std::string &firstName,
     {
         logger_.logMeta(SingletonLogger::DEBUG, "Preparing to add driver...", __FILE__, __LINE__, __func__);
     }
-    else if (role == "rider")
+    else
     {
         logger_.logMeta(SingletonLogger::DEBUG, "Preparing to add rider...", __FILE__, __LINE__, __func__);
     }
 
-    std::string query = "INSERT INTO users (first_name, middle_name, last_name, phone_number, email, username, password_hash, role ) VALUES ('" +
-                        database_->escapeString(firstName) + "', '" +
-                        database_->escapeString(middleName) + "', '" +
-                        database_->escapeString(lastName) + "', '" +
-                        database_->escapeString(mobileNumber) + "', '" +
-                        database_->escapeString(email) + "', '" +
-                        database_->escapeString(username) + "', '" +
-                        database_->escapeString(password) + "', '" +
-                        database_->escapeString(role) + "');";
+    std::string query = "INSERT INTO users (first_name, middle_name, last_name, phone_number, email, username, password_hash, "
+                        "country_code, role, preferred_language, currency, country) VALUES ('" +
+                        database_->escapeString(user->getFirstName()) + "', '" +
+                        database_->escapeString(user->getMiddleName()) + "', '" +
+                        database_->escapeString(user->getLastName()) + "', '" +
+                        database_->escapeString(user->getMobileNumber()) + "', '" +
+                        database_->escapeString(user->getEmail()) + "', '" +
+                        database_->escapeString(user->getUsername()) + "', '" +
+                        database_->escapeString(user->getPasswordHash()) + "', '" +
+                        database_->escapeString(user->getCountryCode()) + "', '" +
+                        database_->escapeString(user->getRole()) + "', '" +
+                        database_->escapeString(user->getPreferredLanguage()) + "', '" +
+                        database_->escapeString(user->getCurrency()) + "', '" +
+                        database_->escapeString(user->getCountry()) + "');";
 
-    if(database_->executeInsert(query)){
-        // kakfka producer to send data to othe rservers
-
-    }else{
+    if (database_->executeInsert(query))
+    {
+        logger_.logMeta(SingletonLogger::INFO, "User successfully added to database.", __FILE__, __LINE__, __func__);
+        // You can trigger Kafka producer here if needed
+    }
+    else
+    {
         logger_.logMeta(SingletonLogger::ERROR, "Adding new user to database failed.", __FILE__, __LINE__, __func__);
     }
 }
+
 
 nlohmann::json UserDBManager::getUserByID(int userID)
 {

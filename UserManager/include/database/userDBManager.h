@@ -19,15 +19,7 @@ namespace UberBackend
         UserDBManager(std::shared_ptr<SharedDatabase> db);
         ~UserDBManager();
 
-        void addUserToDB(const std::string &firstName,
-                         const std::string &middleName,
-                         const std::string &lastName,
-                         const std::string &mobileNumber,
-                         const std::string &address,
-                         const std::string &email,
-                         const std::string &username,
-                         const std::string &password,
-                         const std::string &role);
+        void addUserToDB(std::shared_ptr<User> user);;
 
         [[nodiscard]] nlohmann::json getUserByUsername(const std::string &username);
         [[nodiscard]] nlohmann::json getUserByID(int id);

@@ -9,7 +9,7 @@ HttpUserServer::HttpUserServer(const std::string &name,
                                std::shared_ptr<SharedDatabase> db)
     : SharedHttpServer(name, host, port, db), jwt_("your_super_secret_key")
 {
-    userDBManager_ = std::make_shared<UserDBManager>(db);
+    routHandler_ = std::make_shared<RouteHandler>(db);
 }
 
 void HttpUserServer::createServerMethods()
@@ -25,7 +25,7 @@ void HttpUserServer::createServerMethods()
 
             logger_.logMeta(SingletonLogger::INFO, "Received login request", __FILE__, __LINE__, __func__);
 
-            auto userData = userDBManager_->getUserByUsername(username); 
+            auto userData = routHandler_->handleUserLogin(username);
 
             logger_.logMeta(SingletonLogger::DEBUG, "User Data: " + userData.dump(), __FILE__, __LINE__, __func__);
 
@@ -63,39 +63,56 @@ void HttpUserServer::createServerMethods()
 
     server_->Post("/signup", [this](const httplib::Request &req, httplib::Response &res)
                   {
-        std::string body = req.body;
-        auto jsonData = Json::parse(body);
+    std::string body = req.body;
+    auto jsonData = Json::parse(body);
 
-        if (jsonData.contains("firstName") &&
-            jsonData.contains("middleName") &&
-            jsonData.contains("lastName") &&
-            jsonData.contains("mobileNumber") &&
-            jsonData.contains("address") &&
-            jsonData.contains("email") &&
-            jsonData.contains("username") &&
-            jsonData.contains("password") &&
-            jsonData.contains("role"))
-        {
-            logger_.logMeta(SingletonLogger::INFO, "Received signup data successfully", __FILE__, __LINE__, __func__);
+    if (jsonData.contains("firstName") &&
+        jsonData.contains("middleName") &&
+        jsonData.contains("lastName") &&
+        jsonData.contains("mobileNumber") &&
+        jsonData.contains("address") &&
+        jsonData.contains("email") &&
+        jsonData.contains("username") &&
+        jsonData.contains("password") &&
+        jsonData.contains("role"))
+    {
+        logger_.logMeta(SingletonLogger::INFO, "Received signup data successfully", __FILE__, __LINE__, __func__);
 
-            std::string firstName = jsonData["firstName"];
-            std::string middleName = jsonData["middleName"];
-            std::string lastName = jsonData["lastName"];
-            std::string mobileNumber = jsonData["mobileNumber"];
-            std::string address = jsonData["address"];
-            std::string email = jsonData["email"];
-            std::string username = jsonData["username"];
-            std::string passwordHash = algorithms::hashComputation(algorithms::toBinary(jsonData["password"]));
-            std::string role = jsonData["role"];
+        std::string firstName = jsonData["firstName"];
+        std::string middleName = jsonData["middleName"];
+        std::string lastName = jsonData["lastName"];
+        std::string mobileNumber = jsonData["mobileNumber"];
+        std::string address = jsonData["address"];
+        std::string email = jsonData["email"];
+        std::string username = jsonData["username"];
+        std::string passwordHash = algorithms::hashComputation(algorithms::toBinary(jsonData["password"]));
+        std::string role = jsonData["role"];
 
-            logger_.logMeta(SingletonLogger::INFO, "Run : userDBManager_->addUserToDB()", __FILE__, __LINE__, __func__);
-            userDBManager_->addUserToDB(firstName, middleName, lastName, mobileNumber, address, email, username, passwordHash, role);
+        auto user = std::make_shared<User>(
+            firstName,
+            middleName,
+            lastName,
+            "",                 // countryCode - not yet provided
+            mobileNumber,
+            address,
+            email,
+            username,
+            passwordHash,
+            role,
+            "",                 // preferredLanguage
+            "",                 // currency
+            ""                  // country
+        );
 
-            res.set_content("Signup successful", "text/plain");
-        }
-        else
-        {
-            logger_.logMeta(SingletonLogger::ERROR, "Signup data missing fields", __FILE__, __LINE__, __func__);
-            res.set_content("Signup unsuccessful - missing fields", "text/plain");
-        } });
+        logger_.logMeta(SingletonLogger::INFO, "Calling handleNewUser()", __FILE__, __LINE__, __func__);
+
+        routHandler_->handleNewUser(user);
+
+        res.set_content("Signup successful", "text/plain");
+    }
+    else
+    {
+        logger_.logMeta(SingletonLogger::ERROR, "Signup data missing fields", __FILE__, __LINE__, __func__);
+        res.set_content("Signup unsuccessful - missing fields", "text/plain");
+    } });
 }
