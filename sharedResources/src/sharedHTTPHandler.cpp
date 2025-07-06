@@ -13,6 +13,7 @@ SharedHttpHandler::SharedHttpHandler(int port)
 SharedHttpHandler::SharedHttpHandler(std::shared_ptr<SharedDatabase> db)
     : database_(db), logger_(SingletonLogger::instance()), thread_pool_(&ThreadPool::instance())
 {
+
     if (!database_)
     {
         logger_.logMeta(SingletonLogger::ERROR, "HTTPHandler initiation failed due to missing database.", __FILE__, __LINE__, __func__);
@@ -31,9 +32,7 @@ void SharedHttpHandler::initiateServers()
     for (auto &server : servers_)
     {
         httpServerFuture_ = thread_pool_->enqueue([s = server.get()]()
-        {
-            s->start();
-        });
+                                                  { s->start(); });
     }
 
     logger_.logMeta(SingletonLogger::INFO, "All HTTP servers have been initiated.", __FILE__, __LINE__, __func__);

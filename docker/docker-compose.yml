@@ -70,6 +70,7 @@ services:
     container_name: UserManager
     depends_on:
       - mysql_userManagerDatabase
+      - kafka
     ports:
       - "${USERMANAGER_APP_PORT}:8081"
     volumes:

@@ -121,7 +121,7 @@ RUN apt-get update && apt-get install -y \
 RUN git clone https://github.com/madler/pigz.git /tmp/pigz \
     && cd /tmp/pigz \
     && make \
-    && make install \
+    && cp pigz unpigz /usr/local/bin \
     && rm -rf /tmp/pigz
 
 # --- Setup environment variables ---
