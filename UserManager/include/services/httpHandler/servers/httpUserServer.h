@@ -10,6 +10,7 @@
 #include "../../../../../sharedResources/include/sharedHTTPServer.h"
 #include "../../../../../sharedUtils/include/jwt.h"
 #include "../../../database/userDBManager.h"
+#include "../../routeHandler/routeHandler.h"
 
 namespace UberBackend
 {
@@ -25,6 +26,6 @@ namespace UberBackend
 
     private:
         JWTUtils jwt_;
-        std::shared_ptr<UberBackend::UserDBManager> userDBManager_;
+        std::shared_ptr<UberBackend::RouteHandler> routHandler_;
     };
 }

@@ -43,6 +43,10 @@ namespace UberBackend
   std::string User::getUsername() const { return username_; }
   std::string User::getRole() const { return role_; }
   std::string User::getPasswordHash() const { return passwordHash_; }
+  std::string User::getCountryCode() const { return countryCode_; }
+  std::string User::getPreferredLanguage() const { return preferredLanguage_; }
+  std::string User::getCurrency() const { return currency_; }
+  std::string User::getCountry() const { return country_; }
 
   void User::setFirstName(const std::string &firstName) { firstName_ = firstName; }
   void User::setMiddleName(const std::string &middleName) { middleName_ = middleName; }
@@ -53,5 +57,12 @@ namespace UberBackend
   void User::setUsername(const std::string &username) { username_ = username; }
   void User::setRole(const std::string &role) { role_ = role; }
   void User::setPasswordHash(const std::string &hash) { passwordHash_ = hash; }
+  void User::setCountryCode(const std::string &countryCode) { countryCode_ = countryCode; }
+  void User::setPreferredLanguage(const std::string &language) { preferredLanguage_ = language; }
+  void User::setCurrency(const std::string &currency) { currency_ = currency; }
+  void User::setCountry(const std::string &country) { country_ = country; }
+
+  PaymentDetails &User::getPaymentDetails() { return paymentDetails_; }
+  BankDetails &User::getBankDetails() { return bankDetails_; }
 
 }

@@ -28,11 +28,11 @@ SharedServer::SharedServer(
     logger_.logMeta(SingletonLogger::INFO, "Creating database instance...", __FILE__, __LINE__, __func__);
     database_ = std::make_shared<SharedDatabase>(host_, user_, password_, databaseName_, port_);
 
-    logger_.logMeta(SingletonLogger::INFO, "Creating Kafka handler...", __FILE__, __LINE__, __func__);
-    sharedKafkaHandler_ = std::make_shared<SharedKafkaHandler>(host_, std::to_string(port_));
-
     logger_.logMeta(SingletonLogger::INFO, "Creating thread pool with 64 threads...", __FILE__, __LINE__, __func__);
     thread_pool_ = std::shared_ptr<ThreadPool>(&ThreadPool::instance(64), [](ThreadPool *) {});
+
+    logger_.logMeta(SingletonLogger::INFO, "Creating route handler.", __FILE__, __LINE__, __func__);
+    sharedRouteHandler_ = std::make_unique<SharedRouteHandler>(database_);
 
     logger_.logMeta(SingletonLogger::INFO, "SharedServer initialized", __FILE__, __LINE__, __func__);
 }
@@ -67,12 +67,8 @@ void SharedServer::startHttpServers()
 
 void SharedServer::stopHttpServers()
 {
-    if (httpServerHandler_)
-    {
-        httpServerHandler_->stopServers();
-    }
-
-    logger_.logMeta(SingletonLogger::INFO, "HTTP servers stopped", __FILE__, __LINE__, __func__);
+    httpServerHandler_->stopServers();
+    logger_.logMeta(SingletonLogger::INFO, "HTTP server stopped", __FILE__, __LINE__, __func__);
 }
 
 std::shared_ptr<SharedDatabase> SharedServer::getDatabase()

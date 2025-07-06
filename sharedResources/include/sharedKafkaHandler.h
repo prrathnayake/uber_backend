@@ -3,6 +3,8 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <future>
+
 
 #include <utils/index.h>
 #include <kafka/index.h>
@@ -26,8 +28,13 @@ namespace UberBackend
         const std::vector<std::shared_ptr<SharedKafkaProducer>>& getProducers() const;
         const std::vector<std::shared_ptr<SharedKafkaConsumer>>& getConsumers() const;
 
+        void runConsumers();
+
     protected:
         SingletonLogger &logger_;
+        ThreadPool* thread_pool_;
+        std::vector<std::future<void>> kafkaServerFutures_;
+
         std::vector<std::shared_ptr<SharedKafkaProducer>> kafkaProducers_;
         std::vector<std::shared_ptr<SharedKafkaConsumer>> kafkaConsumers_;
 
