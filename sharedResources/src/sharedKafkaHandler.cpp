@@ -64,8 +64,6 @@ const std::vector<std::shared_ptr<SharedKafkaConsumer>> &SharedKafkaHandler::get
 
 void SharedKafkaHandler::runConsumers()
 {
-    logger_.logMeta(SingletonLogger::INFO, "Running kafka consumers. " + name, __FILE__, __LINE__, __func__);
-
     for (auto &consumer : kafkaConsumers_)
     {
         kafkaServerFutures_.push_back(

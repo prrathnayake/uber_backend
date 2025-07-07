@@ -14,7 +14,7 @@ SharedKafkaConsumer::SharedKafkaConsumer(const std::string &consumerName,
       host_(host),
       port_(port)
 {
-    f(consumerName_.empty() || topic.empty() || host_.empty() || port_.empty())
+    if(consumerName_.empty() || topic.empty() || host_.empty() || port_.empty())
     {
         logger_.logMeta(SingletonLogger::ERROR, "createConsumer failed due to not having proper consumerName, topic, host or topic.", __FILE__, __LINE__, __func__);
     }
