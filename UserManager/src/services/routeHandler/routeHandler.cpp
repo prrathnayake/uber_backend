@@ -2,6 +2,7 @@
 #include <filesystem>
 
 #include "../../../include/services/routeHandler/routeHandler.h"
+#include "../../../../sharedUtils/include/config.h"
 
 using namespace UberBackend;
 
@@ -10,8 +11,8 @@ RouteHandler::RouteHandler(std::shared_ptr<SharedDatabase> db)
 {
     userDBManager_ = std::make_shared<UserDBManager>(database_);
     logger_.logMeta(SingletonLogger::INFO, "Creating Kafka handler...", __FILE__, __LINE__, __func__);
-    std::string host = "localhost";
-    int port = 9092;
+    std::string host = UberUtils::CONFIG::KAFKA_HOST;
+    int port = UberUtils::CONFIG::KAFKA_PORT;
     sharedKafkaHandler_ = std::make_shared<SharedKafkaHandler>(host, std::to_string(port));
     logger_.logMeta(SingletonLogger::DEBUG, "Implementing Kafka producers", __FILE__, __LINE__, __func__);
 

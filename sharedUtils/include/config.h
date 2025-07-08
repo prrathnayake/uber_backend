@@ -15,6 +15,11 @@ namespace UberBackend
             static constexpr unsigned int USER_MANAGER_DATABASE_PORT = 3036;
 
             static constexpr unsigned int USER_MANAGER_HTTP_USER_HANDLER_PORT = 8081;
+
+            static constexpr const char *KAFKA_HOST = "localhost";
+            static constexpr unsigned int KAFKA_PORT = 9092;
+
+            static constexpr const char *JWT_SECRET = "localguwgfowgi8fgwkurvrtgwnlgeghrihtu98ynvuhfnauxehnchgecturvtigfiwgiikvbcjkbsvgwegfwfwefhofewefswefwft";
         };
     };
 };
