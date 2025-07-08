@@ -27,32 +27,8 @@ SharedDatabase::SharedDatabase(const std::string &host,
 
 SharedDatabase::~SharedDatabase()
 {
-    disconnectDatabase();
+
     logger_.logMeta(SingletonLogger::INFO, "Disconected from MySQL Database.", __FILE__, __LINE__, __func__);
-}
-
-void SharedDatabase::connectDatabase()
-{
-
-    if (!database_->initializeDatabase(databaseName_))
-    {
-        logger_.logMeta(SingletonLogger::ERROR, "Database initialization failed.", __FILE__, __LINE__, __func__);
-        return;
-    }
-
-    logger_.logMeta(SingletonLogger::INFO, "Connected to MySQL Database.", __FILE__, __LINE__, __func__);
-}
-
-void SharedDatabase::disconnectDatabase()
-{
-    if (database_)
-    {
-        database_->getConnection()->disconnect();
-        if (!database_->getConnection()->isConnected())
-        {
-            logger_.logMeta(SingletonLogger::INFO, "Disconnected from Database.", __FILE__, __LINE__, __func__);
-        }
-    }
 }
 
 void SharedDatabase::runSQLScript(const std::string &relativePath)

@@ -23,8 +23,6 @@ namespace UberBackend
 
         virtual ~SharedDatabase();
 
-        virtual void connectDatabase();
-        virtual void disconnectDatabase();
         virtual void runSQLScript(const std::string &relativePath);
         virtual bool executeInsert(const std::string &query);
         virtual bool executeUpdate(const std::string &query);
