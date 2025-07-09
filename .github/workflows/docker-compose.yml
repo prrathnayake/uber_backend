@@ -17,9 +17,6 @@ jobs:
       - name: 🐳 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: 🐙 Set up Docker Compose
-        uses: docker/setup-docker-compose@v2
-
       - name: 🧪 Create .env if missing
         run: |
           if [ ! -f .env ]; then
