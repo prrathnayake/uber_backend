@@ -13,15 +13,19 @@ namespace UberBackend
     class UserKafkaManager
     {
     public:
-        UserKafkaManager(std::shared_ptr<SharedKafkaProducer> kafkaProducer);
+        explicit UserKafkaManager(std::shared_ptr<SharedKafkaProducer> kafkaProducer);
         ~UserKafkaManager();
 
         void produceNewUser(std::shared_ptr<User> user);
+        void produceUpdatedUser(std::shared_ptr<User> user);
+        void produceDeletedUser(const std::string &userId);
 
     private:
+        void sendEvent(const std::string &eventType, const nlohmann::json &data);
+
         SingletonLogger &logger_;
         std::shared_ptr<SharedKafkaProducer> kafkaProducer_;
-        std::string topic_;
+        const std::string topic_ = "user-events";  // default topic
     };
 
 }

@@ -16,7 +16,7 @@ RouteHandler::RouteHandler(std::shared_ptr<SharedDatabase> db)
     kafkaHandler_ = std::make_shared<SharedKafkaHandler>(host, std::to_string(port));
     logger_.logMeta(SingletonLogger::DEBUG, "Implementing Kafka producers", __FILE__, __LINE__, __func__);
 
-    userKafkaManager_ = std::make_shared<UserKafkaManager>(kafkaHandler_->createProducer("userKafkaManager_","user"));
+    userKafkaManager_ = std::make_shared<UserKafkaManager>(kafkaHandler_->createProducer("userKafkaManager_"));
 
     logger_.logMeta(SingletonLogger::INFO, "RouteHandler constructed.", __FILE__, __LINE__, __func__);
 }

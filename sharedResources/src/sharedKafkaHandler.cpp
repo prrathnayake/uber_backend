@@ -22,11 +22,11 @@ SharedKafkaHandler::~SharedKafkaHandler()
     logger_.logMeta(SingletonLogger::INFO, "SharedKafkaHandler destroyed", __FILE__, __LINE__, __func__);
 }
 
-std::shared_ptr<SharedKafkaProducer> SharedKafkaHandler::createProducer(const std::string &name, const std::string &topic)
+std::shared_ptr<SharedKafkaProducer> SharedKafkaHandler::createProducer(const std::string &name)
 {
-    if (name.empty() || topic.empty())
+    if (name.empty())
     {
-        logger_.logMeta(SingletonLogger::ERROR, "createProducer failed due to not having proper name or topic.", __FILE__, __LINE__, __func__);
+        logger_.logMeta(SingletonLogger::ERROR, "createProducer failed due to not having proper name.", __FILE__, __LINE__, __func__);
     }
     else
     {
