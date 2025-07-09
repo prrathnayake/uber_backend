@@ -35,6 +35,12 @@ jobs:
           docker ps | grep RideManager
           docker ps | grep LocationManager
 
+      - name: 🪵 Print MySQL logs (debug)
+        run: |
+          docker logs userManagerDatabase
+          docker logs rideManagerDatabase
+          docker logs locationManagerDatabase
+
       - name: ✅ Test - MySQL ports open
         run: |
           nc -z localhost 3307
