@@ -32,6 +32,9 @@ namespace UberBackend
 
             static constexpr unsigned int RIDE_MANAGER_HTTP_LOCATION_HANDLER_PORT = 8083;
 
+            static constexpr const char *REDIS_Host = "pasan";
+            static constexpr unsigned int REDIS_PORT = 6379;
+
             static constexpr const char *KAFKA_HOST = "localhost";
             static constexpr unsigned int KAFKA_PORT = 9092;
 
