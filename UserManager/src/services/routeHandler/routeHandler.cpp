@@ -13,10 +13,10 @@ RouteHandler::RouteHandler(std::shared_ptr<SharedDatabase> db)
     logger_.logMeta(SingletonLogger::INFO, "Creating Kafka handler...", __FILE__, __LINE__, __func__);
     std::string host = UberUtils::CONFIG::KAFKA_HOST;
     int port = UberUtils::CONFIG::KAFKA_PORT;
-    sharedKafkaHandler_ = std::make_shared<SharedKafkaHandler>(host, std::to_string(port));
+    kafkaHandler_ = std::make_shared<SharedKafkaHandler>(host, std::to_string(port));
     logger_.logMeta(SingletonLogger::DEBUG, "Implementing Kafka producers", __FILE__, __LINE__, __func__);
 
-    userKafkaManager_ = std::make_shared<UserKafkaManager>();
+    userKafkaManager_ = std::make_shared<UserKafkaManager>(kafkaHandler_->createProducer("userKafkaManager_","user"));
 
     logger_.logMeta(SingletonLogger::INFO, "RouteHandler constructed.", __FILE__, __LINE__, __func__);
 }
