@@ -22,50 +22,30 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 🧪 Create dummy .env file (if missing)
-        run: |
-          if [ ! -f .env ]; then
-            echo "Creating .env file..."
-            cat <<EOF > .env
-          MYSQL_ROOT_PASSWORD=root
-          MYSQL_USER=pasan
-          MYSQL_PASSWORD=pasan
-          USERMANAGER_DB=userManagerDatabase
-          USERMANAGER_PORT=3307
-          USERMANAGER_APP_PORT=8081
-          RIDEMANAGER_DB=rideManagerDatabase
-          RIDEMANAGER_PORT=3308
-          RIDEMANAGER_APP_PORT=8082
-          LOCATIONMANAGER_DB=locationManagerDatabase
-          LOCATIONMANAGER_PORT=3309
-          LOCATIONMANAGER_APP_PORT=8083
-          EOF
-          fi
-
       - name: 🐳 Start Docker Compose stack
         run: docker compose -f docker/docker-compose.yml up --build -d
 
-      - name: ⏱️ Wait for services to initialize (10 min)
+      - name: ⏱️ Wait for services to initialize (10 minutes)
         run: sleep 600
 
       - name: ✅ Test - All containers are running
         run: |
           docker ps
-          docker ps | grep userManager
-          docker ps | grep rideManager
-          docker ps | grep locationManager
+          docker ps | grep UserManager
+          docker ps | grep RideManager
+          docker ps | grep LocationManager
 
-      - name: ✅ Test - MySQL ports are open
+      - name: ✅ Test - MySQL ports open
         run: |
-          nc -zv localhost 3307
-          nc -zv localhost 3308
-          nc -zv localhost 3309
+          nc -z localhost 3307
+          nc -z localhost 3308
+          nc -z localhost 3309
 
-      - name: ✅ Test - Application ports are open
+      - name: ✅ Test - Application ports open
         run: |
-          nc -zv localhost 8081
-          nc -zv localhost 8082
-          nc -zv localhost 8083
+          nc -z localhost 8081
+          nc -z localhost 8082
+          nc -z localhost 8083
 
       - name: ✅ Test - POST /signup HTTP endpoint
         run: |
@@ -81,19 +61,17 @@ jobs:
               "username": "testuser",
               "password": "testpass",
               "role": "rider"
-            }' || echo "❌ /signup request failed"
+            }' || echo "❌ /signup failed"
 
       - name: ✅ Test - POST /login HTTP endpoint
         run: |
           curl --fail -X POST http://localhost:8081/login \
             -H "Content-Type: application/json" \
-            -d '{"username": "testuser", "password": "testpass"}' \
-            || echo "❌ /login endpoint failed"
+            -d '{"username": "testuser", "password": "testpass"}' || echo "❌ /login failed"
 
       - name: ✅ Test - Kafka port
-        run: nc -zv localhost 9092
+        run: nc -z localhost 9092
 
-      - name: 📦 Stop and clean up
+      - name: 📦 Clean up
         if: always()
         run: docker compose -f docker/docker-compose.yml down -v
-
