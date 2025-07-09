@@ -23,7 +23,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: 🐳 Start Docker Compose stack
-        run: docker compose -f docker/docker-compose.yml up --build -d
+        run: docker compose --env-file .env -f docker/docker-compose.yml up --build -d
 
       - name: ⏱️ Wait for services to initialize (10 minutes)
         run: sleep 600
