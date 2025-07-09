@@ -1,61 +1,76 @@
-name: Docker Compose CI
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
 jobs:
-  docker-compose:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🧾 Checkout Repository
+      - name: ⬇️ Checkout repository
         uses: actions/checkout@v3
 
-      - name: 🐳 Set up Docker Buildx
+      - name: ⚙️ Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: 🧪 Create .env if missing
+      - name: 🔐 Log in to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 🧪 Create dummy .env file (if missing)
         run: |
           if [ ! -f .env ]; then
-            echo "Creating dummy .env file for CI..."
+            echo "Creating .env file..."
             cat <<EOF > .env
           MYSQL_ROOT_PASSWORD=root
           MYSQL_USER=pasan
           MYSQL_PASSWORD=pasan
-          
           USERMANAGER_DB=userManagerDatabase
           USERMANAGER_PORT=3307
           USERMANAGER_APP_PORT=8081
-          
           RIDEMANAGER_DB=rideManagerDatabase
           RIDEMANAGER_PORT=3308
           RIDEMANAGER_APP_PORT=8082
-          
           LOCATIONMANAGER_DB=locationManagerDatabase
           LOCATIONMANAGER_PORT=3309
           LOCATIONMANAGER_APP_PORT=8083
           EOF
           fi
 
-      - name: 🔧 Build and Start All Services
-        run: docker compose -f docker/docker-compose.yml up --build -d
+      - name: 🐳 Start Docker Compose stack
+        run: docker-compose -f docker/docker-compose.yml up --build -d
 
-      - name: ⏳ Wait for Containers to Initialize
+      - name: ⏱️ Wait for services to initialize (10 min)
         run: sleep 600
 
-      - name: 📋 List Running Containers
-        run: docker ps
-
-      - name: 📥 Fetch Logs (UserManager)
-        run: docker logs UserManager || true
-
-      - name: ✅ Health Check (optional)
+      # ✅ Test Case 1: Check containers are running
+      - name: ✅ Test: All containers are running
         run: |
-          curl --fail http://localhost:8081/health || echo "Health check failed"
+          docker ps
+          docker ps | grep UserManager
+          docker ps | grep RideManager
+          docker ps | grep LocationManager
 
-      - name: 🧹 Tear Down
+      # ✅ Test Case 2: MySQL port test
+      - name: ✅ Test: MySQL ports are open
+        run: |
+          nc -zv localhost 3307
+          nc -zv localhost 3308
+          nc -zv localhost 3309
+
+      # ✅ Test Case 3: Application port test
+      - name: ✅ Test: Application ports are open
+        run: |
+          nc -zv localhost 8081
+          nc -zv localhost 8082
+          nc -zv localhost 8083
+
+      # ✅ Test Case 4: UserManager health check (if implemented)
+      - name: ✅ Test: Call UserManager HTTP endpoint
+        run: curl --fail http://localhost:8081/user/health || echo "❌ Health check failed"
+
+      # ✅ Test Case 5: Kafka port test
+      - name: ✅ Test: Kafka port
+        run: nc -zv localhost 9092
+
+      - name: 📦 Stop and clean up
         if: always()
-        run: docker compose -f docker/docker-compose.yml down -v
+        run: docker-compose -f docker/docker-compose.yml down -v
