@@ -39,37 +39,37 @@ services:
     ports:
       - "6379:6379"
 
-  # mysql_rideManagerDatabase:
-  #   image: mysql:8
-  #   container_name: rideManagerDatabase
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-  #     MYSQL_DATABASE: ${RIDEMANAGER_DB}
-  #     MYSQL_USER: ${MYSQL_USER}
-  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-  #   ports:
-  #     - "${RIDEMANAGER_PORT}:3306"
-  #   volumes:
-  #     - mysql_ride_data:/var/lib/mysql
-  #   networks:
-  #     - rideManagerNetwork
+  mysql_rideManagerDatabase:
+    image: mysql:8
+    container_name: rideManagerDatabase
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${RIDEMANAGER_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${RIDEMANAGER_PORT}:3306"
+    volumes:
+      - mysql_ride_data:/var/lib/mysql
+    networks:
+      - rideManagerNetwork
 
-  # mysql_locationManagerDatabase:
-  #   image: mysql:8
-  #   container_name: locationManagerDatabase
-  #   restart: always
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-  #     MYSQL_DATABASE: ${LOCATIONMANAGER_DB}
-  #     MYSQL_USER: ${MYSQL_USER}
-  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-  #   ports:
-  #     - "${LOCATIONMANAGER_PORT}:3306"
-  #   volumes:
-  #     - mysql_location_data:/var/lib/mysql
-  #   networks:
-  #     - locationManagerNetwork
+  mysql_locationManagerDatabase:
+    image: mysql:8
+    container_name: locationManagerDatabase
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${LOCATIONMANAGER_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${LOCATIONMANAGER_PORT}:3306"
+    volumes:
+      - mysql_location_data:/var/lib/mysql
+    networks:
+      - locationManagerNetwork
 
   UserManager:
     image: pasanaa/usermanager
@@ -84,36 +84,36 @@ services:
     networks:
       - userManagerNetwork
 
-  # RideManager:
-  #   image: pasanaa/ridemanager
-  #   container_name: RideManager
-  #   depends_on:
-  #     - mysql_rideManagerDatabase
-  #   ports:
-  #     - "${RIDEMANAGER_APP_PORT}:8081"
-  #   volumes:
-  #     - .:/app
-  #   networks:
-  #     - rideManagerNetwork
+  RideManager:
+    image: pasanaa/ridemanager
+    container_name: RideManager
+    depends_on:
+      - mysql_rideManagerDatabase
+    ports:
+      - "${RIDEMANAGER_APP_PORT}:8081"
+    volumes:
+      - .:/app
+    networks:
+      - rideManagerNetwork
 
-  # LocationManager:
-  #   image: pasanaa/locationmanager
-  #   container_name: LocationManager
-  #   depends_on:
-  #     - mysql_locationManagerDatabase
-  #   ports:
-  #     - "${LOCATIONMANAGER_APP_PORT}:8081"
-  #   volumes:
-  #     - .:/app
-  #   networks:
-  #     - locationManagerNetwork
+  LocationManager:
+    image: pasanaa/locationmanager
+    container_name: LocationManager
+    depends_on:
+      - mysql_locationManagerDatabase
+    ports:
+      - "${LOCATIONMANAGER_APP_PORT}:8081"
+    volumes:
+      - .:/app
+    networks:
+      - locationManagerNetwork
 
 networks:
   userManagerNetwork:
-  # rideManagerNetwork:
-  # locationManagerNetwork:
+  rideManagerNetwork:
+  locationManagerNetwork:
 
 volumes:
   mysql_user_data:
-  # mysql_ride_data:
-  # mysql_location_data:
+  mysql_ride_data:
+  mysql_location_data:
