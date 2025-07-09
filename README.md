@@ -1,6 +1,9 @@
 # 🚗 Uber Backend Clone (C++ Microservices) – Under Development
 
 A **modular C++ backend system** inspired by Uber’s architecture. This project simulates a microservices environment to manage users, rides, and locations, using secure, scalable, and modern design patterns.
+
+---
+
 ![Untitled Diagram(10)](https://github.com/user-attachments/assets/02bb3d93-590f-4973-9c9c-e2b3b13d0ac0)
 
 ---
