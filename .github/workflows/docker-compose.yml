@@ -41,7 +41,7 @@ jobs:
           fi
 
       - name: 🔧 Build and Start All Services
-        run: docker-compose -f docker/docker-compose.yml up --build -d
+        run: docker compose -f docker/docker-compose.yml up --build -d
 
       - name: ⏳ Wait for Containers to Initialize
         run: sleep 20
@@ -58,4 +58,4 @@ jobs:
 
       - name: 🧹 Tear Down
         if: always()
-        run: docker-compose -f docker/docker-compose.yml down -v
+        run: docker compose -f docker/docker-compose.yml down -v
