@@ -51,9 +51,9 @@ jobs:
       - name: ✅ Test - All containers are running
         run: |
           docker ps
-          docker ps | grep UserManager
-          docker ps | grep RideManager
-          docker ps | grep LocationManager
+          docker ps | grep userManager
+          docker ps | grep rideManager
+          docker ps | grep locationManager
 
       - name: ✅ Test - MySQL ports are open
         run: |
@@ -69,7 +69,7 @@ jobs:
 
       - name: ✅ Test - Call UserManager HTTP endpoint
         run: |
-          curl --fail http://localhost:8081/user/health || echo "❌ Health check failed"
+          curl --fail http://localhost:8081/login/health || echo "❌ Health check failed"
 
       - name: ✅ Test - Kafka port
         run: nc -zv localhost 9092
