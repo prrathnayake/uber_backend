@@ -1,6 +1,8 @@
 #include <iostream>
 
 #include "../include/server.h"
+#include "../include/server.h"
+
 
 using namespace utils;
 using namespace UberBackend;
@@ -19,6 +21,6 @@ void Server::createHttpServers()
 {
     logger_.logMeta(SingletonLogger::INFO, "create HTTP Server Handler.", __FILE__, __LINE__, __func__);
 
-    // httpServerHandler_ = std::make_unique<HttpHandler>(database_);
-    // httpServerHandler_->createServers();
+    httpServerHandler_ = std::make_unique<HttpHandler>(database_);
+    httpServerHandler_->createServers();
 }
