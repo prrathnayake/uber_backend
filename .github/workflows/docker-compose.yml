@@ -20,24 +20,24 @@ jobs:
       - name: 🐙 Set up Docker Compose
         uses: docker/setup-docker-compose@v2
 
-      - name: 🧪 Verify .env file exists
+      - name: 🧪 Create .env if missing
         run: |
           if [ ! -f .env ]; then
-            echo ".env file is missing. Creating a dummy one for CI..."
+            echo "Creating dummy .env file for CI..."
             cat <<EOF > .env
-MYSQL_ROOT_PASSWORD=root
-MYSQL_USER=uber
-MYSQL_PASSWORD=pass
-USERMANAGER_DB=userdb
-RIDEMANAGER_DB=ridedb
-LOCATIONMANAGER_DB=locationdb
-USERMANAGER_PORT=3307
-RIDEMANAGER_PORT=3308
-LOCATIONMANAGER_PORT=3309
-USERMANAGER_APP_PORT=8081
-RIDEMANAGER_APP_PORT=8082
-LOCATIONMANAGER_APP_PORT=8083
-EOF
+            MYSQL_ROOT_PASSWORD=root
+            MYSQL_USER=uber
+            MYSQL_PASSWORD=pass
+            USERMANAGER_DB=userdb
+            RIDEMANAGER_DB=ridedb
+            LOCATIONMANAGER_DB=locationdb
+            USERMANAGER_PORT=3307
+            RIDEMANAGER_PORT=3308
+            LOCATIONMANAGER_PORT=3309
+            USERMANAGER_APP_PORT=8081
+            RIDEMANAGER_APP_PORT=8082
+            LOCATIONMANAGER_APP_PORT=8083
+            EOF
           fi
 
       - name: 🔧 Build and Start All Services
@@ -52,7 +52,6 @@ EOF
       - name: 📥 Fetch Logs (UserManager)
         run: docker logs UserManager || true
 
-      # Optionally, check if health endpoint is up
       - name: ✅ Health Check (optional)
         run: |
           curl --fail http://localhost:8081/health || echo "Health check failed"
