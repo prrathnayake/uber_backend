@@ -6,7 +6,7 @@
 #include <future>
 
 #include <utils/index.h>
-#include <database/database.h>
+#include <database/index.h>
 
 #include "sharedHTTPHandler.h"
 #include "sharedKafkaHandler.h"

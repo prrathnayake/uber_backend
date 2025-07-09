@@ -1,37 +1,81 @@
 cmake_minimum_required(VERSION 3.25.2)
 
-set(CMAKE_CXX_STANDARD 17)
-
 project(LocationManager)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
+# --- Define Dependencies ---
 set(DEPENDENCIES
-     app_h3::app_h3
-     app_kafka::app_kafka
-     app_utils::app_utils
-     h3::h3
-     app_database::app_database
+    app_utils::app_utils
+    app_kafka::app_kafka
+    app_h3::app_h3
+    h3::h3
+    app_database::app_database
+    app_algorithms::app_algorithms
+    gRPC::grpc++
+    gRPC::grpc
+    gRPC::grpc++_reflection
+    protobuf::libprotobuf
+    protobuf::libprotoc  # Optional: Only if you use protoc-related C++ APIs
+    absl::base
+    absl::synchronization
+    absl::strings
+    absl::time
+    absl::str_format
+    absl::status
+    absl::random_random
+    absl::hash
+    jwt-cpp::jwt-cpp
+    nlohmann_json::nlohmann_json
 )
 
+# --- Packages to Find ---
 set(PACKAGES
-     app_utils
-     app_kafka
-     app_h3
-     h3
-     app_database
+    app_utils
+    app_kafka
+    app_h3
+    h3
+    app_database
+    app_algorithms
+    protobuf
+    gRPC
+    absl
+    jwt-cpp
+    nlohmann_json
 )
 
+# --- Find Packages ---
 foreach(pack ${PACKAGES})
-     find_package(${pack} CONFIG REQUIRED)
-endforeach()  
+    find_package(${pack} CONFIG REQUIRED)
+endforeach()
 
+# --- Source Files ---
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
-add_executable(${PROJECT_NAME} ${SRC_FILES})
+file(GLOB_RECURSE SHARED_RESOURCES CONFIGURE_DEPENDS ../sharedResources/src/*.cpp)
+file(GLOB_RECURSE PROTO_SRCS CONFIGURE_DEPENDS ../proto/*.pb.cc ../proto/*.grpc.pb.cc)
+file(GLOB_RECURSE PROTO_HDRS CONFIGURE_DEPENDS ../proto/*.pb.h ../proto/*.grpc.pb.h)
+file(GLOB_RECURSE UTILS CONFIGURE_DEPENDS ../sharedUtils/src/*.cpp)
 
-foreach(dep ${DEPENDENCIES})
-     target_link_libraries(${PROJECT_NAME} ${dep})
-endforeach()   
- 
+# --- Executable ---
+add_executable(${PROJECT_NAME}
+    ${SRC_FILES}
+    ${SHARED_RESOURCES}
+    ${PROTO_SRCS}
+    ${UTILS}
+)
+
+# --- Include Directories ---
+target_include_directories(${PROJECT_NAME}
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ../sharedResources/include
+        ../proto
+        ../sharedUtils/include
+)
+
+# --- Link Dependencies ---
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE ${DEPENDENCIES}
+)
