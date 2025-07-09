@@ -62,6 +62,109 @@ uber-backend/
 └── README.md
 ```
 
+# 🧠 Microservice Architecture – Uber Backend Clone (C++)
+
+---
+
+## 🖥️ Server Lifecycle
+
+Each microservice follows this initialization flow:
+
+1. **Database Initialization**  
+   Initializes a dedicated SQL database for the service. This stores all persistent data relevant to the service domain.
+
+2. **HTTP Handler Launch**  
+   Sets up HTTP servers and clients, routes incoming requests to proper controllers, and manages outgoing requests.
+
+3. **Kafka Handler Activation**  
+   Initializes Kafka producers and consumers for event-driven communication between microservices.
+
+---
+
+## 🔍 Component Descriptions
+
+- **🗄️ Database**  
+  Dedicated storage per service using MySQL, PostgreSQL, or SQLite.
+
+- **🌐 HTTP Handler**  
+  Manages HTTP servers and clients. Routes requests to appropriate handlers.
+
+- **📥 HTTP Server**  
+  Listens for external or internal HTTP requests and serves responses based on API logic.
+
+- **📤 HTTP Client**  
+  Sends HTTP requests to other microservices to fetch or send data.
+
+- **🧭 Kafka Handler**  
+  Coordinates Kafka producer and consumer setup within the service.
+
+- **📩 Kafka Consumer**  
+  Subscribes to topics and listens for inter-service messages. Integrates incoming data into the service's workflow.
+
+- **📨 Kafka Producer**  
+  Publishes events/messages to Kafka topics for other microservices to consume.
+
+---
+
+## 🚗 Microservices Breakdown
+
+---
+
+### 1. UserManager Server
+**Purpose:** Manage all user-related operations
+
+**Responsibilities:**
+- Handle user registration and login
+- Manage user profiles (name, email, phone)
+- Generate JWT tokens and hash passwords (bcrypt/Argon2)
+- Publish events to Kafka/RabbitMQ (e.g., user signup)
+- Expose HTTP endpoints:
+  - `/register`
+  - `/login`
+  - `/profile`
+
+---
+
+### 2. RideManager Server
+**Purpose:** Handle ride requests, assignments, and tracking
+
+**Responsibilities:**
+- Accept and manage ride requests
+- Assign drivers based on proximity and availability
+- Track ride status (`requested → accepted → in-progress → completed`)
+- Publish/consume Kafka events (e.g., ride started, completed)
+- Expose HTTP APIs:
+  - `/requestRide`
+  - `/rideStatus`
+  - `/cancelRide`
+
+---
+
+### 3. LocationManager Server
+**Purpose:** Handle real-time geolocation tracking
+
+**Responsibilities:**
+- Track and update driver/rider locations
+- Use Uber H3 for geospatial indexing
+- Find nearby drivers or riders
+- Publish/consume location updates via Kafka/RabbitMQ
+- Provide real-time location services
+
+---
+
+## 🔧 Common Subsystems Used in All Servers
+
+- 🗃️ **Dedicated SQL Database** (MySQL/PostgreSQL/SQLite)
+- 🌐 **HTTP Server** for exposing REST APIs
+- 📡 **Kafka Handler** for event messaging (Producer + Consumer)
+- 📬 **RabbitMQ Handler** (optional command queue)
+- 🔁 **gRPC Client/Server** (optional internal communication)
+- 🧵 **Thread Pool** for async task execution
+- 📋 **Singleton Logger** with colored output
+- 🔐 **.env / Env Variable Config Loader**
+
+---
+
 ### 🚀 Getting Started
 
 ## 🛠️ Build & Run (Manual)
