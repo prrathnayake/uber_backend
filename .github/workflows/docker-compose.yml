@@ -1,3 +1,10 @@
+name: Uber_Backend_Workflow
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -41,36 +48,33 @@ jobs:
       - name: ⏱️ Wait for services to initialize (10 min)
         run: sleep 600
 
-      # ✅ Test Case 1: Check containers are running
-      - name: ✅ Test: All containers are running
+      - name: ✅ Test - All containers are running
         run: |
           docker ps
           docker ps | grep UserManager
           docker ps | grep RideManager
           docker ps | grep LocationManager
 
-      # ✅ Test Case 2: MySQL port test
-      - name: ✅ Test: MySQL ports are open
+      - name: ✅ Test - MySQL ports are open
         run: |
           nc -zv localhost 3307
           nc -zv localhost 3308
           nc -zv localhost 3309
 
-      # ✅ Test Case 3: Application port test
-      - name: ✅ Test: Application ports are open
+      - name: ✅ Test - Application ports are open
         run: |
           nc -zv localhost 8081
           nc -zv localhost 8082
           nc -zv localhost 8083
 
-      # ✅ Test Case 4: UserManager health check (if implemented)
-      - name: ✅ Test: Call UserManager HTTP endpoint
-        run: curl --fail http://localhost:8081/user/health || echo "❌ Health check failed"
+      - name: ✅ Test - Call UserManager HTTP endpoint
+        run: |
+          curl --fail http://localhost:8081/user/health || echo "❌ Health check failed"
 
-      # ✅ Test Case 5: Kafka port test
-      - name: ✅ Test: Kafka port
+      - name: ✅ Test - Kafka port
         run: nc -zv localhost 9092
 
       - name: 📦 Stop and clean up
         if: always()
         run: docker-compose -f docker/docker-compose.yml down -v
+
