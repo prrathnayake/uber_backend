@@ -67,9 +67,28 @@ jobs:
           nc -zv localhost 8082
           nc -zv localhost 8083
 
-      - name: ✅ Test - Call UserManager HTTP endpoint
+      - name: ✅ Test - POST /signup HTTP endpoint
         run: |
-          curl --fail http://localhost:8081/login/health || echo "❌ Health check failed"
+          curl --fail -X POST http://localhost:8081/signup \
+            -H "Content-Type: application/json" \
+            -d '{
+              "firstName": "firstName",
+              "middleName": "middleName",
+              "lastName": "lastName",
+              "mobileNumber": "123456789",
+              "address": "123 Test St",
+              "email": "test@example.com",
+              "username": "testuser",
+              "password": "testpass",
+              "role": "rider"
+            }' || echo "❌ /signup request failed"
+
+      - name: ✅ Test - POST /login HTTP endpoint
+        run: |
+          curl --fail -X POST http://localhost:8081/login \
+            -H "Content-Type: application/json" \
+            -d '{"username": "testuser", "password": "testpass"}' \
+            || echo "❌ /login endpoint failed"
 
       - name: ✅ Test - Kafka port
         run: nc -zv localhost 9092
