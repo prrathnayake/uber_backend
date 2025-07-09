@@ -196,7 +196,54 @@ conan build . --output-folder=build --build=missing
 ./build/Release/bin/LocationManager
 ```
 
-## 🚀 Getting Started
+## 🐳 Docker Compose Setup
+
+This project supports a fully containerized microservices environment using **Docker Compose**.
+
+---
+
+### 📦 Services
+
+| Service                  | Description                               | Port        |
+|--------------------------|-------------------------------------------|-------------|
+| `mysql_userManagerDatabase` | MySQL for UserManager                    | `${USERMANAGER_PORT}` |
+| `mysql_rideManagerDatabase` | MySQL for RideManager                    | `${RIDEMANAGER_PORT}` |
+| `mysql_locationManagerDatabase` | MySQL for LocationManager            | `${LOCATIONMANAGER_PORT}` |
+| `kafka`                  | Kafka broker using Bitnami (KRaft mode)   | `9092`      |
+| `redis`                  | Redis instance (for caching/session)      | `6379`      |
+| `UserManager`            | UserManager C++ microservice              | `${USERMANAGER_APP_PORT}` |
+| `RideManager`            | RideManager C++ microservice              | `${RIDEMANAGER_APP_PORT}` |
+| `LocationManager`        | LocationManager C++ microservice          | `${LOCATIONMANAGER_APP_PORT}` |
+
+---
+
+### 🔧 Environment Configuration
+
+Set your values in a `.env` file at the project root:
+
+```env
+# MySQL shared config
+MYSQL_ROOT_PASSWORD=yourRootPassword
+MYSQL_USER=uber
+MYSQL_PASSWORD=securepass
+
+# Databases
+USERMANAGER_DB=userdb
+RIDEMANAGER_DB=ridedb
+LOCATIONMANAGER_DB=locationdb
+
+# DB Ports
+USERMANAGER_PORT=3307
+RIDEMANAGER_PORT=3308
+LOCATIONMANAGER_PORT=3309
+
+# Application Ports
+USERMANAGER_APP_PORT=8081
+RIDEMANAGER_APP_PORT=8082
+LOCATIONMANAGER_APP_PORT=8083
+```
+
+### 🔧 Run Docker Compose
 
 ```bash
 docker-compose up --build
