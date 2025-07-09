@@ -41,6 +41,6 @@ namespace UberBackend
     private:
         std::shared_ptr<UserDBManager> userDBManager_;
         std::shared_ptr<UserKafkaManager> userKafkaManager_;
-        std::shared_ptr<SharedKafkaHandler> sharedKafkaHandler_;
+        std::shared_ptr<SharedKafkaHandler> kafkaHandler_;
     };
 }

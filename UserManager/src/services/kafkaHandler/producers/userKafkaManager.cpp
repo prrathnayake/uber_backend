@@ -7,14 +7,10 @@
 using namespace UberBackend;
 using namespace utils;
 
-UserKafkaManager::UserKafkaManager()
-    : logger_(SingletonLogger::instance())
+UserKafkaManager::UserKafkaManager(std::shared_ptr<SharedKafkaProducer> kafkaProducer)
+    : logger_(SingletonLogger::instance()),
+      kafkaProducer_(kafkaProducer)
 {
-    kafkaProducer_ = std::make_shared<SharedKafkaProducer>(
-        "UserProducer",
-        "localhost",
-        "9092");
-    topic_ = "user";
 }
 
 UserKafkaManager::~UserKafkaManager() {}

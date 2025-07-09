@@ -13,7 +13,7 @@ namespace UberBackend
     class UserKafkaManager
     {
     public:
-        UserKafkaManager();
+        UserKafkaManager(std::shared_ptr<SharedKafkaProducer> kafkaProducer);
         ~UserKafkaManager();
 
         void produceNewUser(std::shared_ptr<User> user);
