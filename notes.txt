@@ -1,34 +1,109 @@
-Server :
-When the a microserver starts, it first initializes the database dedicated to this server. 
-After successful initialization, Then the microserver launches the HTTP server handler, which 
-manages all HTTP servers and clients associated with this service. 
-Finally, the server starts the Kafka handler, responsible for managing all Kafka consumers and producers 
-to facilitate data transfer between microservices.
+🧠 Microservice Architecture Overview – Uber Backend Clone (C++)
+🖥️ Server Lifecycle
+Each microservice follows a standard initialization sequence:
 
-Database:
-A dedicated database instance for the microserver that stores and retrieves persistent data 
-relevant to the service's domain. It is initialized when the server starts and provides a data layer for business logic operations.
+Database Initialization
+A dedicated database instance is initialized for the microservice. It stores and retrieves persistent data specific to the service's domain logic.
 
-HTTP Handler:
-A controller module that initializes and manages HTTP-related components. It routes incoming 
-HTTP requests to appropriate handlers and manages HTTP server and client lifecycles.
+HTTP Handler Launch
+The HTTP handler is started to manage both incoming and outgoing HTTP interactions. It sets up the HTTP server and client components and routes requests to appropriate handlers.
 
-HTTP Server:
-An interface that listens for incoming HTTP requests from external clients or other microservices. 
-It processes requests and returns responses based on the server’s API logic.
+Kafka Handler Activation
+Finally, the Kafka handler is initialized to manage Kafka producers and consumers. This enables asynchronous communication with other microservices.
 
-HTTP Client:
-A component responsible for making outgoing HTTP requests to other services. It is used for 
-inter-service communication when data or actions are required from other microservices over HTTP.
+🔍 Component Descriptions
+🗄️ Database
+Provides a persistent storage layer. Each service uses its own dedicated SQL database (MySQL, PostgreSQL, or SQLite). Initialized on server start.
 
-Kafka Handler:
-A central coordinator for Kafka operations within the microserver. It initializes and manages 
-both producers and consumers, ensuring reliable message flow between services.
-Kafka Consumer:
+🌐 HTTP Handler
+Controls all HTTP interactions by initializing servers/clients and routing requests to corresponding controllers.
 
-A component that subscribes to Kafka topics and listens for incoming messages from other 
-microservices. It processes received data and integrates it into the microservice's workflow.
+📥 HTTP Server
+Listens for incoming HTTP requests from clients or services. Processes these based on exposed RESTful API endpoints.
 
-Kafka Producer:
-A component responsible for publishing messages to Kafka topics. It sends events or data 
-updates to other microservices asynchronously for further processing.
+📤 HTTP Client
+Sends HTTP requests to other microservices to retrieve or share data (e.g., request user details from UserManager).
+
+🧭 Kafka Handler
+Manages Kafka producers and consumers to facilitate real-time, decoupled event communication between services.
+
+📩 Kafka Consumer
+Subscribes to Kafka topics and listens for messages from other services. Processes received events in the context of the service.
+
+📨 Kafka Producer
+Publishes messages to Kafka topics. Used to notify other services of internal events (e.g., new user registration, ride status updates).
+
+🚗 Microservices Breakdown
+1. UserManager Server
+Purpose: Manages all user-related operations
+
+Responsibilities:
+
+Handle user registration and authentication
+
+Store and retrieve user profiles (name, email, phone, etc.)
+
+Generate JWT tokens and perform password hashing (bcrypt/Argon2)
+
+Produce events to Kafka/RabbitMQ (e.g., on user signup)
+
+Expose HTTP endpoints like:
+
+/register
+
+/login
+
+/profile
+
+2. RideManager Server
+Purpose: Manages ride booking and lifecycle
+
+Responsibilities:
+
+Handle ride requests and assign drivers
+
+Track ride lifecycle: requested → accepted → in-progress → completed
+
+Communicate via Kafka with other services (e.g., user and location updates)
+
+Store ride-related data in a dedicated database
+
+Expose HTTP APIs such as:
+
+/requestRide
+
+/rideStatus
+
+/cancelRide
+
+3. LocationManager Server
+Purpose: Handles geolocation tracking and indexing
+
+Responsibilities:
+
+Track and update driver/rider locations (via Kafka or HTTP)
+
+Use Uber's H3 library for spatial indexing and proximity calculations
+
+Respond to location queries (e.g., find nearby drivers)
+
+Consume/publish Kafka or RabbitMQ messages for real-time updates
+
+Support live location-based services like maps or driver tracking
+
+🛠️ Shared Subsystems Across All Servers
+🗃️ SQL Database: Each microservice has its own schema and instance.
+
+🌐 HTTP Server: Exposes RESTful APIs to clients and other services.
+
+🔄 Kafka Handler: For event-based communication (Pub/Sub model).
+
+📬 RabbitMQ Handler (Optional): For command/request messaging.
+
+🎛️ gRPC (Optional): For efficient internal service-to-service communication.
+
+🧵 Thread Pool: Handles background jobs and async task execution.
+
+📋 Singleton Logger: Provides consistent, color-coded logging output.
+
+🔐 Environment Configuration Loader: Securely loads .env variables or environment configs.
