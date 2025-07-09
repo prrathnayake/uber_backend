@@ -14,7 +14,7 @@ namespace UberBackend
             static constexpr const char *USER_MANAGER_DATABASE_NAME = "userManagerDatabase";
             static constexpr unsigned int USER_MANAGER_DATABASE_PORT = 3036;
 
-            static constexpr unsigned int USER_HTTP_LOCATION_HANDLER_PORT = 8081;
+            static constexpr unsigned int USER_MANAGER_HTTP_USER_HANDLER_PORT = 8081;
 
             static constexpr const char *LOCATION_MANAGER_HOST = "localhost";
             static constexpr const char *LOCATION_MANAGER_USERNAME = "pasan";
@@ -24,13 +24,13 @@ namespace UberBackend
 
             static constexpr unsigned int LOCATION_MANAGER_HTTP_LOCATION_HANDLER_PORT = 8082;
 
-            tatic constexpr const char *RIDE_MANAGER_HOST = "localhost";
+            static constexpr const char *RIDE_MANAGER_HOST = "localhost";
             static constexpr const char *RIDE_MANAGER_USERNAME = "pasan";
             static constexpr const char *RIDE_MANAGER_PASSWORD = "pasan";
             static constexpr const char *RIDE_MANAGER_DATABASE_NAME = "rideManagerDatabase";
             static constexpr unsigned int RIDE_MANAGER_DATABASE_PORT = 3038;
 
-            static constexpr unsigned int RIDE_MANAGER_HTTP_LOCATION_HANDLER_PORT = 8083;
+            static constexpr unsigned int RIDE_MANAGER_HTTP_RIDE_HANDLER_PORT = 8083;
 
             static constexpr const char *REDIS_Host = "pasan";
             static constexpr unsigned int REDIS_PORT = 6379;

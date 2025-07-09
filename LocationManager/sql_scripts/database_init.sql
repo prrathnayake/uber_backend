@@ -30,14 +30,14 @@ CREATE TABLE IF NOT EXISTS vehicles (
     model VARCHAR(50),
     plate_number VARCHAR(20) NOT NULL UNIQUE,
     color VARCHAR(30),
-    year INT CHECK (year >= 1900 AND year <= YEAR(CURRENT_DATE)),
+    year INT CHECK (year >= 1900), -- Removed dynamic check
     FOREIGN KEY (driver_id) REFERENCES drivers(id) ON DELETE CASCADE
 );
 
 -- Rides
 CREATE TABLE IF NOT EXISTS rides (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    rider_id INT NOT NULL,
     driver_id INT,
     pickup_location VARCHAR(255) NOT NULL,
     dropoff_location VARCHAR(255) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS rides (
     end_time DATETIME,
     status ENUM('requested', 'ongoing', 'completed', 'cancelled') DEFAULT 'requested',
     fare DECIMAL(10, 2),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (rider_id) REFERENCES riders(id) ON DELETE CASCADE,
     FOREIGN KEY (driver_id) REFERENCES drivers(id) ON DELETE SET NULL
 );
 
@@ -63,9 +63,9 @@ CREATE TABLE IF NOT EXISTS payments (
 -- Locations (saved places or live tracking)
 CREATE TABLE IF NOT EXISTS locations (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
+    rider_id INT,
     name VARCHAR(100), -- e.g., Home, Work
     latitude DECIMAL(9,6),
     longitude DECIMAL(9,6),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (rider_id) REFERENCES riders(id) ON DELETE CASCADE
 );

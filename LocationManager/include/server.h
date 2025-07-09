@@ -6,7 +6,7 @@
 #include <utils/index.h>
 #include <database/index.h>
 
-// #include "./services/httpHandler/httpHandler.h"
+#include "./services/httpHandler/httpHandler.h"
 #include "../../sharedResources/include/sharedServer.h"
 
 namespace UberBackend
