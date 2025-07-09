@@ -15,14 +15,23 @@ UserKafkaManager::UserKafkaManager(std::shared_ptr<SharedKafkaProducer> kafkaPro
 
 UserKafkaManager::~UserKafkaManager() {}
 
+void UserKafkaManager::sendEvent(const std::string &eventType, const nlohmann::json &data)
+{
+    nlohmann::json messageJson;
+    messageJson["event"] = eventType;
+    messageJson["data"] = data;
+
+    std::string message = messageJson.dump();
+    logger_.logMeta(SingletonLogger::DEBUG, "Kafka Message [" + eventType + "]: " + message, __FILE__, __LINE__, __func__);
+
+    kafkaProducer_->sendMessage(topic_, message);
+}
+
 void UserKafkaManager::produceNewUser(std::shared_ptr<User> user)
 {
     logger_.logMeta(SingletonLogger::INFO, "Inside: produceNewUser()", __FILE__, __LINE__, __func__);
 
-    // Create a structured JSON message from the User object
-    nlohmann::json messageJson;
-    messageJson["event"] = "user_created";
-    messageJson["data"] = {
+    nlohmann::json data = {
         {"first_name", user->getFirstName()},
         {"middle_name", user->getMiddleName()},
         {"last_name", user->getLastName()},
@@ -34,11 +43,33 @@ void UserKafkaManager::produceNewUser(std::shared_ptr<User> user)
         {"country_code", user->getCountryCode()},
         {"preferred_language", user->getPreferredLanguage()},
         {"currency", user->getCurrency()},
-        {"country", user->getCountry()}};
+        {"country", user->getCountry()}
+    };
 
-    std::string message = messageJson.dump(); // Convert to string
+    sendEvent("user_created", data);
+}
 
-    logger_.logMeta(SingletonLogger::DEBUG, "Kafka Message: " + message, __FILE__, __LINE__, __func__);
+void UserKafkaManager::produceUpdatedUser(std::shared_ptr<User> user)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside: produceUpdatedUser()", __FILE__, __LINE__, __func__);
 
-    kafkaProducer_->sendMessage(topic_, message);
+    nlohmann::json data = {
+        {"username", user->getUsername()},
+        {"email", user->getEmail()},
+        {"role", user->getRole()}
+        // Add more fields if needed
+    };
+
+    sendEvent("user_updated", data);
+}
+
+void UserKafkaManager::produceDeletedUser(const std::string &userId)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside: produceDeletedUser()", __FILE__, __LINE__, __func__);
+
+    nlohmann::json data = {
+        {"user_id", userId}
+    };
+
+    sendEvent("user_deleted", data);
 }
