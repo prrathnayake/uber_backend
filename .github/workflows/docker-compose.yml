@@ -44,7 +44,7 @@ jobs:
         run: docker compose -f docker/docker-compose.yml up --build -d
 
       - name: ⏳ Wait for Containers to Initialize
-        run: sleep 20
+        run: sleep 600
 
       - name: 📋 List Running Containers
         run: docker ps
