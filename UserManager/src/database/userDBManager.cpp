@@ -62,7 +62,6 @@ void UserDBManager::addUserToDB(std::shared_ptr<User> user)
     }
 }
 
-
 nlohmann::json UserDBManager::getUserByID(int userID)
 {
     logger_.logMeta(SingletonLogger::INFO, "Inside : getUserByID()", __FILE__, __LINE__, __func__);
@@ -91,4 +90,61 @@ nlohmann::json UserDBManager::getUserByUsername(const std::string &username)
     }
 
     return nlohmann::json(); // empty
+}
+
+nlohmann::json UserDBManager::getAllUsers()
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : getAllUsers()", __FILE__, __LINE__, __func__);
+
+    std::string query = "SELECT * FROM users;";
+    auto rows = database_->fetchRows(query);
+    return nlohmann::json(rows);
+}
+
+bool UserDBManager::updateUserById(int id, const nlohmann::json &data)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : updateUserById()", __FILE__, __LINE__, __func__);
+
+    std::string updates;
+    for (auto it = data.begin(); it != data.end(); ++it)
+    {
+        if (!updates.empty())
+            updates += ", ";
+        updates += it.key() + " = '" + database_->escapeString(it.value()) + "'";
+    }
+
+    std::string query = "UPDATE users SET " + updates + " WHERE id = " + std::to_string(id) + ";";
+    return database_->executeUpdate(query);
+}
+
+bool UserDBManager::updateUserPassword(int id, const std::string &newPasswordHash)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : updateUserPassword()", __FILE__, __LINE__, __func__);
+
+    std::string query = "UPDATE users SET password_hash = '" + database_->escapeString(newPasswordHash) +
+                        "' WHERE id = " + std::to_string(id) + ";";
+    return database_->executeUpdate(query);
+}
+
+bool UserDBManager::updateUserFields(int id, const nlohmann::json &fields)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : updateUserFields()", __FILE__, __LINE__, __func__);
+    return updateUserById(id, fields);
+}
+
+bool UserDBManager::deleteUserById(int id)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : deleteUserById()", __FILE__, __LINE__, __func__);
+
+    std::string query = "DELETE FROM users WHERE id = " + std::to_string(id) + ";";
+    return database_->executeDelete(query);
+}
+
+nlohmann::json UserDBManager::searchUsersByUsername(const std::string &username)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : searchUsersByUsername()", __FILE__, __LINE__, __func__);
+
+    std::string query = "SELECT * FROM users WHERE username LIKE '%" + database_->escapeString(username) + "%';";
+    auto rows = database_->fetchRows(query);
+    return nlohmann::json(rows);
 }

@@ -115,4 +115,128 @@ void HttpUserServer::createServerMethods()
         logger_.logMeta(SingletonLogger::ERROR, "Signup data missing fields", __FILE__, __LINE__, __func__);
         res.set_content("Signup unsuccessful - missing fields", "text/plain");
     } });
+
+    // GET /user/:id
+    server_->Get(R"(/user/(\d+))", [this](const httplib::Request &req, httplib::Response &res)
+                 {
+        std::string userId = req.matches[1];
+        logger_.logMeta(SingletonLogger::INFO, "GET /user/" + userId, __FILE__, __LINE__, __func__);
+
+        auto userJson = routHandler_->handleGetUserById(userId);
+        if (!userJson.empty()) {
+            res.set_content(userJson.dump(), "application/json");
+        } else {
+            res.status = 404;
+            res.set_content(R"({"error": "User not found"})", "application/json");
+        } });
+
+    // PUT /user/:id
+    server_->Put(R"(/user/(\d+))", [this](const httplib::Request &req, httplib::Response &res)
+                 {
+        std::string userId = req.matches[1];
+        logger_.logMeta(SingletonLogger::INFO, "PUT /user/" + userId, __FILE__, __LINE__, __func__);
+
+        auto jsonData = Json::parse(req.body);
+        bool success = routHandler_->handleUpdateUser(userId, jsonData);
+        if (success) {
+            res.set_content(R"({"message": "User updated successfully"})", "application/json");
+        } else {
+            res.status = 400;
+            res.set_content(R"({"error": "Failed to update user"})", "application/json");
+        } });
+
+    // DELETE /user/:id
+    server_->Delete(R"(/user/(\d+))", [this](const httplib::Request &req, httplib::Response &res)
+                    {
+        std::string userId = req.matches[1];
+        logger_.logMeta(SingletonLogger::INFO, "DELETE /user/" + userId, __FILE__, __LINE__, __func__);
+
+        bool deleted = routHandler_->handleDeleteUser(userId);
+        if (deleted) {
+            res.set_content(R"({"message": "User deleted successfully"})", "application/json");
+        } else {
+            res.status = 404;
+            res.set_content(R"({"error": "User not found"})", "application/json");
+        } });
+
+    // GET /users
+    server_->Get("/users", [this](const httplib::Request &req, httplib::Response &res)
+                 {
+        logger_.logMeta(SingletonLogger::INFO, "GET /users", __FILE__, __LINE__, __func__);
+
+        auto users = routHandler_->handleGetAllUsers();
+        res.set_content(users.dump(), "application/json"); });
+
+    // PATCH /user/:id/password
+    server_->Patch(R"(/user/(\d+)/password)", [this](const httplib::Request &req, httplib::Response &res)
+                   {
+    std::string userId = req.matches[1];
+    auto jsonData = Json::parse(req.body);
+
+    if (jsonData.contains("oldPassword") && jsonData.contains("newPassword")) {
+        std::string oldPassword = jsonData["oldPassword"];
+        std::string newPassword = jsonData["newPassword"];
+
+        bool updated = routHandler_->handlePasswordUpdate(userId, oldPassword, newPassword);
+        if (updated) {
+            res.set_content(R"({"message": "Password updated"})", "application/json");
+        } else {
+            res.status = 400;
+            res.set_content(R"({"error": "Incorrect old password"})", "application/json");
+        }
+    } else {
+        res.status = 400;
+        res.set_content(R"({"error": "Missing password fields"})", "application/json");
+    } });
+
+    // PATCH /user/:id/profile
+    server_->Patch(R"(/user/(\d+)/profile)", [this](const httplib::Request &req, httplib::Response &res)
+                   {
+    std::string userId = req.matches[1];
+    auto jsonData = Json::parse(req.body);
+
+    bool updated = routHandler_->handlePartialProfileUpdate(userId, jsonData);
+    if (updated) {
+        res.set_content(R"({"message": "Profile updated"})", "application/json");
+    } else {
+        res.status = 400;
+        res.set_content(R"({"error": "Failed to update profile"})", "application/json");
+    } });
+
+    // GET /user/search?username=abc
+    server_->Get("/user/search", [this](const httplib::Request &req, httplib::Response &res)
+                 {
+    if (req.has_param("username")) {
+        std::string username = req.get_param_value("username");
+        auto result = routHandler_->searchUsersByUsername(username);
+        res.set_content(result.dump(), "application/json");
+    } else {
+        res.status = 400;
+        res.set_content(R"({"error": "Missing search parameter"})", "application/json");
+    } });
+
+    // GET /user/me (JWT required)
+    server_->Get("/user/me", [this](const httplib::Request &req, httplib::Response &res)
+                 {
+    if (req.has_header("Authorization")) {
+        std::string token = req.get_header_value("Authorization");
+        std::string userId;
+
+        if (jwt_.verifyToken(token, userId)) {
+            auto userJson = routHandler_->handleGetUserById(userId);
+            res.set_content(userJson.dump(), "application/json");
+        } else {
+            res.status = 401;
+            res.set_content(R"({"error": "Invalid token"})", "application/json");
+        }
+    } else {
+        res.status = 400;
+        res.set_content(R"({"error": "Missing Authorization header"})", "application/json");
+    } });
+
+    // POST /user/logout
+    server_->Post("/user/logout", [this](const httplib::Request &req, httplib::Response &res)
+                  {
+    // If session-based, invalidate session; if JWT-based, just return success
+    res.set_content(R"({"message": "Logged out"})", "application/json"); });
 }
