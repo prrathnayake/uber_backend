@@ -1,74 +1,92 @@
-# 🚗 Uber Backend Clone (C++ Microservices) - Under  Development
+# 🚗 Uber Backend Clone (C++ Microservices) – Under Development
 
-A **modular C++ backend system** inspired by Uber’s architecture. This clone simulates microservices for handling user, ride, and location data. It integrates logging, database management, multithreading, and secure service configuration.
+A **modular C++ backend system** inspired by Uber’s architecture. This project simulates a microservices environment to manage users, rides, and locations, using secure, scalable, and modern design patterns.
 
 ---
 
 ## 📦 Features
 
-- 🧩 **Microservice architecture**:
-  - `UserManager`, `RideManager`, and `LocationManager` are independent services.
-- 💾 **Database support** for MySQL, PostgreSQL, and SQLite (per-service).
-- 🧵 **Thread pool** for background execution of tasks.
-- 🪵 **Singleton-based logger** for consistent, colored logging.
-- 🧱 **Shared utilities** via [`cpp_base`](https://github.com/prrathnayake/cpp-base).
-- 🛡️ **Secure configuration** via environment variables and `.env` file.
-- 🐳 **Docker-ready** with separate entrypoints for each microservice.
+- 🧩 **Microservice Architecture**
+  - Independent services: `UserManager`, `RideManager`, and `LocationManager`
+- 💾 **Multi-DB Support**: MySQL, PostgreSQL, SQLite (per service)
+- 🧵 **Thread Pool**: Asynchronous background task execution
+- 🪵 **Color-Coded Logger**: Singleton-based centralized logging
+- 🔐 **JWT Authentication**: Secure login/session using JSON Web Tokens
+- 📬 **Message Brokers**:
+  - Kafka: For inter-service events (`user_created`, etc.)
+  - RabbitMQ: For async job/event delegation
+- 📦 **Shared Libraries** via [`cpp_base`](https://github.com/prrathnayake/cpp-base)
+- ⚙️ **Secure Configuration**: Via `.env` file + environment variables
+- 🐳 **Dockerized**: Each microservice has its own Dockerfile & entrypoint
+- 🔁 **CI/CD Ready**: GitHub Actions build and push Docker images
 
 ---
 
 ## 🏗️ Tech Stack
 
-- **C++17 / C++20**
-- **MySQL Connector/C++**, PostgreSQL, SQLite
-- **gRPC** + Protobuf
-- **CMake**, **Conan**
-- **Docker**, **GitHub Actions**
+- **Language**: C++17 / C++20
+- **Databases**: MySQL, PostgreSQL, SQLite
+- **Message Brokers**: Apache Kafka, RabbitMQ
+- **Networking**: gRPC + Protobuf
+- **Build**: CMake + Conan
+- **Containerization**: Docker + docker-compose
+- **CI/CD**: GitHub Actions
 
 ---
 
-## 🗂️ Project Structure
+## 📂 Project Structure
 
 ```plaintext
 uber-backend/
-├── UserManager/                     # User service
-│   ├── include/
-│   │   ├── database/
-│   │   ├── models/
-│   │   ├── services/
-│   │   └── server.h
-│   ├── src/
-│   │   ├── database/
-│   │   ├── models/
-│   │   ├── services/
-│   │   ├── main.cpp
-│   │   └── server.cpp
-│   └── sql_scripts/
+├── UserManager/                     # Handles users + JWT auth
+│   ├── include/                     # Headers
+│   ├── src/                         # Source
+│   └── sql_scripts/                # SQL init files
 │
-├── RideManager/                     # Ride service
-├── LocationManager/                 # Location service
+├── RideManager/                     # Handles ride matching and booking
+├── LocationManager/                 # Geolocation services (H3-based)
 │
 ├── sharedUtils/                     # Logger, thread pool, config loader
-├── sharedResources/                 # Shared components (e.g., gRPC setup)
-├── proto/                           # gRPC protobuf definitions
-├── docker/                          # Dockerfiles for each service
+├── sharedResources/                 # Shared gRPC, Kafka, RabbitMQ, DB
+├── proto/                           # gRPC proto definitions
+├── docker/                          # Dockerfiles per service
 │
-├── entrypointUserManager.sh         # Entrypoint for UserManager
-├── entrypointRideManager.sh         # Entrypoint for RideManager
-├── entrypointLocationManager.sh     # Entrypoint for LocationManager
+├── entrypointUserManager.sh         # Entrypoint: UserManager
+├── entrypointRideManager.sh         # Entrypoint: RideManager
+├── entrypointLocationManager.sh     # Entrypoint: LocationManager
 │
-├── .env                             # Environment config
+├── .env                             # Environment variables
+├── docker-compose.yml               # Multi-service orchestration
 ├── CMakeLists.txt
 ├── conanfile.py
 └── README.md
 ```
 
-## 🚀 Getting Started
+### 🚀 Getting Started
+
+## 🛠️ Build & Run (Manual)
+
+> 🛑 **Important:** Kafka and RabbitMQ must be running before you start the service binaries.
+
+You can start Kafka and RabbitMQ using Docker (recommended) or your local installation.
+
+### ✅ Start Kafka and RabbitMQ with Docker
+
+```bash
+docker-compose -f docker/docker-compose.message-stack.yml up -d
+```
 
 1. **Install dependencies** via Conan:
 
 ```bash
 conan build . --output-folder=build --build=missing
+```
+
+2. **Run individual services:**
+```bash
+./build/Release/bin/UserManager
+./build/Release/bin/RideManager
+./build/Release/bin/LocationManager
 ```
 
 ## 🚀 Getting Started
