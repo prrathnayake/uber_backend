@@ -32,6 +32,9 @@ namespace UberBackend
         virtual void createHttpServers() = 0;
         virtual void startHttpServers();
         virtual void stopHttpServers();
+        virtual void startConsumers() = 0;
+        virtual void stopConsumers();
+
         virtual std::shared_ptr<SharedDatabase> getDatabase();
 
     protected:
@@ -40,6 +43,7 @@ namespace UberBackend
         std::shared_ptr<ThreadPool> thread_pool_;
         std::unique_ptr<SharedHttpHandler> httpServerHandler_;
         std::unique_ptr<SharedRouteHandler> sharedRouteHandler_;
+        std::unique_ptr<SharedKafkaHandler> sharedKafkaHandler_;
 
         const std::string serverName_;
         const std::string host_;

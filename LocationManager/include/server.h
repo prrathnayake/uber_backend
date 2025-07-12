@@ -22,6 +22,7 @@ namespace UberBackend
                unsigned int port);
 
         void createHttpServers() override;
+        void startConsumers() override;
 
     private:
     };

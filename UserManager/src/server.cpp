@@ -22,3 +22,7 @@ void Server::createHttpServers()
     httpServerHandler_ = std::make_unique<HttpHandler>(database_);
     httpServerHandler_->createServers();
 }
+
+void Server::startConsumers()
+{
+}
