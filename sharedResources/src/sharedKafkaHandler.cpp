@@ -27,6 +27,7 @@ std::shared_ptr<SharedKafkaProducer> SharedKafkaHandler::createProducer(const st
     if (name.empty())
     {
         logger_.logMeta(SingletonLogger::ERROR, "createProducer failed due to not having proper name.", __FILE__, __LINE__, __func__);
+        return nullptr;
     }
     else
     {
@@ -35,6 +36,7 @@ std::shared_ptr<SharedKafkaProducer> SharedKafkaHandler::createProducer(const st
         logger_.logMeta(SingletonLogger::INFO, "Kafka producer created: " + name, __FILE__, __LINE__, __func__);
         return producer;
     }
+    return nullptr;
 }
 
 std::shared_ptr<SharedKafkaConsumer> SharedKafkaHandler::createConsumer(const std::string &name, const std::string &topic)
@@ -42,6 +44,7 @@ std::shared_ptr<SharedKafkaConsumer> SharedKafkaHandler::createConsumer(const st
     if (name.empty() || topic.empty())
     {
         logger_.logMeta(SingletonLogger::ERROR, "createConsumer failed due to not having proper name or topic.", __FILE__, __LINE__, __func__);
+        return nullptr;
     }
     else
     {
@@ -50,6 +53,7 @@ std::shared_ptr<SharedKafkaConsumer> SharedKafkaHandler::createConsumer(const st
         logger_.logMeta(SingletonLogger::INFO, "Kafka consumer created: " + name, __FILE__, __LINE__, __func__);
         return consumer;
     }
+    return nullptr;
 }
 
 const std::vector<std::shared_ptr<SharedKafkaProducer>> &SharedKafkaHandler::getProducers() const
@@ -70,4 +74,29 @@ void SharedKafkaHandler::runConsumers()
             thread_pool_->enqueue([consumer]()
                                   { consumer->listening(); }));
     }
+}
+
+void SharedKafkaHandler::stopConsumers()
+{
+    logger_.logMeta(SingletonLogger::INFO, "Stopping all Kafka consumers...", __FILE__, __LINE__, __func__);
+
+    for (auto &consumer : kafkaConsumers_)
+    {
+        if (consumer)
+        {
+            consumer->stop(); // Ensure this method is defined in SharedKafkaConsumer
+            logger_.logMeta(SingletonLogger::DEBUG, "Stop signal sent to consumer", __FILE__, __LINE__, __func__);
+        }
+    }
+
+    // Optionally wait for futures to complete if your threads run async
+    for (auto &future : kafkaServerFutures_)
+    {
+        if (future.valid())
+        {
+            future.get(); // Block until consumer thread finishes
+        }
+    }
+
+    logger_.logMeta(SingletonLogger::INFO, "All Kafka consumers stopped", __FILE__, __LINE__, __func__);
 }

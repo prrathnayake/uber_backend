@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <atomic>
 #include <httplib.h>
 
 #include <utils/index.h>
@@ -20,11 +21,15 @@ namespace UberBackend
                             const std::string &port);
         ~SharedKafkaConsumer();
 
-        void listening();
+        std::string listening();
+        void stop();
+        void setCallback(std::function<void(const std::string &)> callback);
 
     protected:
         SingletonLogger &logger_;
         kafka::KafkaConsumer *kafkaConsumer_;
+        std::atomic<bool> shouldRun_;
+        std::function<void(const std::string &)> callback_;
 
         std::string consumerName_;
         std::string topic_;

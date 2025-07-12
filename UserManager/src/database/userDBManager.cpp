@@ -36,6 +36,19 @@ void UserDBManager::addUserToDB(std::shared_ptr<User> user)
         logger_.logMeta(SingletonLogger::DEBUG, "Preparing to add rider...", __FILE__, __LINE__, __func__);
     }
 
+    logger_.logMeta(SingletonLogger::DEBUG, "First Name: " + user->getFirstName(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Middle Name: " + user->getMiddleName(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Last Name: " + user->getLastName(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Phone: " + user->getMobileNumber(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Email: " + user->getEmail(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Username: " + user->getUsername(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Password: " + user->getPasswordHash(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Country Code: " + user->getCountryCode(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Role: " + user->getRole(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Language: " + user->getPreferredLanguage(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Currency: " + user->getCurrency(), __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::DEBUG, "Country: " + user->getCountry(), __FILE__, __LINE__, __func__);
+
     std::string query = "INSERT INTO users (first_name, middle_name, last_name, phone_number, email, username, password_hash, "
                         "country_code, role, preferred_language, currency, country) VALUES ('" +
                         database_->escapeString(user->getFirstName()) + "', '" +

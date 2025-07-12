@@ -29,6 +29,7 @@ namespace UberBackend
         const std::vector<std::shared_ptr<SharedKafkaConsumer>>& getConsumers() const;
 
         void runConsumers();
+        void stopConsumers(); 
 
     protected:
         SingletonLogger &logger_;

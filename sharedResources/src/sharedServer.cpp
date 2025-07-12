@@ -65,6 +65,7 @@ void SharedServer::startHttpServers()
     logger_.logMeta(SingletonLogger::INFO, "HTTP server handler started", __FILE__, __LINE__, __func__);
 }
 
+
 void SharedServer::stopHttpServers()
 {
     httpServerHandler_->stopServers();
@@ -75,4 +76,9 @@ std::shared_ptr<SharedDatabase> SharedServer::getDatabase()
 {
     logger_.logMeta(SingletonLogger::DEBUG, "SharedDatabase SharedServer::getDatabase() called", __FILE__, __LINE__, __func__);
     return database_;
+}
+
+void SharedServer::stopConsumers()
+{
+    sharedKafkaHandler_->stopConsumers();
 }

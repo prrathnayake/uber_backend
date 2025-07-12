@@ -26,12 +26,15 @@ void startApplication()
     server_->createHttpServers();
     logger_.logMeta(SingletonLogger::DEBUG, "run : server_->startHttpServers();", __FILE__, __LINE__, __func__);
     server_->startHttpServers();
+    logger_.logMeta(SingletonLogger::DEBUG, "run : server_->startConsumers();", __FILE__, __LINE__, __func__);
+    server_->startConsumers();
 }
 
 void stopApplication()
 {
     logger_.logMeta(SingletonLogger::INFO, "Stoping Uber Location Manager Server......", __FILE__, __LINE__, __func__);
     server_->stopHttpServers();
+    server_->stopConsumers();
 }
 
 int main()
