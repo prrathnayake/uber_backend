@@ -33,7 +33,7 @@ void Server::startConsumers()
     }
 
     std::string name = "newUser";
-    std::string topic = "user-events";
+    std::string topic = "user_created";
 
     std::shared_ptr<SharedKafkaConsumer> kafkaConsumer = sharedKafkaHandler_->createConsumer(name, topic);
     kafkaConsumer->setCallback([](const std::string &msg)

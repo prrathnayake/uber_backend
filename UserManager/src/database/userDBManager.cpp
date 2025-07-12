@@ -15,7 +15,7 @@ UserDBManager::UserDBManager(std::shared_ptr<UberBackend::SharedDatabase> db)
 
 UserDBManager::~UserDBManager() {}
 
-void UserDBManager::addUserToDB(std::shared_ptr<User> user)
+bool UserDBManager::addUserToDB(std::shared_ptr<User> user)
 {
     logger_.logMeta(SingletonLogger::INFO, "Inside : addUserToDB(User)", __FILE__, __LINE__, __func__);
 
@@ -24,7 +24,7 @@ void UserDBManager::addUserToDB(std::shared_ptr<User> user)
     if (role != "driver" && role != "rider")
     {
         logger_.logMeta(SingletonLogger::ERROR, "Invalid role: " + role, __FILE__, __LINE__, __func__);
-        return;
+        return false;
     }
 
     if (role == "driver")
@@ -67,11 +67,12 @@ void UserDBManager::addUserToDB(std::shared_ptr<User> user)
     if (database_->executeInsert(query))
     {
         logger_.logMeta(SingletonLogger::INFO, "User successfully added to database.", __FILE__, __LINE__, __func__);
-        // You can trigger Kafka producer here if needed
+        return true;
     }
     else
     {
         logger_.logMeta(SingletonLogger::ERROR, "Adding new user to database failed.", __FILE__, __LINE__, __func__);
+        return false;
     }
 }
 

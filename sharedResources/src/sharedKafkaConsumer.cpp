@@ -20,7 +20,7 @@ SharedKafkaConsumer::SharedKafkaConsumer(const std::string &consumerName,
     }
     else
     {
-        logger_.logMeta(SingletonLogger::ERROR, host_ + ":" + port_, __FILE__, __LINE__, __func__);
+        logger_.logMeta(SingletonLogger::INFO, host_ + ":" + port_, __FILE__, __LINE__, __func__);
 
         kafkaConsumer_ = new KafkaConsumer(host_ + ":" + port_, topic_);
         logger_.logMeta(SingletonLogger::INFO, "SharedKafkaConsumer initialized", __FILE__, __LINE__, __func__);
