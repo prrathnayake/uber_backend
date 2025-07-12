@@ -26,8 +26,11 @@ RouteHandler::~RouteHandler() {}
 void RouteHandler::handleNewUser(std::shared_ptr<User> user)
 {
     logger_.logMeta(SingletonLogger::DEBUG, "handleNewUser().", __FILE__, __LINE__, __func__);
-    userDBManager_->addUserToDB(user);
-    userKafkaManager_->produceNewUser(user);
+    bool success = userDBManager_->addUserToDB(user);
+    if (success)
+    {
+        userKafkaManager_->produceNewUser(user);
+    }
 }
 
 nlohmann::json RouteHandler::handleUserLogin(std::string &username)

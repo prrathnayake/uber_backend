@@ -24,7 +24,7 @@ void UserKafkaManager::sendEvent(const std::string &eventType, const nlohmann::j
     std::string message = messageJson.dump();
     logger_.logMeta(SingletonLogger::DEBUG, "Kafka Message [" + eventType + "]: " + message, __FILE__, __LINE__, __func__);
 
-    kafkaProducer_->sendMessage(topic_, message);
+    kafkaProducer_->sendMessage(eventType, message);
 }
 
 void UserKafkaManager::produceNewUser(std::shared_ptr<User> user)
