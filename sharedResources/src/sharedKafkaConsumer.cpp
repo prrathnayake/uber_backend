@@ -44,12 +44,14 @@ void SharedKafkaConsumer::setCallback(std::function<void(const std::string &)> c
 
 std::string SharedKafkaConsumer::listening()
 {
+    // Check if the consumer is initialized
     while (shouldRun_)
     {
-        std::string message = kafkaConsumer_->consumeMessage(); // returns payload
+        // returns payload
+        std::string message = kafkaConsumer_->consumeMessage();
         if (!message.empty() && callback_)
         {
-            callback_(message); // ✅ call per-message handler
+            callback_(message);
         }
     }
 

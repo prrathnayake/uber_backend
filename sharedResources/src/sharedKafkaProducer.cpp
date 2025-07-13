@@ -33,6 +33,7 @@ SharedKafkaProducer::~SharedKafkaProducer()
     logger_.logMeta(SingletonLogger::INFO, "SharedKafkaProducer destroyed", __FILE__, __LINE__, __func__);
 }
 
+// sending a message to a Kafka topic
 void SharedKafkaProducer::sendMessage(const std::string &topic, const std::string &message)
 {
     if (topic.empty() || message.empty())

@@ -29,19 +29,23 @@ void SharedHttpHandler::initiateServers()
 {
     logger_.logMeta(SingletonLogger::INFO, "Initiating HTTP servers...", __FILE__, __LINE__, __func__);
 
+    // initiate each server in a new thread on the thread pool
     for (auto &server : servers_)
     {
+    logger_.logMeta(SingletonLogger::INFO, "Assign to the thread pool...", __FILE__, __LINE__, __func__);
+
         httpServerFuture_ = thread_pool_->enqueue([s = server.get()]()
                                                   { s->start(); });
     }
 
-    logger_.logMeta(SingletonLogger::INFO, "All HTTP servers have been initiated.", __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::INFO, "All HTTP servers have been initiated on a seperate threads.", __FILE__, __LINE__, __func__);
 }
 
 void SharedHttpHandler::stopServers()
 {
     logger_.logMeta(SingletonLogger::INFO, "Stopping HTTP servers...", __FILE__, __LINE__, __func__);
 
+    // stopping each server in the thread pool
     for (auto &server : servers_)
     {
         server->stop();
@@ -60,6 +64,7 @@ bool SharedHttpHandler::servers_isEmpty()
     return servers_.empty();
 }
 
+// each server instence need to overide this method to epliment each ther server methods
 void SharedHttpHandler::createServers()
 {
     logger_.logMeta(SingletonLogger::WARNING, "createServers() not implemented in base SharedHttpHandler.", __FILE__, __LINE__, __func__);
