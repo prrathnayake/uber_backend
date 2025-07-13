@@ -32,6 +32,10 @@ void stopApplication()
 {
     logger_.logMeta(SingletonLogger::INFO, "Stoping Uber User Manager Server......", __FILE__, __LINE__, __func__);
     server_->stopHttpServers();
+
+    std::string path = "../../UserManager/sql_scripts/database_del.sql";
+    logger_.logMeta(SingletonLogger::DEBUG, "distroying server instance for user Manager", __FILE__, __LINE__, __func__);
+    server_->distoryDatabase(path);
 }
 
 int main()
