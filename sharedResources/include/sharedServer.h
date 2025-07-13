@@ -28,7 +28,9 @@ namespace UberBackend
                      unsigned int port = 3306);
         ~SharedServer();
 
+        void runScript(const std::string &path);
         virtual void initiateDatabase(const std::string &path);
+        virtual void distoryDatabase(const std::string &path);
         virtual void createHttpServers() = 0;
         virtual void startHttpServers();
         virtual void stopHttpServers();

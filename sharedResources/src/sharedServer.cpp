@@ -39,17 +39,28 @@ SharedServer::SharedServer(
 
 SharedServer::~SharedServer() = default;
 
-void SharedServer::initiateDatabase(const std::string &path)
+void SharedServer::runScript(const std::string &path)
 {
     if (!path.empty())
     {
         database_->runSQLScript(path);
-        logger_.logMeta(SingletonLogger::INFO, "Database initialized from script", __FILE__, __LINE__, __func__);
     }
     else
     {
         logger_.logMeta(SingletonLogger::INFO, "No database initialization script path provided.", __FILE__, __LINE__, __func__);
     }
+}
+
+void SharedServer::initiateDatabase(const std::string &path)
+{
+    runScript(path);
+    logger_.logMeta(SingletonLogger::INFO, "Database initialized from script", __FILE__, __LINE__, __func__);
+}
+
+void SharedServer::distoryDatabase(const std::string &path)
+{
+    runScript(path);
+    logger_.logMeta(SingletonLogger::INFO, "Database distory from script", __FILE__, __LINE__, __func__);
 }
 
 void SharedServer::startHttpServers()
@@ -64,7 +75,6 @@ void SharedServer::startHttpServers()
 
     logger_.logMeta(SingletonLogger::INFO, "HTTP server handler started", __FILE__, __LINE__, __func__);
 }
-
 
 void SharedServer::stopHttpServers()
 {
