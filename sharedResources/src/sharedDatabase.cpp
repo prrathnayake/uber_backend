@@ -78,6 +78,9 @@ bool SharedDatabase::executeSelect(const std::string &query)
     return database_->executeSelect(query);
 }
 
+// This function is used to escape strings for SQL queries
+// It is used to prevent SQL injection attacks
+// It is used to escape special characters in strings
 std::string SharedDatabase::escapeString(const std::string &input)
 {
     logger_.logMeta(SingletonLogger::INFO, "Escaping: " + input, __FILE__, __LINE__, __func__);

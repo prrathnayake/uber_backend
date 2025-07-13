@@ -25,29 +25,35 @@ SharedServer::SharedServer(
         return;
     }
 
+    // create a database instance
     logger_.logMeta(SingletonLogger::INFO, "Creating database instance...", __FILE__, __LINE__, __func__);
     database_ = std::make_shared<SharedDatabase>(host_, user_, password_, databaseName_, port_);
 
-    logger_.logMeta(SingletonLogger::INFO, "Creating thread pool with 64 threads...", __FILE__, __LINE__, __func__);
+    // Thread pool for handling concurrent tasks in the server
+    logger_.logMeta(SingletonLogger::INFO, "Creating thread pool", __FILE__, __LINE__, __func__);
     thread_pool_ = std::shared_ptr<ThreadPool>(&ThreadPool::instance(64), [](ThreadPool *) {});
 
+    // Create Router Handler for handling HTTP routes
     logger_.logMeta(SingletonLogger::INFO, "Creating route handler.", __FILE__, __LINE__, __func__);
     sharedRouteHandler_ = std::make_unique<SharedRouteHandler>(database_);
 
-    logger_.logMeta(SingletonLogger::INFO, "SharedServer initialized", __FILE__, __LINE__, __func__);
+    logger_.logMeta(SingletonLogger::INFO, "SharedServer initialized Successfully", __FILE__, __LINE__, __func__);
 }
 
 SharedServer::~SharedServer() = default;
 
+// This function runs a SQL scriptse
 void SharedServer::runScript(const std::string &path)
 {
     if (!path.empty())
     {
+        logger_.logMeta(SingletonLogger::DEBUG, "run : database_->runSQLScript(path);", __FILE__, __LINE__, __func__);
+
         database_->runSQLScript(path);
     }
     else
     {
-        logger_.logMeta(SingletonLogger::INFO, "No database initialization script path provided.", __FILE__, __LINE__, __func__);
+        logger_.logMeta(SingletonLogger::ERROR, "No database initialization script path provided.", __FILE__, __LINE__, __func__);
     }
 }
 
@@ -65,15 +71,17 @@ void SharedServer::distoryDatabase(const std::string &path)
 
 void SharedServer::startHttpServers()
 {
+    // check if the HTTP server handler is created and has servers to start
     if (!httpServerHandler_ || httpServerHandler_->servers_isEmpty())
     {
         logger_.logMeta(SingletonLogger::ERROR, "No HTTP servers to initialize. Please create them first.", __FILE__, __LINE__, __func__);
         return;
     }
-
-    httpServerHandler_->initiateServers();
-
-    logger_.logMeta(SingletonLogger::INFO, "HTTP server handler started", __FILE__, __LINE__, __func__);
+    else
+    {
+        httpServerHandler_->initiateServers();
+        logger_.logMeta(SingletonLogger::INFO, "HTTP server handler started", __FILE__, __LINE__, __func__);
+    }
 }
 
 void SharedServer::stopHttpServers()

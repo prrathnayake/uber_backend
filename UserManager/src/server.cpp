@@ -19,7 +19,9 @@ void Server::createHttpServers()
 {
     logger_.logMeta(SingletonLogger::INFO, "create HTTP Server Handler.", __FILE__, __LINE__, __func__);
 
+    // implementing the HttpHandler to handle HTTP requests and passing the database details
     httpServerHandler_ = std::make_unique<HttpHandler>(database_);
+    logger_.logMeta(SingletonLogger::DEBUG, "run : httpServerHandler_->createServers();", __FILE__, __LINE__, __func__);
     httpServerHandler_->createServers();
 }
 
