@@ -124,6 +124,22 @@ RUN git clone https://github.com/madler/pigz.git /tmp/pigz \
     && cp pigz unpigz /usr/local/bin \
     && rm -rf /tmp/pigz
 
+# --- Build hiredis ---
+RUN git clone https://github.com/redis/hiredis.git /tmp/hiredis && \
+    cd /tmp/hiredis && \
+    make -j$(nproc) && make install && \
+    ldconfig && \
+    rm -rf /tmp/hiredis
+
+# --- Build redis-plus-plus ---
+RUN git clone https://github.com/sewenew/redis-plus-plus.git /tmp/redis-plus-plus && \
+    cd /tmp/redis-plus-plus && mkdir -p build && cd build && \
+    cmake .. -DREDIS_PLUS_PLUS_BUILD_SHARED=ON -DREDIS_PLUS_PLUS_BUILD_STATIC=ON -DCMAKE_BUILD_TYPE=Release && \
+    make -j$(nproc) && make install && \
+    ldconfig && \
+    rm -rf /tmp/redis-plus-plus
+
+
 # --- Setup environment variables ---
 ENV CMAKE_PREFIX_PATH=/usr/local:/usr/local/lib/cmake:/usr/local/lib64/cmake:/usr/local/lib/cmake/RdKafka
 ENV CMAKE_MODULE_PATH=/usr/local/lib/cmake

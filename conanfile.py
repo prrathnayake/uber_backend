@@ -14,8 +14,8 @@ class BaseRecipe(ConanFile):
         self.requires("abseil/20230125.3")
         self.requires("jwt-cpp/0.7.0")
         self.requires("nlohmann_json/3.11.2")
-
-
+        self.requires("hiredis/1.0.0")
+    
         self.requires("app_utils/1.0@pasan/testing")
         self.requires("app_kafka/1.0@pasan/testing")
         self.requires("app_rabbitmq/1.0@pasan/testing")
