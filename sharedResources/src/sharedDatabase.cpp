@@ -21,7 +21,7 @@ SharedDatabase::SharedDatabase(const std::string &host,
     {
         logger_.logMeta(SingletonLogger::ERROR, "Database initialization failed... Please check database inputs.", __FILE__, __LINE__, __func__);
     }
-    database_ = std::make_shared<database::MySQLDatabase>(host_, user_, password_, port_);
+    database_ = std::make_shared<database::MySQLDatabase>(host_, user_, password_, port_, databaseName_);
     logger_.logMeta(SingletonLogger::INFO, "Initializing MySQL Database.", __FILE__, __LINE__, __func__);
 }
 
@@ -56,26 +56,58 @@ void SharedDatabase::runSQLScript(const std::string &relativePath)
 
 bool SharedDatabase::executeInsert(const std::string &query)
 {
-    logger_.logMeta(SingletonLogger::INFO, "Database executeInsert() successfully.", __FILE__, __LINE__, __func__);
-    return database_->executeInsert(query);
+    if (database_->executeInsert(query))
+    {
+        logger_.logMeta(SingletonLogger::INFO, "Database executeInsert() successfully.", __FILE__, __LINE__, __func__);
+        return true;
+    }
+    else
+    {
+        logger_.logMeta(SingletonLogger::INFO, "Database executeInsert() unsuccessfull.", __FILE__, __LINE__, __func__);
+        return false;
+    }
 }
 
 bool SharedDatabase::executeUpdate(const std::string &query)
 {
-    logger_.logMeta(SingletonLogger::INFO, "Database executeUpdate() successfully.", __FILE__, __LINE__, __func__);
-    return database_->executeUpdate(query);
+    if (database_->executeUpdate(query))
+    {
+        logger_.logMeta(SingletonLogger::INFO, "Database executeUpdate() successfully.", __FILE__, __LINE__, __func__);
+        return true;
+    }
+    else
+    {
+        logger_.logMeta(SingletonLogger::ERROR, "Database executeUpdate() unsuccessful.", __FILE__, __LINE__, __func__);
+        return false;
+    }
 }
 
 bool SharedDatabase::executeDelete(const std::string &query)
 {
-    logger_.logMeta(SingletonLogger::INFO, "Database executeDelete() successfully.", __FILE__, __LINE__, __func__);
-    return database_->executeDelete(query);
+    if (database_->executeDelete(query))
+    {
+        logger_.logMeta(SingletonLogger::INFO, "Database executeDelete() successfully.", __FILE__, __LINE__, __func__);
+        return true;
+    }
+    else
+    {
+        logger_.logMeta(SingletonLogger::ERROR, "Database executeDelete() unsuccessful.", __FILE__, __LINE__, __func__);
+        return false;
+    }
 }
 
 bool SharedDatabase::executeSelect(const std::string &query)
 {
-    logger_.logMeta(SingletonLogger::INFO, "Database executeSelect() successfully.", __FILE__, __LINE__, __func__);
-    return database_->executeSelect(query);
+    if (database_->executeSelect(query))
+    {
+        logger_.logMeta(SingletonLogger::INFO, "Database executeSelect() successfully.", __FILE__, __LINE__, __func__);
+        return true;
+    }
+    else
+    {
+        logger_.logMeta(SingletonLogger::ERROR, "Database executeSelect() unsuccessful.", __FILE__, __LINE__, __func__);
+        return false;
+    }
 }
 
 // This function is used to escape strings for SQL queries
@@ -96,6 +128,14 @@ std::string SharedDatabase::escapeString(const std::string &input)
 
 std::vector<std::map<std::string, std::string>> SharedDatabase::fetchRows(const std::string &query)
 {
-    logger_.logMeta(SingletonLogger::INFO, "Database fetchRows() successfully.", __FILE__, __LINE__, __func__);
-    return database_->fetchRows(query);
+    auto rows = database_->fetchRows(query);
+    if (!rows.empty())
+    {
+        logger_.logMeta(SingletonLogger::INFO, "Database fetchRows() returned rows successfully.", __FILE__, __LINE__, __func__);
+    }
+    else
+    {
+        logger_.logMeta(SingletonLogger::WARNING, "Database fetchRows() returned no rows.", __FILE__, __LINE__, __func__);
+    }
+    return rows;
 }
