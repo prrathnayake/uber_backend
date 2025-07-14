@@ -29,6 +29,8 @@ set(DEPENDENCIES
     absl::hash
     jwt-cpp::jwt-cpp
     nlohmann_json::nlohmann_json
+    hiredis::hiredis
+    redis++::redis++
 )
 
 # --- Packages to Find ---
@@ -44,6 +46,8 @@ set(PACKAGES
     absl
     jwt-cpp
     nlohmann_json
+    hiredis
+    redis++
 )
 
 # --- Find Packages ---
