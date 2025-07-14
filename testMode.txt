@@ -1,0 +1,12 @@
+docker compose --env-file .env -f docker/docker-compose.kafka_cluster.yml up -d
+
+docker compose docker/docker-compose.redis_server.yml up
+
+docker ps
+CONTAINER ID   IMAGE                  COMMAND                  CREATED         STATUS         PORTS                                         NAMES
+3fa1680ef096   bitnami/kafka:latest   "/opt/bitnami/script…"   7 seconds ago   Up 6 seconds   0.0.0.0:9092->9092/tcp, [::]:9092->9092/tcp   kafka
+f5076ecaa031   redis:latest           "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   0.0.0.0:6379->6379/tcp, [::]:6379->6379/tcp   redis-server
+
+docker exec -it 3fa1680ef096 kafka-topics.sh --create   --bootstrap-server localhost:9092   --replication-factor 1   --partitions 1   --topic user_created
+WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
+Created topic user_created.

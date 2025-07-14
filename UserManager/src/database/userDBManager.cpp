@@ -64,6 +64,8 @@ bool UserDBManager::addUserToDB(std::shared_ptr<User> user)
                         database_->escapeString(user->getCurrency()) + "', '" +
                         database_->escapeString(user->getCountry()) + "');";
 
+    logger_.logMeta(SingletonLogger::INFO, "Querry : " + query, __FILE__, __LINE__, __func__);
+
     if (database_->executeInsert(query))
     {
         logger_.logMeta(SingletonLogger::INFO, "User successfully added to database.", __FILE__, __LINE__, __func__);

@@ -18,6 +18,7 @@ SharedKafkaProducer::SharedKafkaProducer(const std::string &producerName,
     }
     else
     {
+        logger_.logMeta(SingletonLogger::INFO, "Kafka Producer --> " + host_ + ":" + port_, __FILE__, __LINE__, __func__);
         kafkaProducer_ = new KafkaProducer(host_ + ":" + port_);
         logger_.logMeta(SingletonLogger::INFO, "SharedKafkaProducer initialized", __FILE__, __LINE__, __func__);
     }

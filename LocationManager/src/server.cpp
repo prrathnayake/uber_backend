@@ -1,5 +1,7 @@
 #include <iostream>
 #include "../include/server.h"
+#include "../../sharedUtils/include/config.h"
+
 
 using namespace utils;
 using namespace UberBackend;
@@ -24,12 +26,12 @@ void Server::createHttpServers()
 
 void Server::startConsumers()
 {
-    std::string host = "localhost";
-    std::string port = "9092";
+    std::string host = UberUtils::CONFIG::KAFKA_HOST;
+    int port = UberUtils::CONFIG::KAFKA_PORT;
 
     if (!sharedKafkaHandler_)
     {
-        sharedKafkaHandler_ = std::make_unique<SharedKafkaHandler>(host, port);
+        sharedKafkaHandler_ = std::make_unique<SharedKafkaHandler>(host, std::to_string(port));
     }
 
     std::string name = "newUser";
