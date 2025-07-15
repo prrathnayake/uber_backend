@@ -28,7 +28,9 @@ namespace UberBackend
     protected:
         SingletonLogger &logger_;
         kafka::KafkaConsumer *kafkaConsumer_;
-        std::atomic<bool> shouldRun_;
+        std::atomic<bool> shouldRun_{true}; // thread-safe flag
+        std::mutex mutex_;
+        std::condition_variable cv_;
         std::function<void(const std::string &)> callback_;
 
         std::string consumerName_;

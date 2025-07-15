@@ -50,7 +50,7 @@ void SharedDatabase::runSQLScript(const std::string &relativePath)
     }
     else
     {
-        logger_.logMeta(SingletonLogger::INFO, "Database initialized successfully.", __FILE__, __LINE__, __func__);
+        logger_.logMeta(SingletonLogger::INFO, "SQL script executed successfully.", __FILE__, __LINE__, __func__);
     }
 }
 

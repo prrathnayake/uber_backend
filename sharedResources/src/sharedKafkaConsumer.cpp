@@ -44,22 +44,26 @@ void SharedKafkaConsumer::setCallback(std::function<void(const std::string &)> c
 
 std::string SharedKafkaConsumer::listening()
 {
-    // Check if the consumer is initialized
-    while (shouldRun_)
-    {
-        // returns payload
+    while (shouldRun_) {
+    logger_.logMeta(SingletonLogger::INFO, "Status : " + shouldRun_, __FILE__, __LINE__, __func__);
+
         std::string message = kafkaConsumer_->consumeMessage();
-        if (!message.empty() && callback_)
-        {
+        if (!message.empty() && callback_) {
             callback_(message);
         }
+
+        std::unique_lock<std::mutex> lock(mutex_);
+        cv_.wait_for(lock, std::chrono::milliseconds(100), [this] { return !shouldRun_; });
+        return message;
     }
 
     logger_.logMeta(SingletonLogger::INFO, "Kafka consumer stopped: " + consumerName_, __FILE__, __LINE__, __func__);
-    return "stopped";
+    return"";
 }
 
 void SharedKafkaConsumer::stop()
 {
     shouldRun_ = false;
+    kafkaConsumer_->stopConsumeMessages();
+    cv_.notify_all();
 }
