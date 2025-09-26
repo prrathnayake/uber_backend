@@ -3,6 +3,8 @@
 #include <memory>
 #include <string>
 
+#include <nlohmann/json.hpp>
+
 #include <utils/index.h>
 #include "../../../models/user.h"
 #include "../../../../../sharedResources/include/sharedKafkaProducer.h"

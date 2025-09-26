@@ -6,28 +6,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(RideManager)
 
-# Dependencies this target needs
-set(DEPENDENCIES
-    app_utils::app_utils
-    app_kafka::app_kafka
-    app_h3::app_h3
-    h3::h3
-    app_database::app_database
-)
-
-# Packages we need to find
-set(PACKAGES
-    app_utils
-    app_kafka
-    app_h3
-    h3
-    app_database
-)
-
-# Find required packages
-foreach(pack ${PACKAGES})
-    find_package(${pack} CONFIG REQUIRED)
-endforeach()
+find_package(nlohmann_json CONFIG REQUIRED)
 
 # Collect source files
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
@@ -36,4 +15,7 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
 add_executable(${PROJECT_NAME} ${SRC_FILES})
 
 # Link dependencies
-target_link_libraries(${PROJECT_NAME} PRIVATE ${DEPENDENCIES})
+target_link_libraries(${PROJECT_NAME}
+    PRIVATE
+        uber_shared_resources
+)
