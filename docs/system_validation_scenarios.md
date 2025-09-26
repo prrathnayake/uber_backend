@@ -113,3 +113,78 @@ Purpose: Confirm the system emits expected telemetry and background work after e
 4. **UserManager `/health` endpoint** exposes DB latency, Kafka configuration, and environment metadata to verify readiness after workloads.【F:UserManager/src/services/routeHandler/routeHandler.cpp†L150-L198】
 
 Use these verifications alongside service logs to confirm every asynchronous requirement and cross-service integration functions as designed.
+
+## Scenario 8 – Ride Request Cross-Service Debug Trace
+
+Purpose: Observe every subsystem a single happy-path ride request touches, together with the console breadcrumbs emitted by each component.
+
+| Step | Trigger | Expected payload & storage | Console / observability checkpoints |
+| --- | --- | --- | --- |
+| 1 | Start `RideManager` binary | Loads HTTP handlers and background consumers. | Look for `INFO` log `Initialising RideManager HTTP handlers` from `RideServer::createHttpServers` followed by Kafka/Rabbit bootstrap messages when consumers attach.【F:RideManager/src/server.cpp†L23-L70】 |
+| 2 | `POST /drivers/{{DRIVER_ID}}/status` → `{ "available": true }` | Driver marked available in memory, Kafka `driver.status_changed` event published. | Console prints remain silent on success; monitor Kafka topic to confirm envelope `{"type":"driver.status_changed",...}` as described earlier.【F:RideManager/src/services/routeHandler/rideRouteHandler.cpp†L298-L332】 |
+| 3 | `POST /rides/request` with rider and coordinates | Ride persisted, driver reserved, Kafka `ride.requested`/`ride.assigned` and Rabbit driver notification emitted. | `RideManager` Kafka consumer echoes `[Kafka][RideManager] lifecycle event -> {...}` for each event, while Rabbit consumer prints `[RabbitMQ][RideManager] driver task -> {...}` when notifications loop back through the shared handler.【F:RideManager/src/services/routeHandler/rideRouteHandler.cpp†L173-L217】【F:RideManager/src/server.cpp†L41-L64】 |
+| 4 | Same request triggers gRPC bridge | Pickup lat/lng forwarded to Location stream. | Enable debug logs for the gRPC client; the helper prints `Streaming location update to LocationManager host:port` before delivering payloads.【F:sharedResources/src/sharedgRPCClienth.cpp†L6-L26】 |
+| 5 | Location service receives driver location | Fetches nearby drivers via HTTP + optional Kafka backplane. | Monitor LocationManager consumer console lines such as `[Kafka Msg] {...}` when new location events arrive and `[RabbitMQ] received payload: {...}` for queue callbacks.【F:LocationManager/src/server.cpp†L45-L71】 |
+| 6 | `POST /rides/{{RIDE_ID}}/status` transitions (`accepted`, `in_progress`, `completed`) | Updates in-memory state, database rows, publishes `ride.status_changed` each time; completion frees driver. | Ride consumer prints each Kafka message; RabbitMQ consumer shows final dispatch message; DB persistence occurs via `persistRide` mutation.【F:RideManager/src/services/routeHandler/rideRouteHandler.cpp†L218-L276】【F:RideManager/src/server.cpp†L41-L64】 |
+| 7 | `GET /rides/{{RIDE_ID}}` & `/drivers/{{DRIVER_ID}}/profile` | Confirms final record and cross-service profile fetch from `UserManager`. | When profile lookup hits `/user/{{DRIVER_ID}}`, inspect `UserManager` console `[Kafka][UserManager] profile update event -> ...` if upstream modifications occurred; HTTP responses confirm federation.【F:RideManager/src/services/routeHandler/rideRouteHandler.cpp†L331-L386】【F:UserManager/src/server.cpp†L27-L67】 |
+
+Console checkpoints make it easy to pinpoint regressions: missing Kafka echo hints at producer/consumer misconfiguration, absent Rabbit message indicates queue or binding issues, and a missing profile response highlights inter-service HTTP or authentication problems.
+
+---
+
+## Scenario 9 – User Lifecycle Messaging Deep Dive
+
+Purpose: Validate that every user mutation publishes the correct Kafka envelope and optional RabbitMQ task while confirming HTTP contracts.
+
+| Step | Trigger | Expected messaging side effects | Console checkpoints |
+| --- | --- | --- | --- |
+| 1 | `POST /signup` | Kafka `user_created` event containing profile JSON and subject ID.【F:UserManager/src/services/kafkaHandler/producers/userKafkaManager.cpp†L18-L48】 | Start `UserManager` Kafka consumer to see `[Kafka][UserManager] profile update event -> {...}` for each emission.【F:UserManager/src/server.cpp†L27-L53】 |
+| 2 | `PUT /user/{{USER_ID}}` | Kafka `user_updated` event with delta; repeated fields overwritten.【F:UserManager/src/services/kafkaHandler/producers/userKafkaManager.cpp†L50-L64】 | Consumer prints updated payload; compare with DB row if needed.【F:UserManager/src/server.cpp†L27-L53】 |
+| 3 | `DELETE /user/{{USER_ID}}` | Kafka `user_deleted` event, payload contains identifier only.【F:UserManager/src/services/kafkaHandler/producers/userKafkaManager.cpp†L66-L74】 | Console log includes deletion envelope, verifying tombstone semantics.【F:UserManager/src/server.cpp†L27-L53】 |
+| 4 | Optional: enable RabbitMQ dispatcher | When extended tasks are configured, queue callback prints `[RabbitMQ][UserManager] task received -> {...}` for asynchronous onboarding/back-office duties.【F:UserManager/src/server.cpp†L55-L67】 |
+
+Use this scenario after running onboarding flows to make sure user topics contain an auditable history for downstream analytics and compliance processes.
+
+---
+
+## Scenario 10 – Location Manager Cache & Redis Harness
+
+Purpose: Exercise the in-memory Redis abstraction that LocationManager uses for proximity lookups so you can validate caching independently of HTTP flows.
+
+| Step | Action | Expected outcome |
+| --- | --- | --- |
+| 1 | Launch `LocationManager` binary | Constructor logs `Initialised in-memory Redis handler`, signalling the stub cache is active.【F:LocationManager/src/services/redisHandler/redisHandler.cpp†L6-L15】 |
+| 2 | Compile a lightweight diagnostic (example below) linking against `LocationManager` to call `RedisHandler::setValue`/`getValue`. | `getValue` returns stored payload, confirming key-value semantics; `addDriverToSet`/`getDriversFromSet` maintain H3-indexed availability lists.【F:LocationManager/src/services/redisHandler/redisHandler.cpp†L18-L43】 |
+| 3 | Integrate with HTTP flow (optional) by inserting cache hooks in `/location/update` to persist the latest driver H3 index before recompiling. | On startup, observe the same constructor log; after HTTP updates, `getDriversFromSet` should be populated when invoked from your added instrumentation. |
+
+Minimal diagnostic snippet:
+
+```cpp
+#include "LocationManager/include/services/redisHandler/redisHandler.h"
+
+int main() {
+    UberBackend::RedisHandler cache;
+    cache.setValue("driver:501", "{\"lat\":37.7749,\"lng\":-122.4194}");
+    auto payload = cache.getValue("driver:501");
+    cache.addDriverToSet("8c2a9472b", "501");
+    auto drivers = cache.getDriversFromSet("8c2a9472b");
+}
+```
+
+Running the binary under `gdb` or adding temporary `std::cout` statements lets you step through cache mutations exactly like a production Redis round-trip while maintaining deterministic local testing.
+
+---
+
+## Scenario 11 – Failure Injection & Error Surface Mapping
+
+Purpose: Deliberately disable dependencies to confirm graceful degradation and pinpoint failure domains.
+
+| Step | Failure mode | Expected API result | Diagnostics |
+| --- | --- | --- | --- |
+| 1 | Stop Kafka broker before calling `POST /rides/request`. | HTTP still returns `201` because producer short-circuits when `createProducer` fails; rides persist but no lifecycle events publish.【F:RideManager/src/services/kafkaHandler/rideKafkaManager.cpp†L15-L33】 | Startup log warns `Failed to create Kafka producer for ride events`; consumer echoes cease, signalling event loss.【F:RideManager/src/services/kafkaHandler/rideKafkaManager.cpp†L20-L27】【F:RideManager/src/server.cpp†L41-L64】 |
+| 2 | Stop RabbitMQ before ride request. | Ride creation succeeds but driver notifications are skipped when producer missing.【F:RideManager/src/services/rabbitHandler/rideRabbitManager.cpp†L16-L46】 | Warning `Failed to create RabbitMQ producer for driver notifications` appears; queue consumers emit nothing.【F:RideManager/src/services/rabbitHandler/rideRabbitManager.cpp†L24-L31】【F:RideManager/src/server.cpp†L55-L71】 |
+| 3 | Kill UserManager before fetching driver profile. | `GET /drivers/{{DRIVER_ID}}/profile` returns `404` with `Driver not found` because cross-service call fails and response is discarded.【F:RideManager/src/services/routeHandler/rideRouteHandler.cpp†L318-L386】 | Ride server logs absence indirectly; use `curl` against UserManager health check to confirm outage.【F:UserManager/src/services/routeHandler/routeHandler.cpp†L150-L198】 |
+| 4 | Provide malformed ride status payload. | API replies `400` `Missing status field` when `status` absent; existing record untouched.【F:RideManager/src/services/routeHandler/rideRouteHandler.cpp†L218-L236】 | HTTP error body pinpoints validation guard, aiding regression debugging. |
+
+Capturing these degradation behaviors upfront ensures the playbook doubles as an incident response reference when dependencies fail in production.
+
