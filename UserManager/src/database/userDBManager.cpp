@@ -82,7 +82,7 @@ nlohmann::json UserDBManager::getUserByID(int userID)
 {
     logger_.logMeta(SingletonLogger::INFO, "Inside : getUserByID()", __FILE__, __LINE__, __func__);
 
-    std::string query = "SELECT * FROM users WHERE id = " + std::to_string(userID) + ";";
+    std::string query = "SELECT * FROM users WHERE user_id = " + std::to_string(userID) + ";";
     auto rows = database_->fetchRows(query);
 
     if (!rows.empty())
@@ -126,10 +126,21 @@ bool UserDBManager::updateUserById(int id, const nlohmann::json &data)
     {
         if (!updates.empty())
             updates += ", ";
-        updates += it.key() + " = '" + database_->escapeString(it.value()) + "'";
+
+        std::string value;
+        if (it.value().is_string())
+        {
+            value = it.value().get<std::string>();
+        }
+        else
+        {
+            value = it.value().dump();
+        }
+
+        updates += it.key() + " = '" + database_->escapeString(value) + "'";
     }
 
-    std::string query = "UPDATE users SET " + updates + " WHERE id = " + std::to_string(id) + ";";
+    std::string query = "UPDATE users SET " + updates + " WHERE user_id = " + std::to_string(id) + ";";
     return database_->executeUpdate(query);
 }
 
@@ -138,7 +149,7 @@ bool UserDBManager::updateUserPassword(int id, const std::string &newPasswordHas
     logger_.logMeta(SingletonLogger::INFO, "Inside : updateUserPassword()", __FILE__, __LINE__, __func__);
 
     std::string query = "UPDATE users SET password_hash = '" + database_->escapeString(newPasswordHash) +
-                        "' WHERE id = " + std::to_string(id) + ";";
+                        "' WHERE user_id = " + std::to_string(id) + ";";
     return database_->executeUpdate(query);
 }
 
@@ -152,7 +163,7 @@ bool UserDBManager::deleteUserById(int id)
 {
     logger_.logMeta(SingletonLogger::INFO, "Inside : deleteUserById()", __FILE__, __LINE__, __func__);
 
-    std::string query = "DELETE FROM users WHERE id = " + std::to_string(id) + ";";
+    std::string query = "DELETE FROM users WHERE user_id = " + std::to_string(id) + ";";
     return database_->executeDelete(query);
 }
 
@@ -163,4 +174,75 @@ nlohmann::json UserDBManager::searchUsersByUsername(const std::string &username)
     std::string query = "SELECT * FROM users WHERE username LIKE '%" + database_->escapeString(username) + "%';";
     auto rows = database_->fetchRows(query);
     return nlohmann::json(rows);
+}
+
+nlohmann::json UserDBManager::getUsersPaginated(int offset, int limit)
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : getUsersPaginated()", __FILE__, __LINE__, __func__);
+
+    if (offset < 0)
+    {
+        offset = 0;
+    }
+
+    if (limit <= 0)
+    {
+        limit = 25;
+    }
+
+    std::string query = "SELECT * FROM users ORDER BY user_id LIMIT " + std::to_string(limit) +
+                        " OFFSET " + std::to_string(offset) + ";";
+    auto rows = database_->fetchRows(query);
+    return nlohmann::json(rows);
+}
+
+nlohmann::json UserDBManager::getUserStats()
+{
+    logger_.logMeta(SingletonLogger::INFO, "Inside : getUserStats()", __FILE__, __LINE__, __func__);
+
+    std::string query = "SELECT role, COUNT(*) AS count FROM users GROUP BY role;";
+    auto rows = database_->fetchRows(query);
+
+    nlohmann::json stats = nlohmann::json::object();
+    int total = 0;
+
+    for (const auto &row : rows)
+    {
+        auto roleIt = row.find("role");
+        auto countIt = row.find("count");
+        if (roleIt != row.end() && countIt != row.end())
+        {
+            try
+            {
+                int roleCount = std::stoi(countIt->second);
+                stats[roleIt->second] = roleCount;
+                total += roleCount;
+            }
+            catch (const std::exception &e)
+            {
+                logger_.logMeta(SingletonLogger::WARNING,
+                                "Failed to parse role count: " + std::string(e.what()),
+                                __FILE__, __LINE__, __func__);
+            }
+        }
+    }
+
+    stats["total"] = total;
+    return stats;
+}
+
+bool UserDBManager::usernameExists(const std::string &username)
+{
+    logger_.logMeta(SingletonLogger::DEBUG, "Checking if username exists: " + username, __FILE__, __LINE__, __func__);
+    std::string query = "SELECT user_id FROM users WHERE username = '" + database_->escapeString(username) + "' LIMIT 1;";
+    auto rows = database_->fetchRows(query);
+    return !rows.empty();
+}
+
+bool UserDBManager::emailExists(const std::string &email)
+{
+    logger_.logMeta(SingletonLogger::DEBUG, "Checking if email exists: " + email, __FILE__, __LINE__, __func__);
+    std::string query = "SELECT user_id FROM users WHERE email = '" + database_->escapeString(email) + "' LIMIT 1;";
+    auto rows = database_->fetchRows(query);
+    return !rows.empty();
 }
