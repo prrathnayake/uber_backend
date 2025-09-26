@@ -1,8 +1,12 @@
 #pragma once
 
-#include <string>
-#include <memory>
 #include <atomic>
+#include <condition_variable>
+#include <functional>
+#include <memory>
+#include <mutex>
+#include <string>
+
 #include <httplib.h>
 
 #include <utils/index.h>
@@ -28,7 +32,7 @@ namespace UberBackend
     protected:
         SingletonLogger &logger_;
         kafka::KafkaConsumer *kafkaConsumer_;
-        std::atomic<bool> shouldRun_{true}; // thread-safe flag
+        std::atomic<bool> shouldRun_{true};
         std::mutex mutex_;
         std::condition_variable cv_;
         std::function<void(const std::string &)> callback_;
