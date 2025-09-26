@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2200" height="1480" viewBox="0 0 2200 1480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style type="text/css"><![CDATA[
+      text { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; fill: #0f172a; }
+      .title { font-size: 52px; font-weight: 700; }
+      .subtitle { font-size: 28px; font-weight: 500; fill: #1d4ed8; }
+      .section { font-size: 34px; font-weight: 700; }
+      .body { font-size: 24px; font-weight: 500; line-height: 1.4; }
+      .note { font-size: 20px; fill: #475569; }
+    ]]></style>
+    <linearGradient id="ucBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#e0f2fe" />
+    </linearGradient>
+    <linearGradient id="coreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1d4ed8" />
+      <stop offset="100%" stop-color="#1e3a8a" />
+    </linearGradient>
+  </defs>
+
+  <rect width="2200" height="1480" rx="48" ry="48" fill="url(#ucBg)" stroke="#bfdbfe" stroke-width="4" />
+
+  <rect x="120" y="80" width="1960" height="160" rx="36" ry="36" fill="#1d4ed8" opacity="0.08" stroke="#1d4ed8" stroke-width="3" />
+  <text x="1100" y="155" class="title" text-anchor="middle">Uber Backend Clone – System Use Cases</text>
+  <text x="1100" y="215" class="subtitle" text-anchor="middle">Actors, goals, and core interactions for the mobility platform</text>
+
+  <!-- Core platform -->
+  <g transform="translate(920,460)">
+    <rect width="360" height="420" rx="36" ry="36" fill="url(#coreGradient)" stroke="#172554" stroke-width="4" />
+    <text x="180" y="70" font-size="40" font-weight="700" fill="#f8fafc" text-anchor="middle">Uber Backend Platform</text>
+    <text x="180" y="130" class="body" text-anchor="middle" fill="#dbeafe">• Microservice APIs</text>
+    <text x="180" y="170" class="body" text-anchor="middle" fill="#dbeafe">• Event-driven workflows</text>
+    <text x="180" y="210" class="body" text-anchor="middle" fill="#dbeafe">• Data &amp; Observability fabric</text>
+    <text x="180" y="250" class="body" text-anchor="middle" fill="#e0f2fe">Supports all rider, driver, and ops journeys</text>
+  </g>
+
+  <!-- Rider use cases -->
+  <g transform="translate(160,360)">
+    <rect width="420" height="520" rx="32" ry="32" fill="#ecfeff" stroke="#0f766e" stroke-width="4" />
+    <text x="210" y="70" class="section" text-anchor="middle" fill="#0f766e">Rider</text>
+    <text x="40" y="140" class="body">• Discover product tiers (X, XL, Delivery)</text>
+    <text x="40" y="190" class="body">• Request on-demand rides or scheduled pickups</text>
+    <text x="40" y="240" class="body">• Track driver ETA &amp; trip progress in real-time</text>
+    <text x="40" y="290" class="body">• Split fares, apply promo codes, manage payments</text>
+    <text x="40" y="340" class="body">• Rate trips, report safety or quality incidents</text>
+    <text x="40" y="390" class="body">• View trip history &amp; download invoices</text>
+    <text x="40" y="440" class="body">• Manage saved locations &amp; preferences</text>
+    <text x="40" y="490" class="note">Primary mobile client consuming Rider APIs</text>
+  </g>
+
+  <!-- Driver use cases -->
+  <g transform="translate(1620,360)">
+    <rect width="420" height="520" rx="32" ry="32" fill="#fef2f2" stroke="#dc2626" stroke-width="4" />
+    <text x="210" y="70" class="section" text-anchor="middle" fill="#b91c1c">Driver/ Courier</text>
+    <text x="40" y="140" class="body">• Onboard, verify identity &amp; vehicle docs</text>
+    <text x="40" y="190" class="body">• Toggle availability, accept/decline trips</text>
+    <text x="40" y="240" class="body">• Navigate optimal route &amp; pickup workflows</text>
+    <text x="40" y="290" class="body">• Upload proof-of-delivery, manage incentives</text>
+    <text x="40" y="340" class="body">• Receive surge or batching offers</text>
+    <text x="40" y="390" class="body">• Track earnings, payouts, tax documents</text>
+    <text x="40" y="440" class="body">• Handle safety emergencies (SOS)</text>
+    <text x="40" y="490" class="note">Primarily interacts via Driver Mobile &amp; gRPC streams</text>
+  </g>
+
+  <!-- Operations use cases -->
+  <g transform="translate(160,940)">
+    <rect width="420" height="360" rx="32" ry="32" fill="#ede9fe" stroke="#7c3aed" stroke-width="4" />
+    <text x="210" y="70" class="section" text-anchor="middle" fill="#5b21b6">Operations &amp; Support</text>
+    <text x="40" y="140" class="body">• Live incident triage &amp; chat escalation</text>
+    <text x="40" y="190" class="body">• Service health &amp; capacity monitoring</text>
+    <text x="40" y="240" class="body">• Fraud / abuse detection response</text>
+    <text x="40" y="290" class="body">• Campaign / promotion management</text>
+    <text x="40" y="340" class="note">Admin console + analytics warehouse</text>
+  </g>
+
+  <!-- External partners -->
+  <g transform="translate(1620,940)">
+    <rect width="420" height="360" rx="32" ry="32" fill="#fef3c7" stroke="#f59e0b" stroke-width="4" />
+    <text x="210" y="70" class="section" text-anchor="middle" fill="#b45309">External Partners</text>
+    <text x="40" y="140" class="body">• Maps, traffic, weather intelligence</text>
+    <text x="40" y="190" class="body">• Payment gateways &amp; loyalty providers</text>
+    <text x="40" y="240" class="body">• Regulatory / compliance data feeds</text>
+    <text x="40" y="290" class="body">• Mobility-as-a-service integrations</text>
+    <text x="40" y="340" class="note">Connected through Partner API contracts</text>
+  </g>
+
+  <!-- Payments & Finance use cases -->
+  <g transform="translate(720,1020)">
+    <rect width="760" height="280" rx="32" ry="32" fill="#cffafe" stroke="#0891b2" stroke-width="4" />
+    <text x="380" y="70" class="section" text-anchor="middle" fill="#0369a1">Finance &amp; Compliance</text>
+    <text x="40" y="140" class="body">• Fare settlement, wallet top-ups, refunds</text>
+    <text x="40" y="190" class="body">• Regulatory reporting &amp; tax invoices</text>
+    <text x="40" y="240" class="body">• Anti-money laundering (AML) checks &amp; holds</text>
+  </g>
+
+  <!-- Connectors -->
+  <line x1="580" y1="620" x2="920" y2="670" stroke="#0f766e" stroke-width="6" stroke-dasharray="18 12" />
+  <line x1="580" y1="820" x2="920" y2="760" stroke="#0f766e" stroke-width="6" stroke-dasharray="18 12" />
+
+  <line x1="1540" y1="620" x2="1280" y2="670" stroke="#dc2626" stroke-width="6" stroke-dasharray="18 12" />
+  <line x1="1540" y1="820" x2="1280" y2="760" stroke="#dc2626" stroke-width="6" stroke-dasharray="18 12" />
+
+  <line x1="580" y1="1120" x2="920" y2="920" stroke="#7c3aed" stroke-width="6" stroke-dasharray="18 12" />
+  <line x1="1280" y1="920" x2="1620" y2="1120" stroke="#f59e0b" stroke-width="6" stroke-dasharray="18 12" />
+  <line x1="1100" y1="900" x2="1100" y2="1020" stroke="#0891b2" stroke-width="6" stroke-dasharray="18 12" />
+
+  <!-- Legend -->
+  <g transform="translate(1720,240)">
+    <rect width="300" height="100" rx="24" ry="24" fill="#ffffff" stroke="#1e293b" stroke-width="3" />
+    <text x="150" y="52" class="body" text-anchor="middle">Dashed connectors show primary interactions</text>
+  </g>
+</svg>
