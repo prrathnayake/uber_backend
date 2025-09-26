@@ -1,10 +1,11 @@
 #pragma once
 
+#include <ctime>
 #include <optional>
 #include <string>
+#include <tuple>
 
 #include <utils/index.h>
-#include <jwt-cpp/traits/nlohmann-json/defaults.h>
 
 namespace UberBackend {
     class JWTUtils {
@@ -17,6 +18,11 @@ namespace UberBackend {
         std::string refreshToken(const std::string &token, int expirySeconds = 3600);
 
     private:
+        std::string buildSignature(const std::string &userId, const std::string &salt, std::time_t expiry) const;
+        std::optional<std::tuple<std::string, std::string, std::time_t, std::string>>
+        parseToken(const std::string &token) const;
+        std::string generateSalt() const;
+
         std::string secretKey_;
         utils::SingletonLogger &logger_;
     };

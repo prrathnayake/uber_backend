@@ -3,8 +3,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <h3/h3api.h>
-
 #include <utils/index.h>
 #include <h3/index.h>
 
