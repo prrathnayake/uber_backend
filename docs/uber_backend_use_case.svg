@@ -1,158 +1,224 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="1748" height="1240" viewBox="0 0 1748 1240" xmlns="http://www.w3.org/2000/svg">
+<svg width="2200" height="1480" viewBox="0 0 2200 1480" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <style type="text/css"><![CDATA[
-      text { font-family: 'Segoe UI', 'Arial', sans-serif; fill: #1f2933; }
-      .title { font-size: 42px; font-weight: 700; }
-      .subtitle { font-size: 26px; font-weight: 500; }
-      .tagline { font-size: 20px; fill: #364152; }
-      .section-title { font-size: 28px; font-weight: 600; }
-      .body { font-size: 20px; line-height: 1.3; }
-      .actor { font-size: 22px; font-weight: 600; }
-      .note { font-size: 18px; fill: #52606d; }
+      text { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; fill: #1f2933; }
+      .title { font-size: 52px; font-weight: 700; }
+      .subtitle { font-size: 28px; font-weight: 500; fill: #1e3a8a; }
+      .section-title { font-size: 30px; font-weight: 700; }
+      .body { font-size: 22px; font-weight: 500; line-height: 1.4; }
+      .note { font-size: 18px; fill: #475569; }
+      .metric { font-size: 18px; fill: #1e3a8a; font-weight: 600; }
+      .legend-label { font-size: 20px; fill: #1f2933; }
     ]]></style>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L10,3 L0,6 z" fill="#1e88e5" />
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eff6ff" />
+      <stop offset="100%" stop-color="#e0f2fe" />
+    </linearGradient>
+    <marker id="arrow-blue" markerWidth="12" markerHeight="12" refX="12" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,3.5 L0,7 z" fill="#2563eb" />
     </marker>
-    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="10" refY="3" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L10,3 L0,6 z" fill="#f97316" />
+    <marker id="arrow-orange" markerWidth="12" markerHeight="12" refX="12" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,3.5 L0,7 z" fill="#f97316" />
+    </marker>
+    <marker id="arrow-green" markerWidth="12" markerHeight="12" refX="12" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,3.5 L0,7 z" fill="#16a34a" />
+    </marker>
+    <marker id="arrow-purple" markerWidth="12" markerHeight="12" refX="12" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,3.5 L0,7 z" fill="#7c3aed" />
     </marker>
   </defs>
 
-  <rect width="1748" height="1240" fill="#f8fafc" rx="28" ry="28" />
+  <rect width="2200" height="1480" rx="48" ry="48" fill="url(#bgGradient)" stroke="#93c5fd" stroke-width="4" />
 
-  <!-- Title Band -->
-  <rect x="60" y="60" width="1628" height="180" fill="#dbeafe" stroke="#1d4ed8" stroke-width="3" rx="24" ry="24" />
-  <text x="874" y="130" class="title" text-anchor="middle">Uber Backend Clone – Service Use Case Overview</text>
-  <text x="874" y="180" class="subtitle" text-anchor="middle">Microservice flow for Users, Rides, and Locations (C++17/20)</text>
-  <text x="874" y="220" class="tagline" text-anchor="middle">Event-driven services with Kafka, RabbitMQ, and shared utilities</text>
+  <!-- Header -->
+  <rect x="120" y="80" width="1960" height="160" rx="32" ry="32" fill="#1d4ed8" opacity="0.08" stroke="#1d4ed8" stroke-width="3" />
+  <text x="1100" y="160" class="title" text-anchor="middle">Uber Backend Clone – End-to-End Architecture</text>
+  <text x="1100" y="215" class="subtitle" text-anchor="middle">C++17/20 Microservices • Async Messaging • Geo-spatial Intelligence • Observability</text>
 
-  <!-- Actor Strip -->
-  <rect x="60" y="270" width="260" height="640" fill="#e0f2f1" stroke="#0f766e" stroke-width="3" rx="20" ry="20" />
-  <text x="190" y="320" class="section-title" text-anchor="middle" fill="#0f766e">Actors</text>
+  <!-- Client zone -->
+  <rect x="120" y="280" width="320" height="820" rx="28" ry="28" fill="#ecfeff" stroke="#0f766e" stroke-width="3" />
+  <text x="280" y="340" class="section-title" text-anchor="middle" fill="#0f766e">Client Interfaces</text>
 
-  <g transform="translate(110,360)">
-    <circle cx="35" cy="35" r="28" fill="none" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="63" x2="35" y2="150" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="90" x2="5" y2="120" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="90" x2="65" y2="120" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="150" x2="10" y2="200" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="150" x2="60" y2="200" stroke="#0f766e" stroke-width="4" />
-    <text x="35" y="240" class="actor" text-anchor="middle">Rider App</text>
+  <g transform="translate(180,370)">
+    <rect width="200" height="150" rx="20" ry="20" fill="#f0fdf4" stroke="#16a34a" stroke-width="3" />
+    <text x="100" y="50" class="body" text-anchor="middle">Rider Mobile</text>
+    <text x="100" y="90" class="note" text-anchor="middle">Swift/Kotlin</text>
+    <text x="100" y="120" class="note" text-anchor="middle">REST + WebSockets</text>
   </g>
 
-  <g transform="translate(110,580)">
-    <circle cx="35" cy="35" r="28" fill="none" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="63" x2="35" y2="150" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="90" x2="5" y2="120" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="90" x2="65" y2="120" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="150" x2="10" y2="200" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="150" x2="60" y2="200" stroke="#0f766e" stroke-width="4" />
-    <text x="35" y="240" class="actor" text-anchor="middle">Driver App</text>
+  <g transform="translate(180,550)">
+    <rect width="200" height="150" rx="20" ry="20" fill="#fef2f2" stroke="#dc2626" stroke-width="3" />
+    <text x="100" y="50" class="body" text-anchor="middle">Driver Mobile</text>
+    <text x="100" y="90" class="note" text-anchor="middle">Android Auto focus</text>
+    <text x="100" y="120" class="note" text-anchor="middle">Live GPS streaming</text>
   </g>
 
-  <g transform="translate(110,800)">
-    <circle cx="35" cy="35" r="28" fill="none" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="63" x2="35" y2="150" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="90" x2="5" y2="120" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="90" x2="65" y2="120" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="150" x2="10" y2="200" stroke="#0f766e" stroke-width="4" />
-    <line x1="35" y1="150" x2="60" y2="200" stroke="#0f766e" stroke-width="4" />
-    <text x="35" y="240" class="actor" text-anchor="middle">Admin / Support</text>
+  <g transform="translate(180,730)">
+    <rect width="200" height="150" rx="20" ry="20" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" />
+    <text x="100" y="50" class="body" text-anchor="middle">Admin Console</text>
+    <text x="100" y="90" class="note" text-anchor="middle">React dashboard</text>
+    <text x="100" y="120" class="note" text-anchor="middle">Analytics + Support</text>
   </g>
 
-  <!-- Core Service Blocks -->
-  <rect x="370" y="270" width="1050" height="640" fill="#fff" stroke="#cbd5f5" stroke-width="4" rx="28" ry="28" />
-  <text x="895" y="320" class="section-title" text-anchor="middle" fill="#1d4ed8">Microservice Boundary</text>
+  <g transform="translate(180,910)">
+    <rect width="200" height="150" rx="20" ry="20" fill="#e0f2fe" stroke="#1d4ed8" stroke-width="3" />
+    <text x="100" y="50" class="body" text-anchor="middle">3rd Party APIs</text>
+    <text x="100" y="90" class="note" text-anchor="middle">Payments, Maps,</text>
+    <text x="100" y="120" class="note" text-anchor="middle">Fraud detection</text>
+  </g>
 
-  <rect x="410" y="360" width="320" height="210" fill="#e0ecff" stroke="#1d4ed8" stroke-width="3" rx="24" ry="24" />
-  <text x="570" y="410" class="section-title" text-anchor="middle">UserManager</text>
-  <text x="430" y="450" class="body">• Register &amp; login endpoints (/register, /login)</text>
-  <text x="430" y="480" class="body">• Profile updates with dedicated SQL store</text>
-  <text x="430" y="510" class="body">• Hash credentials &amp; issue JWT tokens</text>
-  <text x="430" y="540" class="body">• Emits <tspan fill="#f97316">user_created</tspan> events via Kafka/RabbitMQ</text>
+  <!-- Experience tier -->
+  <rect x="520" y="280" width="380" height="240" rx="28" ry="28" fill="#e0f2f1" stroke="#0f766e" stroke-width="3" />
+  <text x="710" y="330" class="section-title" text-anchor="middle" fill="#0f766e">Edge &amp; Experience Tier</text>
+  <text x="540" y="380" class="body">• API Gateway (nghttp2) – TLS termination, rate limits</text>
+  <text x="540" y="415" class="body">• BFF adapters for Rider/Driver apps</text>
+  <text x="540" y="450" class="body">• JWT validation &amp; feature flag evaluation</text>
 
-  <rect x="770" y="360" width="320" height="260" fill="#ffe4e6" stroke="#e11d48" stroke-width="3" rx="24" ry="24" />
-  <text x="930" y="410" class="section-title" text-anchor="middle">RideManager</text>
-  <text x="790" y="450" class="body">• Handles ride requests &amp; driver assignment</text>
-  <text x="790" y="480" class="body">• REST: /requestRide, /rideStatus, /cancelRide</text>
-  <text x="790" y="510" class="body">• State flow: requested → accepted → in-progress → completed</text>
-  <text x="790" y="540" class="body">• Publishes lifecycle updates (<tspan fill="#f97316">ride_status</tspan>)</text>
-  <text x="790" y="570" class="body">• Consumes rider &amp; driver availability events</text>
+  <rect x="520" y="560" width="380" height="200" rx="24" ry="24" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" />
+  <text x="710" y="610" class="section-title" text-anchor="middle" fill="#6d28d9">Real-time Comms</text>
+  <text x="540" y="660" class="body">• WebSocket hub (ride progress, ETA)</text>
+  <text x="540" y="695" class="body">• Push notifications fan-out via RabbitMQ</text>
 
-  <rect x="1130" y="360" width="320" height="230" fill="#dcfce7" stroke="#16a34a" stroke-width="3" rx="24" ry="24" />
-  <text x="1290" y="410" class="section-title" text-anchor="middle">LocationManager</text>
-  <text x="1150" y="450" class="body">• Streams driver GPS updates with H3 indexing</text>
-  <text x="1150" y="480" class="body">• Nearby driver lookup for rider requests</text>
-  <text x="1150" y="510" class="body">• Publishes <tspan fill="#f97316">location_update</tspan> events</text>
-  <text x="1150" y="540" class="body">• gRPC helpers + Kafka / RabbitMQ integration</text>
+  <!-- Platform services container -->
+  <rect x="940" y="280" width="780" height="820" rx="36" ry="36" fill="#ffffff" stroke="#c7d2fe" stroke-width="4" />
+  <text x="1330" y="330" class="section-title" text-anchor="middle" fill="#1d4ed8">Domain Microservices (C++ gRPC/REST)</text>
 
-  <!-- Arrows from actors to services -->
-  <line x1="320" y1="440" x2="410" y2="440" stroke="#1e88e5" stroke-width="4" marker-end="url(#arrow)" />
-  <line x1="320" y1="660" x2="410" y2="660" stroke="#1e88e5" stroke-width="4" marker-end="url(#arrow)" />
-  <line x1="320" y1="880" x2="410" y2="880" stroke="#1e88e5" stroke-width="4" marker-end="url(#arrow)" />
+  <!-- UserManager -->
+  <g transform="translate(980,360)">
+    <rect width="320" height="220" rx="26" ry="26" fill="#e0ecff" stroke="#1d4ed8" stroke-width="3" />
+    <text x="160" y="50" class="section-title" text-anchor="middle">UserManager</text>
+    <text x="40" y="95" class="body">• Sign-up/login, token issuance</text>
+    <text x="40" y="130" class="body">• Profile, payment methods</text>
+    <text x="40" y="165" class="body">• Emits <tspan fill="#f97316">user.created</tspan> events</text>
+  </g>
 
-  <!-- Inter-service arrows -->
-  <line x1="730" y1="460" x2="770" y2="460" stroke="#1e88e5" stroke-width="4" marker-end="url(#arrow)" />
-  <line x1="730" y1="520" x2="770" y2="520" stroke="#f97316" stroke-width="4" marker-end="url(#arrow-orange)" />
+  <!-- RideManager -->
+  <g transform="translate(1320,360)">
+    <rect width="320" height="250" rx="26" ry="26" fill="#fee2e2" stroke="#dc2626" stroke-width="3" />
+    <text x="160" y="50" class="section-title" text-anchor="middle">RideManager</text>
+    <text x="40" y="95" class="body">• Ride orchestration state machine</text>
+    <text x="40" y="130" class="body">• Driver matching, surge pricing</text>
+    <text x="40" y="165" class="body">• Consumes <tspan fill="#2563eb">availability</tspan>,</text>
+    <text x="40" y="200" class="body">  publishes <tspan fill="#f97316">ride.status</tspan></text>
+  </g>
 
-  <line x1="1090" y1="470" x2="1130" y2="470" stroke="#1e88e5" stroke-width="4" marker-end="url(#arrow)" />
-  <line x1="1130" y1="520" x2="1090" y2="520" stroke="#f97316" stroke-width="4" marker-end="url(#arrow-orange)" />
+  <!-- LocationManager -->
+  <g transform="translate(980,630)">
+    <rect width="320" height="240" rx="26" ry="26" fill="#dcfce7" stroke="#16a34a" stroke-width="3" />
+    <text x="160" y="50" class="section-title" text-anchor="middle">LocationManager</text>
+    <text x="40" y="95" class="body">• H3 geohash indexing &amp; proximity search</text>
+    <text x="40" y="130" class="body">• Ingests GPS streams (3s cadence)</text>
+    <text x="40" y="165" class="body">• Publishes <tspan fill="#f97316">driver.location</tspan></text>
+  </g>
 
-  <line x1="600" y1="640" x2="600" y2="730" stroke="#1e88e5" stroke-width="4" marker-end="url(#arrow)" />
-  <rect x="430" y="730" width="340" height="150" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" rx="24" ry="24" />
-  <text x="600" y="780" class="section-title" text-anchor="middle" fill="#5b21b6">Shared Events</text>
-  <text x="450" y="820" class="body">• <tspan fill="#7c3aed">Kafka topics:</tspan> user_created, ride_status, location_update</text>
-  <text x="450" y="850" class="body">• <tspan fill="#7c3aed">RabbitMQ queues:</tspan> email_jobs, retry_match, geo_refresh</text>
+  <!-- Billing/Payments Service -->
+  <g transform="translate(1320,650)">
+    <rect width="320" height="220" rx="26" ry="26" fill="#fef3c7" stroke="#f59e0b" stroke-width="3" />
+    <text x="160" y="50" class="section-title" text-anchor="middle">BillingAdapter</text>
+    <text x="40" y="95" class="body">• Fare calculation, surge adjustments</text>
+    <text x="40" y="130" class="body">• Integrates Stripe/Adyen via gRPC</text>
+    <text x="40" y="165" class="body">• Handles refunds &amp; fraud checks</text>
+  </g>
 
-  <line x1="930" y1="620" x2="930" y2="690" stroke="#f97316" stroke-width="4" marker-end="url(#arrow-orange)" />
-  <rect x="810" y="690" width="240" height="140" fill="#fff7ed" stroke="#f97316" stroke-width="3" rx="24" ry="24" />
-  <text x="930" y="740" class="section-title" text-anchor="middle" fill="#ea580c">Ride Lifecycle</text>
-  <text x="830" y="780" class="body">1. Request</text>
-  <text x="830" y="810" class="body">2. Accept</text>
-  <text x="830" y="840" class="body">3. In-progress → Completed</text>
+  <!-- Shared Utils -->
+  <g transform="translate(1140,900)">
+    <rect width="360" height="160" rx="26" ry="26" fill="#ede9fe" stroke="#7c3aed" stroke-width="3" />
+    <text x="180" y="45" class="section-title" text-anchor="middle">Shared Utilities</text>
+    <text x="30" y="85" class="body">• Thread pools, async runtime, env loader</text>
+    <text x="30" y="120" class="body">• Structured logging + OpenTelemetry emitters</text>
+  </g>
 
-  <line x1="1290" y1="600" x2="1290" y2="690" stroke="#16a34a" stroke-width="4" marker-end="url(#arrow)" />
-  <rect x="1170" y="690" width="240" height="140" fill="#ecfdf5" stroke="#16a34a" stroke-width="3" rx="24" ry="24" />
-  <text x="1290" y="740" class="section-title" text-anchor="middle" fill="#15803d">Location Streams</text>
-  <text x="1190" y="780" class="body">• Ingest GPS every 3s</text>
-  <text x="1190" y="810" class="body">• Index via Uber H3</text>
-  <text x="1190" y="840" class="body">• Broadcast to rider map</text>
+  <!-- Data platform -->
+  <rect x="1760" y="280" width="320" height="820" rx="36" ry="36" fill="#f8fafc" stroke="#475569" stroke-width="3" />
+  <text x="1920" y="330" class="section-title" text-anchor="middle" fill="#0f172a">State &amp; Data Platform</text>
 
-  <!-- Infrastructure Layer -->
-  <rect x="60" y="940" width="1628" height="200" fill="#e2e8f0" stroke="#475569" stroke-width="3" rx="24" ry="24" />
-  <text x="874" y="990" class="section-title" text-anchor="middle" fill="#1f2937">Shared Infrastructure</text>
-  <text x="140" y="1030" class="body">• Dedicated PostgreSQL DB per service</text>
-  <text x="140" y="1070" class="body">• Kafka cluster (event backbone)</text>
-  <text x="140" y="1110" class="body">• RabbitMQ (async job queue &amp; retries)</text>
-  <text x="800" y="1030" class="body">• gRPC helpers &amp; thread pool</text>
-  <text x="800" y="1070" class="body">• Structured logger &amp; metrics</text>
-  <text x="800" y="1110" class="body">• .env config loader + docker-compose startup</text>
+  <g transform="translate(1790,370)">
+    <rect width="260" height="140" rx="20" ry="20" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2" />
+    <text x="130" y="45" class="body" text-anchor="middle">PostgreSQL</text>
+    <text x="130" y="85" class="note" text-anchor="middle">Service-specific schemas</text>
+  </g>
+
+  <g transform="translate(1790,540)">
+    <rect width="260" height="140" rx="20" ry="20" fill="#fee2f2" stroke="#db2777" stroke-width="2" />
+    <text x="130" y="45" class="body" text-anchor="middle">Redis Cache</text>
+    <text x="130" y="85" class="note" text-anchor="middle">Driver ETA &amp; session cache</text>
+  </g>
+
+  <g transform="translate(1790,710)">
+    <rect width="260" height="140" rx="20" ry="20" fill="#fef9c3" stroke="#facc15" stroke-width="2" />
+    <text x="130" y="45" class="body" text-anchor="middle">Kafka Cluster</text>
+    <text x="130" y="85" class="note" text-anchor="middle">Topic: ride.status, user.created</text>
+  </g>
+
+  <g transform="translate(1790,880)">
+    <rect width="260" height="140" rx="20" ry="20" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" />
+    <text x="130" y="45" class="body" text-anchor="middle">RabbitMQ</text>
+    <text x="130" y="85" class="note" text-anchor="middle">Retries, push fan-out</text>
+  </g>
+
+  <!-- Interconnections -->
+  <line x1="440" y1="445" x2="520" y2="400" stroke="#2563eb" stroke-width="5" marker-end="url(#arrow-blue)" />
+  <line x1="440" y1="625" x2="520" y2="640" stroke="#2563eb" stroke-width="5" marker-end="url(#arrow-blue)" />
+  <line x1="440" y1="805" x2="520" y2="610" stroke="#7c3aed" stroke-width="4" marker-end="url(#arrow-purple)" />
+  <line x1="440" y1="985" x2="520" y2="400" stroke="#16a34a" stroke-width="4" marker-end="url(#arrow-green)" />
+
+  <line x1="900" y1="380" x2="980" y2="420" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)" />
+  <line x1="900" y1="650" x2="980" y2="700" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)" />
+  <line x1="900" y1="640" x2="980" y2="430" stroke="#f97316" stroke-width="4" marker-end="url(#arrow-orange)" />
+
+  <line x1="1300" y1="470" x2="1320" y2="470" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)" />
+  <line x1="1300" y1="520" x2="1320" y2="520" stroke="#f97316" stroke-width="4" marker-end="url(#arrow-orange)" />
+  <line x1="1300" y1="710" x2="1320" y2="720" stroke="#f97316" stroke-width="4" marker-end="url(#arrow-orange)" />
+  <line x1="1640" y1="450" x2="1760" y2="440" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)" />
+  <line x1="1640" y1="520" x2="1760" y2="600" stroke="#16a34a" stroke-width="4" marker-end="url(#arrow-green)" />
+  <line x1="1640" y1="720" x2="1760" y2="780" stroke="#f97316" stroke-width="4" marker-end="url(#arrow-orange)" />
+  <line x1="1640" y1="760" x2="1760" y2="910" stroke="#7c3aed" stroke-width="4" marker-end="url(#arrow-purple)" />
+
+  <line x1="1140" y1="980" x2="1030" y2="820" stroke="#7c3aed" stroke-width="4" marker-end="url(#arrow-purple)" />
+  <line x1="1500" y1="980" x2="1620" y2="820" stroke="#7c3aed" stroke-width="4" marker-end="url(#arrow-purple)" />
+
+  <!-- Async event fabric -->
+  <rect x="940" y="1140" width="780" height="220" rx="32" ry="32" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3" />
+  <text x="1330" y="1190" class="section-title" text-anchor="middle" fill="#0f172a">Event &amp; Data Flow</text>
+  <text x="970" y="1240" class="body">• Kafka topics: user.created, driver.location, ride.status, billing.charged</text>
+  <text x="970" y="1280" class="body">• RabbitMQ queues: notification.push, billing.retry, geo.refresh</text>
+  <text x="970" y="1320" class="body">• Schema registry + protobuf contracts in <tspan fill="#1d4ed8">sharedResources/proto</tspan></text>
+
+  <!-- Observability & Ops -->
+  <rect x="120" y="1140" width="800" height="220" rx="32" ry="32" fill="#f8fafc" stroke="#475569" stroke-width="3" />
+  <text x="520" y="1190" class="section-title" text-anchor="middle" fill="#0f172a">Observability &amp; Ops</text>
+  <text x="150" y="1240" class="body">• Prometheus exporters, Grafana dashboards</text>
+  <text x="150" y="1280" class="body">• OpenTelemetry traces shipped to Jaeger</text>
+  <text x="150" y="1320" class="body">• GitHub Actions → Docker builds → Helm deploy</text>
 
   <!-- Legend -->
-  <rect x="1450" y="270" width="238" height="320" fill="#f1f5f9" stroke="#475569" stroke-width="3" rx="24" ry="24" />
-  <text x="1569" y="320" class="section-title" text-anchor="middle" fill="#1f2937">Legend</text>
-  <rect x="1470" y="340" width="40" height="20" fill="#e0ecff" stroke="#1d4ed8" stroke-width="2" rx="6" ry="6" />
-  <text x="1520" y="356" class="note">User API service</text>
-  <rect x="1470" y="370" width="40" height="20" fill="#ffe4e6" stroke="#e11d48" stroke-width="2" rx="6" ry="6" />
-  <text x="1520" y="386" class="note">Ride orchestration</text>
-  <rect x="1470" y="400" width="40" height="20" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="6" ry="6" />
-  <text x="1520" y="416" class="note">Location streaming</text>
-  <rect x="1470" y="430" width="40" height="20" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" rx="6" ry="6" />
-  <text x="1520" y="446" class="note">Shared events</text>
-  <rect x="1470" y="460" width="40" height="20" fill="#fff7ed" stroke="#f97316" stroke-width="2" rx="6" ry="6" />
-  <text x="1520" y="476" class="note">Ride lifecycle detail</text>
-  <rect x="1470" y="490" width="40" height="20" fill="#ecfdf5" stroke="#16a34a" stroke-width="2" rx="6" ry="6" />
-  <text x="1520" y="506" class="note">Location detail</text>
-  <line x1="1470" y1="530" x2="1510" y2="530" stroke="#1e88e5" stroke-width="4" marker-end="url(#arrow)" />
-  <text x="1520" y="536" class="note">REST / request flow</text>
-  <line x1="1470" y1="560" x2="1510" y2="560" stroke="#f97316" stroke-width="4" marker-end="url(#arrow-orange)" />
-  <text x="1520" y="566" class="note">Event / async flow</text>
+  <rect x="1820" y="1160" width="260" height="220" rx="28" ry="28" fill="#ffffff" stroke="#1e293b" stroke-width="3" />
+  <text x="1950" y="1210" class="section-title" text-anchor="middle">Legend</text>
+  <g transform="translate(1840,1230)">
+    <rect width="28" height="28" rx="6" ry="6" fill="#e0ecff" stroke="#1d4ed8" stroke-width="2" />
+    <text x="40" y="22" class="legend-label">User/API Service</text>
+  </g>
+  <g transform="translate(1840,1280)">
+    <rect width="28" height="28" rx="6" ry="6" fill="#fee2e2" stroke="#dc2626" stroke-width="2" />
+    <text x="40" y="22" class="legend-label">Ride Orchestration</text>
+  </g>
+  <g transform="translate(1840,1330)">
+    <rect width="28" height="28" rx="6" ry="6" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+    <text x="40" y="22" class="legend-label">Location/Geo</text>
+  </g>
+  <g transform="translate(1840,1380)">
+    <line x1="0" y1="14" x2="28" y2="14" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)" />
+    <text x="40" y="20" class="legend-label">Synchronous REST/gRPC</text>
+  </g>
+  <g transform="translate(1990,1380)">
+    <line x1="0" y1="14" x2="28" y2="14" stroke="#f97316" stroke-width="4" marker-end="url(#arrow-orange)" />
+    <text x="40" y="20" class="legend-label">Async/Event flow</text>
+  </g>
 
-  <!-- Startup callout -->
-  <rect x="1450" y="610" width="238" height="160" fill="#fef3c7" stroke="#f59e0b" stroke-width="3" rx="24" ry="24" />
-  <text x="1569" y="660" class="section-title" text-anchor="middle" fill="#b45309">Startup Order</text>
-  <text x="1465" y="700" class="body">1. Initialize service DB</text>
-  <text x="1465" y="730" class="body">2. Launch HTTP handlers</text>
-  <text x="1465" y="760" class="body">3. Attach Kafka / RabbitMQ</text>
+  <!-- Latency metrics -->
+  <g transform="translate(1760,1060)">
+    <rect width="320" height="80" rx="20" ry="20" fill="#cffafe" stroke="#0891b2" stroke-width="2" />
+    <text x="160" y="40" class="metric" text-anchor="middle">P95 Rider request → driver match &lt; 1.5s</text>
+  </g>
 </svg>
