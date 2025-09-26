@@ -14,6 +14,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Add subdirectories (these must each have their own CMakeLists.txt)
+add_subdirectory(sharedUtils)
+add_subdirectory(sharedResources)
 add_subdirectory(UserManager)
 add_subdirectory(RideManager)
 add_subdirectory(LocationManager)
