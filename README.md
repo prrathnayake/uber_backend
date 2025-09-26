@@ -261,3 +261,12 @@ RABBITMQ_VHOST=/
 docker-compose up --build
 ```
 
+
+---
+
+## 🤝 Community & Project Standards
+
+- Review the [Code of Conduct](CODE_OF_CONDUCT.md) to understand the expectations for participating in this community.
+- See the [Contributing Guide](CONTRIBUTING.md) for instructions on setting up your environment, coding standards, and submitting pull requests.
+- Consult the [Security Policy](SECURITY.md) for guidance on how to responsibly disclose vulnerabilities.
+- This project is distributed under the terms of the [MIT License](LICENSE).
