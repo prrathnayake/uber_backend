@@ -59,12 +59,19 @@ namespace UberBackend
             std::string statusReason;
             std::string requestedAt;
             std::string updatedAt;
+            double fareAmount{0.0};
+            std::string currency{"USD"};
+            bool fareRecorded{false};
+            std::string paymentMethod{"wallet"};
+            bool paymentRecorded{false};
         };
 
         struct DriverState
         {
             bool available{false};
             std::string currentRideId;
+            double walletBalance{0.0};
+            double lifetimeEarnings{0.0};
         };
 
         [[nodiscard]] std::string generateRideId();
@@ -82,6 +89,12 @@ namespace UberBackend
         [[nodiscard]] std::vector<RideRecord> findRidesByPredicate(const std::function<bool(const RideRecord &)> &predicate) const;
         [[nodiscard]] std::optional<nlohmann::json> fetchDriverProfile(const std::string &driverId) const;
         void persistRide(const RideRecord &record) const;
+        [[nodiscard]] std::optional<double> parseFareAmount(const nlohmann::json &payload) const;
+        void creditDriverWallet(const std::string &driverId, double amount, const RideRecord &record);
+        [[nodiscard]] double getDriverWalletBalance(const std::string &driverId) const;
+        bool recordPaymentInDatabase(const RideRecord &record, double amount, const std::string &method);
+        [[nodiscard]] std::optional<long long> lookupRidePrimaryKey(const std::string &rideIdentifier) const;
+        [[nodiscard]] DriverState snapshotDriverState(const std::string &driverId) const;
 
         utils::SingletonLogger &logger_;
         std::unique_ptr<RideKafkaManager> kafkaManager_;

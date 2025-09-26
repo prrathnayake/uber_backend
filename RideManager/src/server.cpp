@@ -1,7 +1,5 @@
 #include "../include/server.h"
 
-#include <iostream>
-
 #include "../../sharedResources/include/sharedKafkaHandler.h"
 #include "../../sharedResources/include/sharedRabbitMQConsumer.h"
 #include "../../sharedResources/include/sharedRabbitMQHandler.h"
@@ -53,18 +51,26 @@ namespace UberBackend
         auto rideLifecycleConsumer = sharedKafkaHandler_->createConsumer("ride_manager_lifecycle", "ride_lifecycle_events");
         if (rideLifecycleConsumer)
         {
-            rideLifecycleConsumer->setCallback([](const std::string &payload)
+            rideLifecycleConsumer->setCallback([this](const std::string &payload)
                                                {
-                                                   std::cout << "[Kafka][RideManager] lifecycle event -> " << payload << std::endl;
+                                                   logger_.logMeta(SingletonLogger::INFO,
+                                                                   std::string{"[Kafka][RideManager] lifecycle event -> "} + payload,
+                                                                   __FILE__,
+                                                                   __LINE__,
+                                                                   __func__);
                                                });
         }
 
         auto locationBridgeConsumer = sharedKafkaHandler_->createConsumer("ride_manager_location_bridge", "location_events");
         if (locationBridgeConsumer)
         {
-            locationBridgeConsumer->setCallback([](const std::string &payload)
+            locationBridgeConsumer->setCallback([this](const std::string &payload)
                                                 {
-                                                    std::cout << "[Kafka][RideManager] location update -> " << payload << std::endl;
+                                                    logger_.logMeta(SingletonLogger::INFO,
+                                                                    std::string{"[Kafka][RideManager] location update -> "} + payload,
+                                                                    __FILE__,
+                                                                    __LINE__,
+                                                                    __func__);
                                                 });
         }
 
@@ -93,9 +99,13 @@ namespace UberBackend
         auto driverTaskConsumer = sharedRabbitHandler_->createConsumer("ride_manager_driver_tasks", "driver_notifications");
         if (driverTaskConsumer)
         {
-            driverTaskConsumer->setCallback([](const std::string &message)
+            driverTaskConsumer->setCallback([this](const std::string &message)
                                             {
-                                                std::cout << "[RabbitMQ][RideManager] driver task -> " << message << std::endl;
+                                                logger_.logMeta(SingletonLogger::INFO,
+                                                                std::string{"[RabbitMQ][RideManager] driver task -> "} + message,
+                                                                __FILE__,
+                                                                __LINE__,
+                                                                __func__);
                                             });
         }
 
