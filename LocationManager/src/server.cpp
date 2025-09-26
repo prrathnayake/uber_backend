@@ -22,12 +22,17 @@ void Server::createHttpServers()
 
     httpServerHandler_ = std::make_unique<HttpHandler>(database_);
     httpServerHandler_->createServers();
+
+    const auto grpcPort = UberUtils::CONFIG::getLocationManagerGrpcPort();
+    const std::string grpcAddress = "0.0.0.0:" + std::to_string(grpcPort);
+    ensureGrpcServer(grpcAddress);
+    startGrpcServer();
 }
 
 void Server::startConsumers()
 {
-    std::string host = UberUtils::CONFIG::KAFKA_HOST;
-    int port = UberUtils::CONFIG::KAFKA_PORT;
+    std::string host = UberUtils::CONFIG::getKafkaHost();
+    unsigned int port = UberUtils::CONFIG::getKafkaPort();
 
     if (!sharedKafkaHandler_)
     {
@@ -42,4 +47,25 @@ void Server::startConsumers()
                                { std::cout << "[Kafka Msg] " << msg << std::endl; });
 
     sharedKafkaHandler_->runConsumers();
+
+    SharedRabbitMQHandler::ConnectionOptions rabbitOptions{
+        UberUtils::CONFIG::getRabbitMQHost(),
+        std::to_string(UberUtils::CONFIG::getRabbitMQPort()),
+        UberUtils::CONFIG::getRabbitMQUsername(),
+        UberUtils::CONFIG::getRabbitMQPassword(),
+        UberUtils::CONFIG::getRabbitMQVHost()};
+
+    if (!sharedRabbitHandler_)
+    {
+        sharedRabbitHandler_ = std::make_unique<SharedRabbitMQHandler>(rabbitOptions);
+    }
+
+    auto rabbitConsumer = sharedRabbitHandler_->createConsumer("location_events", "location_updates");
+    if (rabbitConsumer)
+    {
+        rabbitConsumer->setCallback([](const std::string &message)
+                                    { std::cout << "[RabbitMQ] received payload: " << message << std::endl; });
+    }
+
+    sharedRabbitHandler_->runConsumers();
 }

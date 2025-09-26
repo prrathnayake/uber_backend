@@ -12,6 +12,8 @@
 #include "sharedKafkaHandler.h"
 #include "sharedRouteHandler.h"
 #include "sharedDatabase.h"
+#include "sharedRabbitMQHandler.h"
+#include "sharedgRPCServer.h"
 
 using namespace utils;
 
@@ -37,6 +39,10 @@ namespace UberBackend
         virtual void startConsumers() = 0;
         virtual void stopConsumers();
 
+        void ensureGrpcServer(const std::string &address);
+        void startGrpcServer();
+        void stopGrpcServer();
+
         virtual std::shared_ptr<SharedDatabase> getDatabase();
 
     protected:
@@ -46,7 +52,10 @@ namespace UberBackend
         std::unique_ptr<SharedHttpHandler> httpServerHandler_;
         std::unique_ptr<SharedRouteHandler> sharedRouteHandler_;
         std::unique_ptr<SharedKafkaHandler> sharedKafkaHandler_;
-
+        std::unique_ptr<SharedRabbitMQHandler> sharedRabbitHandler_;
+        std::unique_ptr<SharedgPRCServer> grpcServer_;
+        std::future<void> grpcFuture_;
+    
         const std::string serverName_;
         const std::string host_;
         const std::string user_;

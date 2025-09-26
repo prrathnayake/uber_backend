@@ -10,6 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(DEPENDENCIES
     app_utils::app_utils
     app_kafka::app_kafka
+    app_rabbitmq::app_rabbitmq
     app_h3::app_h3
     h3::h3
     app_database::app_database
@@ -35,6 +36,7 @@ set(DEPENDENCIES
 set(PACKAGES
     app_utils
     app_kafka
+    app_rabbitmq
     app_h3
     h3
     app_database
