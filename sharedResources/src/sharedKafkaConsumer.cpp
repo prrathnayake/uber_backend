@@ -1,5 +1,7 @@
 #include "../include/sharedKafkaConsumer.h"
 
+#include <chrono>
+
 using namespace utils;
 using namespace UberBackend;
 using namespace kafka;
@@ -9,26 +11,31 @@ SharedKafkaConsumer::SharedKafkaConsumer(const std::string &consumerName,
                                          const std::string &host,
                                          const std::string &port)
     : logger_(SingletonLogger::instance()),
+      kafkaConsumer_(nullptr),
       consumerName_(consumerName),
       topic_(topic),
       host_(host),
       port_(port)
 {
-    if (consumerName_.empty() || topic.empty() || host_.empty() || port_.empty())
+    if (consumerName_.empty() || topic_.empty() || host_.empty() || port_.empty())
     {
-        logger_.logMeta(SingletonLogger::ERROR, "createConsumer failed due to not having proper consumerName, topic, host or topic.", __FILE__, __LINE__, __func__);
+        logger_.logMeta(SingletonLogger::ERROR,
+                        "createConsumer failed due to not having proper consumerName, topic, host or port.",
+                        __FILE__,
+                        __LINE__,
+                        __func__);
+        return;
     }
-    else
-    {
-        logger_.logMeta(SingletonLogger::INFO, host_ + ":" + port_, __FILE__, __LINE__, __func__);
 
-        kafkaConsumer_ = new KafkaConsumer(host_ + ":" + port_, topic_);
-        logger_.logMeta(SingletonLogger::INFO, "SharedKafkaConsumer initialized", __FILE__, __LINE__, __func__);
-    }
+    logger_.logMeta(SingletonLogger::INFO, host_ + ":" + port_, __FILE__, __LINE__, __func__);
+    kafkaConsumer_ = new KafkaConsumer(host_ + ":" + port_, topic_);
+    logger_.logMeta(SingletonLogger::INFO, "SharedKafkaConsumer initialized", __FILE__, __LINE__, __func__);
 }
 
 SharedKafkaConsumer::~SharedKafkaConsumer()
 {
+    stop();
+
     if (kafkaConsumer_)
     {
         delete kafkaConsumer_;
@@ -44,26 +51,48 @@ void SharedKafkaConsumer::setCallback(std::function<void(const std::string &)> c
 
 std::string SharedKafkaConsumer::listening()
 {
-    while (shouldRun_) {
-    logger_.logMeta(SingletonLogger::INFO, "Status : " + shouldRun_, __FILE__, __LINE__, __func__);
+    if (!kafkaConsumer_)
+    {
+        logger_.logMeta(SingletonLogger::ERROR, "Kafka consumer is not initialised", __FILE__, __LINE__, __func__);
+        return {};
+    }
+
+    std::string lastMessage;
+    while (shouldRun_.load())
+    {
+        logger_.logMeta(SingletonLogger::DEBUG,
+                        std::string("Kafka consumer active: ") + (shouldRun_.load() ? "true" : "false"),
+                        __FILE__,
+                        __LINE__,
+                        __func__);
 
         std::string message = kafkaConsumer_->consumeMessage();
-        if (!message.empty() && callback_) {
-            callback_(message);
+        if (!message.empty())
+        {
+            lastMessage = message;
+            if (callback_)
+            {
+                callback_(message);
+            }
         }
 
         std::unique_lock<std::mutex> lock(mutex_);
-        cv_.wait_for(lock, std::chrono::milliseconds(100), [this] { return !shouldRun_; });
-        return message;
+        cv_.wait_for(lock, std::chrono::milliseconds(100), [this] { return !shouldRun_.load(); });
     }
 
     logger_.logMeta(SingletonLogger::INFO, "Kafka consumer stopped: " + consumerName_, __FILE__, __LINE__, __func__);
-    return"";
+    return lastMessage;
 }
 
 void SharedKafkaConsumer::stop()
 {
-    shouldRun_ = false;
-    kafkaConsumer_->stopConsumeMessages();
-    cv_.notify_all();
+    bool expected = true;
+    if (shouldRun_.compare_exchange_strong(expected, false))
+    {
+        if (kafkaConsumer_)
+        {
+            kafkaConsumer_->stopConsumeMessages();
+        }
+        cv_.notify_all();
+    }
 }
