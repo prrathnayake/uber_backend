@@ -1,4 +1,3 @@
-#include <iostream>
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
 #include "../../sharedResources/include/sharedRabbitMQConsumer.h"
@@ -44,8 +43,14 @@ void Server::startConsumers()
     std::string topic = "user_created";
 
     std::shared_ptr<SharedKafkaConsumer> kafkaConsumer = sharedKafkaHandler_->createConsumer(name, topic);
-    kafkaConsumer->setCallback([](const std::string &msg)
-                               { std::cout << "[Kafka Msg] " << msg << std::endl; });
+    kafkaConsumer->setCallback([this](const std::string &msg)
+                               {
+                                   logger_.logMeta(SingletonLogger::INFO,
+                                                   std::string{"[Kafka][LocationManager] message -> "} + msg,
+                                                   __FILE__,
+                                                   __LINE__,
+                                                   __func__);
+                               });
 
     sharedKafkaHandler_->runConsumers();
 
@@ -64,8 +69,14 @@ void Server::startConsumers()
     auto rabbitConsumer = sharedRabbitHandler_->createConsumer("location_events", "location_updates");
     if (rabbitConsumer)
     {
-        rabbitConsumer->setCallback([](const std::string &message)
-                                    { std::cout << "[RabbitMQ] received payload: " << message << std::endl; });
+        rabbitConsumer->setCallback([this](const std::string &message)
+                                    {
+                                        logger_.logMeta(SingletonLogger::INFO,
+                                                        std::string{"[RabbitMQ][LocationManager] payload -> "} + message,
+                                                        __FILE__,
+                                                        __LINE__,
+                                                        __func__);
+                                    });
     }
 
     sharedRabbitHandler_->runConsumers();

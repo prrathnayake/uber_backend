@@ -24,6 +24,7 @@ A **modular C++ backend system** inspired by Uber’s architecture. This project
 - 🐳 **Dockerized**: Each microservice has its own Dockerfile & entrypoint
 - 🔁 **CI/CD Ready**: GitHub Actions build and push Docker images
 - 🌐 **gRPC Services**: LocationManager boots its own gRPC endpoint alongside HTTP handlers
+- 📄 **Ride Settlement Runbook**: End-to-end booking → wallet flow captured in [`docs/ride_lifecycle_settlement.md`](docs/ride_lifecycle_settlement.md)
 
 ---
 
@@ -179,23 +180,26 @@ Each microservice follows this initialization flow:
 
 You can start Kafka and RabbitMQ using Docker (recommended) or your local installation.
 
-### ✅ Start Kafka and RabbitMQ with Docker
-
-```bash
-docker-compose -f docker/docker-compose.message-stack.yml up -d
-```
-
-1. **Install dependencies** via Conan:
+### ✅ Local build
 
 ```bash
 conan build . --output-folder=build --build=missing
 ```
 
-2. **Run individual services:**
+Then run the binaries from `./build/Release/bin/` as needed.
+
+### 🧪 Test deployment with Docker Compose
+
 ```bash
-./build/Release/bin/UserManager
-./build/Release/bin/RideManager
-./build/Release/bin/LocationManager
+docker build -f docker/Dockerfile.base -t uber_base:latest .
+docker compose -f docker/docker-compose.test-deploy.yml --env-file .env build
+docker compose -f docker/docker-compose.test-deploy.yml --env-file .env up -d
+```
+
+Bring the stack down when finished:
+
+```bash
+docker compose -f docker/docker-compose.test-deploy.yml down
 ```
 
 ## 🐳 Docker Compose Setup
@@ -206,16 +210,17 @@ This project supports a fully containerized microservices environment using **Do
 
 ### 📦 Services
 
-| Service                  | Description                               | Port        |
-|--------------------------|-------------------------------------------|-------------|
-| `mysql_userManagerDatabase` | MySQL for UserManager                    | `${USERMANAGER_PORT}` |
-| `mysql_rideManagerDatabase` | MySQL for RideManager                    | `${RIDEMANAGER_PORT}` |
-| `mysql_locationManagerDatabase` | MySQL for LocationManager            | `${LOCATIONMANAGER_PORT}` |
-| `kafka`                  | Kafka broker using Bitnami (KRaft mode)   | `9092`      |
-| `redis`                  | Redis instance (for caching/session)      | `6379`      |
-| `UserManager`            | UserManager C++ microservice              | `${USERMANAGER_APP_PORT}` |
-| `RideManager`            | RideManager C++ microservice              | `${RIDEMANAGER_APP_PORT}` |
-| `LocationManager`        | LocationManager C++ microservice          | `${LOCATIONMANAGER_APP_PORT}` |
+| Service            | Description                                    | Port                              |
+|--------------------|------------------------------------------------|-----------------------------------|
+| `mysql_user`       | MySQL for UserManager                          | `${USERMANAGER_PORT}`             |
+| `mysql_ride`       | MySQL for RideManager                          | `${RIDEMANAGER_PORT}`             |
+| `mysql_location`   | MySQL for LocationManager                      | `${LOCATIONMANAGER_PORT}`         |
+| `kafka`            | Kafka broker (KRaft mode)                      | `${KAFKA_EXTERNAL_PORT:-9092}`    |
+| `rabbitmq`         | RabbitMQ broker + management UI                | `${RABBITMQ_AMQP_PORT:-5672}`/`${RABBITMQ_HTTP_PORT:-15672}` |
+| `redis`            | Redis cache                                    | `${REDIS_PORT:-6379}`             |
+| `usermanager`      | UserManager C++ microservice                   | `${USERMANAGER_APP_PORT}`         |
+| `ridemanager`      | RideManager C++ microservice                   | `${RIDEMANAGER_APP_PORT}`         |
+| `locationmanager`  | LocationManager C++ microservice               | `${LOCATIONMANAGER_APP_PORT}`     |
 
 ---
 
@@ -255,10 +260,12 @@ RABBITMQ_PASSWORD=guest
 RABBITMQ_VHOST=/
 ```
 
+> 💡 **Tip:** When running inside the provided Docker Compose stack, set service hosts (e.g., `USER_MANAGER_HOST`, `RIDE_MANAGER_HOST`, `LOCATION_MANAGER_HOST`, `KAFKA_HOST`, `RABBITMQ_HOST`, `REDIS_HOST`) to the matching container names (`usermanager`, `ridemanager`, `locationmanager`, `kafka-bus`, `rabbitmq-bus`, `redis-cache`).
+
 ### 🔧 Run Docker Compose
 
 ```bash
-docker-compose up --build
+docker compose -f docker/docker-compose.test-deploy.yml --env-file .env up -d
 ```
 
 
