@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2400" height="1500" viewBox="0 0 2400 1500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style type="text/css"><![CDATA[
+      text { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; fill: #0f172a; }
+      .title { font-size: 52px; font-weight: 700; }
+      .subtitle { font-size: 28px; font-weight: 500; fill: #1d4ed8; }
+      .section { font-size: 30px; font-weight: 700; }
+      .body { font-size: 22px; font-weight: 500; }
+      .note { font-size: 18px; fill: #475569; }
+    ]]></style>
+    <linearGradient id="dataBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#e0f2fe" />
+    </linearGradient>
+    <marker id="arrow-data" markerWidth="12" markerHeight="12" refX="12" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,3.5 L0,7 z" fill="#2563eb" />
+    </marker>
+    <marker id="arrow-stream" markerWidth="12" markerHeight="12" refX="12" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,3.5 L0,7 z" fill="#22c55e" />
+    </marker>
+    <marker id="arrow-ops" markerWidth="12" markerHeight="12" refX="12" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,3.5 L0,7 z" fill="#7c3aed" />
+    </marker>
+  </defs>
+
+  <rect width="2400" height="1500" rx="48" ry="48" fill="url(#dataBg)" stroke="#bfdbfe" stroke-width="4" />
+
+  <rect x="160" y="80" width="2080" height="160" rx="36" ry="36" fill="#1d4ed8" opacity="0.08" stroke="#1d4ed8" stroke-width="3" />
+  <text x="1200" y="155" class="title" text-anchor="middle">State, Data &amp; Observability Blueprint</text>
+  <text x="1200" y="215" class="subtitle" text-anchor="middle">How operational stores, event streams, analytics, and SRE tooling connect</text>
+
+  <!-- Operational data stores -->
+  <g transform="translate(200,320)">
+    <rect width="520" height="360" rx="32" ry="32" fill="#dbeafe" stroke="#1d4ed8" stroke-width="4" />
+    <text x="260" y="70" class="section" text-anchor="middle" fill="#1d4ed8">Operational Datastores</text>
+    <text x="40" y="140" class="body">• PostgreSQL clusters (users, rides, ledger)</text>
+    <text x="40" y="190" class="body">• Redis (sessions, surge cache, rate limits)</text>
+    <text x="40" y="240" class="body">• ElasticSearch (searchable trips, support)</text>
+    <text x="40" y="290" class="body">• Feature store (online features)</text>
+    <text x="40" y="330" class="note">Managed per service via operators</text>
+  </g>
+
+  <!-- Event backbone -->
+  <g transform="translate(820,320)">
+    <rect width="520" height="360" rx="32" ry="32" fill="#fef3c7" stroke="#f59e0b" stroke-width="4" />
+    <text x="260" y="70" class="section" text-anchor="middle" fill="#b45309">Streaming &amp; Messaging</text>
+    <text x="40" y="140" class="body">• Kafka – ride.status, driver.location, billing.*</text>
+    <text x="40" y="190" class="body">• RabbitMQ – notification fan-out, retries</text>
+    <text x="40" y="240" class="body">• Schema Registry – protobuf/Avro governance</text>
+    <text x="40" y="290" class="body">• Change Data Capture (Debezium) → Kafka</text>
+  </g>
+
+  <!-- Analytics -->
+  <g transform="translate(1440,320)">
+    <rect width="520" height="360" rx="32" ry="32" fill="#dcfce7" stroke="#16a34a" stroke-width="4" />
+    <text x="260" y="70" class="section" text-anchor="middle" fill="#047857">Analytics &amp; ML</text>
+    <text x="40" y="140" class="body">• Data Lake (S3/Delta) – immutable events</text>
+    <text x="40" y="190" class="body">• Warehouse (Trino/Presto) – BI, regulatory</text>
+    <text x="40" y="240" class="body">• Feature Engineering – Kubeflow pipelines</text>
+    <text x="40" y="290" class="body">• Model Serving – real-time scoring (fraud, ETA)</text>
+  </g>
+
+  <!-- Observability -->
+  <g transform="translate(1060,780)">
+    <rect width="520" height="320" rx="32" ry="32" fill="#ede9fe" stroke="#7c3aed" stroke-width="4" />
+    <text x="260" y="70" class="section" text-anchor="middle" fill="#5b21b6">Observability &amp; Reliability</text>
+    <text x="40" y="140" class="body">• Metrics: Prometheus → Grafana dashboards</text>
+    <text x="40" y="190" class="body">• Traces: OpenTelemetry → Jaeger</text>
+    <text x="40" y="240" class="body">• Logs: Fluent Bit → ElasticSearch / S3</text>
+    <text x="40" y="290" class="body">• On-call: PagerDuty, SLO tracking</text>
+  </g>
+
+  <!-- Governance -->
+  <g transform="translate(400,780)">
+    <rect width="520" height="320" rx="32" ry="32" fill="#cffafe" stroke="#0891b2" stroke-width="4" />
+    <text x="260" y="70" class="section" text-anchor="middle" fill="#0369a1">Data Governance &amp; Security</text>
+    <text x="40" y="140" class="body">• Data Catalog &amp; lineage (Amundsen)</text>
+    <text x="40" y="190" class="body">• Access control (RBAC, ABAC)</text>
+    <text x="40" y="240" class="body">• PII tokenization &amp; vault-backed secrets</text>
+    <text x="40" y="290" class="body">• Compliance audits &amp; GDPR tooling</text>
+  </g>
+
+  <!-- Activation -->
+  <g transform="translate(1680,780)">
+    <rect width="520" height="320" rx="32" ry="32" fill="#fee2e2" stroke="#dc2626" stroke-width="4" />
+    <text x="260" y="70" class="section" text-anchor="middle" fill="#b91c1c">Activation &amp; Products</text>
+    <text x="40" y="140" class="body">• Real-time personalization APIs</text>
+    <text x="40" y="190" class="body">• Ops dashboards &amp; anomaly alerts</text>
+    <text x="40" y="240" class="body">• Experimentation platform (feature flags)</text>
+    <text x="40" y="290" class="body">• Reporting portals for regulators/partners</text>
+  </g>
+
+  <!-- Flow arrows -->
+  <line x1="720" y1="500" x2="820" y2="500" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-data)" />
+  <text x="770" y="470" class="note" text-anchor="middle">CDC streams</text>
+
+  <line x1="1340" y1="500" x2="1440" y2="500" stroke="#22c55e" stroke-width="4" marker-end="url(#arrow-stream)" />
+  <text x="1390" y="470" class="note" text-anchor="middle">Kafka → Lake</text>
+
+  <line x1="960" y1="840" x2="1060" y2="840" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-data)" />
+  <text x="1010" y="810" class="note" text-anchor="middle">Governance metadata</text>
+
+  <line x1="1580" y1="840" x2="1680" y2="840" stroke="#22c55e" stroke-width="4" marker-end="url(#arrow-stream)" />
+  <text x="1630" y="810" class="note" text-anchor="middle">Model outputs</text>
+
+  <line x1="1320" y1="1100" x2="1320" y2="680" stroke="#7c3aed" stroke-width="4" marker-end="url(#arrow-ops)" />
+  <text x="1360" y="900" class="note" transform="rotate(-90 1360 900)" text-anchor="middle">Telemetry &amp; alerts</text>
+
+  <line x1="660" y1="680" x2="660" y2="780" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-data)" />
+  <text x="700" y="730" class="note" transform="rotate(-90 700 730)" text-anchor="middle">Access policies</text>
+
+  <line x1="1940" y1="680" x2="1940" y2="780" stroke="#22c55e" stroke-width="4" marker-end="url(#arrow-stream)" />
+  <text x="1980" y="730" class="note" transform="rotate(-90 1980 730)" text-anchor="middle">Feature feeds</text>
+
+  <line x1="460" y1="960" x2="1880" y2="960" stroke="#7c3aed" stroke-width="4" stroke-dasharray="16 14" marker-end="url(#arrow-ops)" />
+  <text x="1170" y="930" class="note" text-anchor="middle">Observability insights drive Ops actions</text>
+
+  <!-- Legend -->
+  <g transform="translate(1720,240)">
+    <rect width="420" height="140" rx="24" ry="24" fill="#ffffff" stroke="#1e293b" stroke-width="3" />
+    <g transform="translate(20,32)">
+      <line x1="0" y1="18" x2="80" y2="18" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-data)" />
+      <text x="100" y="24" class="body">Data movement / ETL</text>
+    </g>
+    <g transform="translate(20,72)">
+      <line x1="0" y1="18" x2="80" y2="18" stroke="#22c55e" stroke-width="4" marker-end="url(#arrow-stream)" />
+      <text x="100" y="24" class="body">Streaming / near-real-time</text>
+    </g>
+    <g transform="translate(20,112)">
+      <line x1="0" y1="18" x2="80" y2="18" stroke="#7c3aed" stroke-width="4" marker-end="url(#arrow-ops)" />
+      <text x="100" y="24" class="body">Observability &amp; feedback</text>
+    </g>
+  </g>
+</svg>
