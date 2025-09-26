@@ -35,11 +35,7 @@ namespace UberBackend
 
     SharedgPRCServer::~SharedgPRCServer()
     {
-        if (grpcServer)
-        {
-            grpcServer->Shutdown();
-            logger_.logMeta(utils::SingletonLogger::INFO, "gRPC server shut down", __FILE__, __LINE__, __func__);
-        }
+        Shutdown();
     }
 
     void SharedgPRCServer::Run()
@@ -50,9 +46,33 @@ namespace UberBackend
         builder.AddListeningPort(serverAddress, grpc::InsecureServerCredentials());
         builder.RegisterService(&service);
 
-        grpcServer = builder.BuildAndStart();
-        logger_.logMeta(utils::SingletonLogger::INFO, "gRPC server started on " + serverAddress, __FILE__, __LINE__, __func__);
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+            grpcServer = builder.BuildAndStart();
+            running_.store(static_cast<bool>(grpcServer));
+        }
 
-        grpcServer->Wait();
+        if (grpcServer)
+        {
+            logger_.logMeta(utils::SingletonLogger::INFO, "gRPC server started on " + serverAddress, __FILE__, __LINE__, __func__);
+            grpcServer->Wait();
+        }
+
+        running_.store(false);
+    }
+
+    void SharedgPRCServer::Shutdown()
+    {
+        std::unique_lock<std::mutex> lock(mutex_);
+        if (grpcServer)
+        {
+            grpcServer->Shutdown();
+            logger_.logMeta(utils::SingletonLogger::INFO, "gRPC server shut down", __FILE__, __LINE__, __func__);
+        }
+    }
+
+    bool SharedgPRCServer::isRunning() const
+    {
+        return running_.load();
     }
 }
