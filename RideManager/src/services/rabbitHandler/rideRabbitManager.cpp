@@ -1,5 +1,6 @@
 #include "../../../include/services/rabbitHandler/rideRabbitManager.h"
 
+#include "../../../../sharedResources/include/sharedRabbitMQProducer.h"
 #include "../../../../sharedUtils/include/config.h"
 
 namespace UberBackend
