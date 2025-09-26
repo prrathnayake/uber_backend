@@ -40,13 +40,19 @@ CREATE TABLE IF NOT EXISTS vehicles (
 -- Rides
 CREATE TABLE IF NOT EXISTS rides (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    ride_identifier VARCHAR(64) NOT NULL UNIQUE,
     user_id INT NOT NULL,
     driver_id INT,
     pickup_location VARCHAR(255) NOT NULL,
     dropoff_location VARCHAR(255) NOT NULL,
-    start_time DATETIME,
-    end_time DATETIME,
-    status ENUM('requested', 'ongoing', 'completed', 'cancelled') DEFAULT 'requested',
+    pickup_lat DECIMAL(10, 6) DEFAULT 0,
+    pickup_lng DECIMAL(10, 6) DEFAULT 0,
+    dropoff_lat DECIMAL(10, 6) DEFAULT 0,
+    dropoff_lng DECIMAL(10, 6) DEFAULT 0,
+    requested_at DATETIME,
+    updated_at DATETIME,
+    status ENUM('requested', 'pending_driver', 'accepted', 'in_progress', 'completed', 'cancelled') DEFAULT 'requested',
+    status_reason VARCHAR(255) DEFAULT NULL,
     fare DECIMAL(10, 2),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (driver_id) REFERENCES drivers(id)
