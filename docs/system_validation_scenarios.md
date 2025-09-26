@@ -114,8 +114,6 @@ Purpose: Confirm the system emits expected telemetry and background work after e
 
 Use these verifications alongside service logs to confirm every asynchronous requirement and cross-service integration functions as designed.
 
----
-
 ## Scenario 8 – Ride Request Cross-Service Debug Trace
 
 Purpose: Observe every subsystem a single happy-path ride request touches, together with the console breadcrumbs emitted by each component.
@@ -189,3 +187,4 @@ Purpose: Deliberately disable dependencies to confirm graceful degradation and p
 | 4 | Provide malformed ride status payload. | API replies `400` `Missing status field` when `status` absent; existing record untouched.【F:RideManager/src/services/routeHandler/rideRouteHandler.cpp†L218-L236】 | HTTP error body pinpoints validation guard, aiding regression debugging. |
 
 Capturing these degradation behaviors upfront ensures the playbook doubles as an incident response reference when dependencies fail in production.
+
