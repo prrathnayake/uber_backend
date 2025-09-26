@@ -8,7 +8,7 @@ using namespace utils;
 using namespace UberBackend;
 
 // Getting instance of the Singleton logger
-auto &logger_ = SingletonLogger::instance("log/UserServerLog.txt");
+auto &logger_ = SingletonLogger::instance();
 
 // Creating a unique pointer for the Server instance
 std::unique_ptr<Server> server_;

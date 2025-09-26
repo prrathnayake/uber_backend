@@ -6,7 +6,7 @@
 using namespace utils;
 using namespace UberBackend;
 
-auto &logger_ = SingletonLogger::instance("log/LocationServerLog.txt");
+auto &logger_ = SingletonLogger::instance();
 
 std::unique_ptr<Server> server_ = std::make_unique<Server>("LocationManager",
                                                            UberUtils::CONFIG::LOCATION_MANAGER_HOST,

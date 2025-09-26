@@ -1,14 +1,24 @@
 #include <iostream>
-#include <memory>
 
-#include <database/index.h>
-
-#include "database/database.h"
 #include <utils/index.h>
-using namespace utils;
 
 int main()
 {
-    auto fileLogger = std::make_unique<FileLogger>("log/RideManagerLog.txt"); // ✅ properly initialized
-    fileLogger->logMeta(FileLogger::ERROR, "Create database instance.", __FILE__, __LINE__, __func__);
-};
+    auto &logger = utils::SingletonLogger::instance();
+    logger.logMeta(utils::SingletonLogger::INFO,
+                   "Starting Ride Manager stub server (in-memory mode)",
+                   __FILE__,
+                   __LINE__,
+                   __func__);
+
+    std::cout << "RideManager service initialised with stubbed dependencies." << std::endl;
+    std::cout << "Press Enter to exit..." << std::endl;
+    std::cin.get();
+
+    logger.logMeta(utils::SingletonLogger::INFO,
+                   "Shutting down Ride Manager stub server",
+                   __FILE__,
+                   __LINE__,
+                   __func__);
+    return 0;
+}

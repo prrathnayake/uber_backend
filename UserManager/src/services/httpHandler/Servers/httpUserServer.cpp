@@ -4,8 +4,8 @@
 
 #include <nlohmann/json.hpp>
 
-#include "../include/services/httpHandler/servers/httpUserServer.h"
-#include "../../../../sharedUtils/include/config.h"
+#include "../../../../include/services/httpHandler/servers/httpUserServer.h"
+#include "../../../../../sharedUtils/include/config.h"
 
 using namespace UberBackend;
 using namespace utils;

@@ -2,6 +2,7 @@
 
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
+#include "../../sharedResources/include/sharedRabbitMQConsumer.h"
 
 using namespace utils;
 using namespace UberBackend;

@@ -1,13 +1,15 @@
 #pragma once
 
-#include <memory>
 #include <future>
-#include <sw/redis++/redis++.h>
+#include <memory>
+#include <mutex>
+#include <optional>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #include <utils/index.h>
-
-using namespace sw::redis;
-using namespace utils;
 
 namespace UberBackend {
 
@@ -22,8 +24,10 @@ namespace UberBackend {
         std::vector<std::string> getDriversFromSet(const std::string& h3Index);
 
     private:
-        SingletonLogger &logger_;
-        std::shared_ptr<Redis> redis_;
+        utils::SingletonLogger &logger_;
+        mutable std::mutex mutex_;
+        std::unordered_map<std::string, std::string> keyValueStore_;
+        std::unordered_map<std::string, std::unordered_set<std::string>> setStore_;
     };
 
 }
