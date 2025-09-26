@@ -1,24 +1,58 @@
+#include <filesystem>
 #include <iostream>
 
-#include <utils/index.h>
+#include "../include/server.h"
+#include "../../sharedUtils/include/config.h"
+
+using namespace UberBackend;
+using namespace utils;
+
+namespace
+{
+    SingletonLogger &logger = SingletonLogger::instance();
+    std::unique_ptr<RideServer> server;
+
+    void startApplication()
+    {
+        logger.logMeta(SingletonLogger::INFO, "Starting Uber Ride Manager Server...", __FILE__, __LINE__, __func__);
+
+        const auto sourceDir = std::filesystem::path(__FILE__).parent_path();
+        const auto projectRoot = (sourceDir / "../../").lexically_normal();
+        const auto envPath = (projectRoot / ".env").lexically_normal();
+        ConfigManager::instance().loadFromFile(envPath.string());
+
+        server = std::make_unique<RideServer>("RideManager",
+                                              UberUtils::CONFIG::getRideManagerHost(),
+                                              UberUtils::CONFIG::getRideManagerUsername(),
+                                              UberUtils::CONFIG::getRideManagerPassword(),
+                                              UberUtils::CONFIG::getRideManagerDatabase(),
+                                              UberUtils::CONFIG::getRideManagerDatabasePort());
+
+        const auto initScript = (projectRoot / "RideManager/sql_scripts/database_init.sql").lexically_normal();
+        server->initiateDatabase(initScript.string());
+        server->createHttpServers();
+        server->startHttpServers();
+        server->startConsumers();
+    }
+
+    void stopApplication()
+    {
+        logger.logMeta(SingletonLogger::INFO, "Stopping Uber Ride Manager Server...", __FILE__, __LINE__, __func__);
+        if (!server)
+        {
+            return;
+        }
+
+        server->stopConsumers();
+        server->stopHttpServers();
+    }
+}
 
 int main()
 {
-    auto &logger = utils::SingletonLogger::instance();
-    logger.logMeta(utils::SingletonLogger::INFO,
-                   "Starting Ride Manager stub server (in-memory mode)",
-                   __FILE__,
-                   __LINE__,
-                   __func__);
-
-    std::cout << "RideManager service initialised with stubbed dependencies." << std::endl;
-    std::cout << "Press Enter to exit..." << std::endl;
+    startApplication();
+    std::cout << "RideManager service running. Press Enter to exit..." << std::endl;
     std::cin.get();
-
-    logger.logMeta(utils::SingletonLogger::INFO,
-                   "Shutting down Ride Manager stub server",
-                   __FILE__,
-                   __LINE__,
-                   __func__);
+    stopApplication();
     return 0;
 }
