@@ -22,7 +22,7 @@ namespace UberBackend
         RouteHandler(std::shared_ptr<SharedDatabase> db);
         ~RouteHandler();
 
-        void handleNewUser(std::shared_ptr<User> user);
+        bool handleNewUser(std::shared_ptr<User> user);
         nlohmann::json handleUserLogin(std::string &username);
 
         // Extended CRUD operations
@@ -30,6 +30,7 @@ namespace UberBackend
         bool handleUpdateUser(const std::string &userId, const nlohmann::json &data);
         bool handleDeleteUser(const std::string &userId);
         nlohmann::json handleGetAllUsers();
+        nlohmann::json handleGetUsersPaginated(int offset, int limit);
 
         // PATCH operations
         bool handlePasswordUpdate(const std::string &userId, const std::string &oldPwd, const std::string &newPwd);
@@ -37,6 +38,11 @@ namespace UberBackend
 
         // Search
         nlohmann::json searchUsersByUsername(const std::string &username);
+        nlohmann::json checkUserAvailability(const std::string &username, const std::string &email);
+
+        // Service telemetry
+        nlohmann::json getUserStats();
+        nlohmann::json getHealthStatus();
 
     private:
         std::shared_ptr<UserDBManager> userDBManager_;

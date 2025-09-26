@@ -116,9 +116,14 @@ bool SharedDatabase::executeSelect(const std::string &query)
 std::string SharedDatabase::escapeString(const std::string &input)
 {
     logger_.logMeta(SingletonLogger::INFO, "Escaping: " + input, __FILE__, __LINE__, __func__);
-    if (input.empty() || input == "NULL" || input == "null" || input == "''" || input == "\"\"" || input == "")
+    if (input.empty())
     {
-        logger_.logMeta(SingletonLogger::ERROR, "Input string is empty.", __FILE__, __LINE__, __func__);
+        logger_.logMeta(SingletonLogger::DEBUG, "Empty string provided to escapeString; returning empty value.", __FILE__, __LINE__, __func__);
+        return "";
+    }
+    if (input == "NULL" || input == "null" || input == "''" || input == "\"\"")
+    {
+        logger_.logMeta(SingletonLogger::WARNING, "Received sentinel null-like value for escapeString; returning empty.", __FILE__, __LINE__, __func__);
         return "";
     }
     std::string result = database_->escapeString(input);

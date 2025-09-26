@@ -1,8 +1,58 @@
 #pragma once
-#include <iostream>
+
+#include <filesystem>
+#include <mutex>
+#include <optional>
+#include <shared_mutex>
+#include <string>
+#include <unordered_map>
+
+#include <utils/index.h>
 
 namespace UberBackend
 {
+    /**
+     * @brief Runtime configuration loader with support for environment overrides and .env files.
+     *
+     * The legacy code relied purely on compile-time constants.  This manager keeps those defaults
+     * while allowing deployments to override values without recompilation.
+     */
+    class ConfigManager
+    {
+    public:
+        static ConfigManager &instance();
+
+        /**
+         * @brief Configure the manager to read from the provided .env file.
+         *        The file is parsed lazily on first access, and cached values are invalidated.
+         */
+        void loadFromFile(const std::string &envPath);
+
+        /**
+         * @brief Force reloading configuration values from disk on the next read.
+         */
+        void reload();
+
+        [[nodiscard]] std::string getString(const std::string &key, const std::string &defaultValue = "") const;
+        [[nodiscard]] int getInt(const std::string &key, int defaultValue = 0) const;
+        [[nodiscard]] unsigned int getUnsigned(const std::string &key, unsigned int defaultValue = 0) const;
+        [[nodiscard]] bool getBool(const std::string &key, bool defaultValue = false) const;
+        [[nodiscard]] double getDouble(const std::string &key, double defaultValue = 0.0) const;
+
+    private:
+        ConfigManager();
+
+        void ensureLoaded() const;
+        void loadUnlocked();
+        static std::string trim(const std::string &value);
+
+        mutable std::shared_mutex mutex_;
+        mutable bool loaded_;
+        std::unordered_map<std::string, std::string> values_;
+        std::filesystem::path envPath_;
+        utils::SingletonLogger &logger_;
+    };
+
     class UberUtils
     {
     public:
@@ -32,13 +82,60 @@ namespace UberBackend
 
             static constexpr unsigned int RIDE_MANAGER_HTTP_RIDE_HANDLER_PORT = 8083;
 
-            static constexpr const char *REDIS_Host = "pasan";
+            static constexpr const char *REDIS_HOST = "pasan";
             static constexpr unsigned int REDIS_PORT = 6379;
 
             static constexpr const char *KAFKA_HOST = "localhost";
             static constexpr unsigned int KAFKA_PORT = 9092;
 
-            static constexpr const char *JWT_SECRET = "localguwgfowgi8fgwkurvrtgwnlgeghrihtu98ynvuhfnauxehnchgecturvtigfiwgiikvbcjkbsvgwegfwfwefhofewefswefwft";
+            static constexpr const char *JWT_SECRET = "localguwgfowgi8fgwkurvrtgwnlgeghrihtu98ynvuhfnauxehnchgecturvtigfiwgiikvb"
+                                                      "cjkbsvgwegfwfwefhofewefswefwft";
+
+            static std::string getUserManagerHost()
+            {
+                return ConfigManager::instance().getString("USER_MANAGER_HOST", USER_MANAGER_HOST);
+            }
+
+            static std::string getUserManagerUsername()
+            {
+                return ConfigManager::instance().getString("USER_MANAGER_USERNAME", USER_MANAGER_USERNAME);
+            }
+
+            static std::string getUserManagerPassword()
+            {
+                return ConfigManager::instance().getString("USER_MANAGER_PASSWORD", USER_MANAGER_PASSWORD);
+            }
+
+            static std::string getUserManagerDatabase()
+            {
+                return ConfigManager::instance().getString("USER_MANAGER_DATABASE_NAME", USER_MANAGER_DATABASE_NAME);
+            }
+
+            static unsigned int getUserManagerDatabasePort()
+            {
+                return ConfigManager::instance().getUnsigned("USER_MANAGER_DATABASE_PORT", USER_MANAGER_DATABASE_PORT);
+            }
+
+            static unsigned int getUserManagerHttpPort()
+            {
+                return ConfigManager::instance().getUnsigned("USER_MANAGER_HTTP_USER_HANDLER_PORT", USER_MANAGER_HTTP_USER_HANDLER_PORT);
+            }
+
+            static std::string getKafkaHost()
+            {
+                return ConfigManager::instance().getString("KAFKA_HOST", KAFKA_HOST);
+            }
+
+            static unsigned int getKafkaPort()
+            {
+                return ConfigManager::instance().getUnsigned("KAFKA_PORT", KAFKA_PORT);
+            }
+
+            static std::string getJwtSecret()
+            {
+                return ConfigManager::instance().getString("JWT_SECRET", JWT_SECRET);
+            }
         };
     };
-};
+}
+
