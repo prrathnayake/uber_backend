@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="2400" height="1500" viewBox="0 0 2400 1500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style type="text/css"><![CDATA[
+      text { font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; fill: #0f172a; }
+      .title { font-size: 52px; font-weight: 700; }
+      .subtitle { font-size: 28px; font-weight: 500; fill: #1d4ed8; }
+      .section-title { font-size: 30px; font-weight: 700; }
+      .body { font-size: 22px; font-weight: 500; line-height: 1.4; }
+      .caption { font-size: 18px; fill: #475569; }
+    ]]></style>
+    <linearGradient id="msBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#e0f2fe" />
+    </linearGradient>
+    <marker id="sync" markerWidth="12" markerHeight="12" refX="12" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,3.5 L0,7 z" fill="#2563eb" />
+    </marker>
+    <marker id="async" markerWidth="12" markerHeight="12" refX="12" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,3.5 L0,7 z" fill="#f97316" />
+    </marker>
+  </defs>
+
+  <rect width="2400" height="1500" rx="48" ry="48" fill="url(#msBg)" stroke="#bfdbfe" stroke-width="4" />
+
+  <rect x="160" y="80" width="2080" height="160" rx="36" ry="36" fill="#1d4ed8" opacity="0.08" stroke="#1d4ed8" stroke-width="3" />
+  <text x="1200" y="155" class="title" text-anchor="middle">Microservices Landscape &amp; Service Contracts</text>
+  <text x="1200" y="215" class="subtitle" text-anchor="middle">Domain-aligned bounded contexts, datastore ownership, and shared capabilities</text>
+
+  <!-- Edge tier -->
+  <rect x="200" y="300" width="520" height="320" rx="32" ry="32" fill="#ecfeff" stroke="#0f766e" stroke-width="4" />
+  <text x="460" y="350" class="section-title" text-anchor="middle" fill="#0f766e">Edge &amp; Experience</text>
+  <text x="240" y="400" class="body">• API Gateway (REST/gRPC) – request auth, quota enforcement</text>
+  <text x="240" y="440" class="body">• GraphQL/BFF adapters per client (Rider, Driver, Admin)</text>
+  <text x="240" y="480" class="body">• Realtime socket hub – WebSockets, push notifications</text>
+  <text x="240" y="520" class="body">• Feature flag SDK &amp; A/B routing</text>
+
+  <!-- User services -->
+  <rect x="780" y="300" width="420" height="320" rx="32" ry="32" fill="#e0ecff" stroke="#1d4ed8" stroke-width="4" />
+  <text x="990" y="350" class="section-title" text-anchor="middle" fill="#1d4ed8">Identity &amp; Growth</text>
+  <text x="820" y="400" class="body">• UserManager – auth, profiles, wallets</text>
+  <text x="820" y="440" class="body">• CampaignService – referral, incentives</text>
+  <text x="820" y="480" class="body">• SupportService – case management</text>
+  <text x="820" y="520" class="caption">Datastores: PostgreSQL (users, campaigns), Redis (session cache)</text>
+
+  <!-- Trip services -->
+  <rect x="1240" y="300" width="460" height="320" rx="32" ry="32" fill="#fee2e2" stroke="#dc2626" stroke-width="4" />
+  <text x="1470" y="350" class="section-title" text-anchor="middle" fill="#b91c1c">Trips &amp; Marketplace</text>
+  <text x="1280" y="400" class="body">• RideManager – orchestration, matching</text>
+  <text x="1280" y="440" class="body">• PricingService – surge, dynamic ETA</text>
+  <text x="1280" y="480" class="body">• DispatchService – driver assignment queue</text>
+  <text x="1280" y="520" class="caption">State: PostgreSQL (rides), Kafka (ride.status), Redis (driver availability)</text>
+
+  <!-- Geo services -->
+  <rect x="1740" y="300" width="440" height="320" rx="32" ry="32" fill="#dcfce7" stroke="#16a34a" stroke-width="4" />
+  <text x="1960" y="350" class="section-title" text-anchor="middle" fill="#047857">Geo &amp; Maps</text>
+  <text x="1780" y="400" class="body">• LocationManager – GPS ingestion, H3 index</text>
+  <text x="1780" y="440" class="body">• RoutingService – ETA, route optimization</text>
+  <text x="1780" y="480" class="body">• GeofenceService – compliance zones, surge areas</text>
+  <text x="1780" y="520" class="caption">State: PostgreSQL/PostGIS, Redis (hot locations), Kafka (driver.location)</text>
+
+  <!-- Finance services -->
+  <rect x="520" y="700" width="520" height="320" rx="32" ry="32" fill="#fef3c7" stroke="#f59e0b" stroke-width="4" />
+  <text x="780" y="750" class="section-title" text-anchor="middle" fill="#b45309">Payments &amp; Compliance</text>
+  <text x="560" y="800" class="body">• BillingAdapter – external gateway integrations</text>
+  <text x="560" y="840" class="body">• LedgerService – trip fares, adjustments</text>
+  <text x="560" y="880" class="body">• PayoutService – driver earnings, banking flows</text>
+  <text x="560" y="920" class="caption">State: PostgreSQL (ledger), S3 (statements), Kafka (billing.*)</text>
+
+  <!-- Platform services -->
+  <rect x="1100" y="700" width="520" height="320" rx="32" ry="32" fill="#ede9fe" stroke="#7c3aed" stroke-width="4" />
+  <text x="1360" y="750" class="section-title" text-anchor="middle" fill="#5b21b6">Platform &amp; Enablement</text>
+  <text x="1140" y="800" class="body">• ObservabilityService – metrics, traces, alerts</text>
+  <text x="1140" y="840" class="body">• NotificationService – SMS, email, push fan-out</text>
+  <text x="1140" y="880" class="body">• ConfigService – dynamic config, feature flags</text>
+  <text x="1140" y="920" class="caption">Shared: OpenTelemetry pipeline, Redis (rate limits), RabbitMQ queues</text>
+
+  <!-- Data & analytics -->
+  <rect x="1680" y="700" width="520" height="320" rx="32" ry="32" fill="#cffafe" stroke="#0891b2" stroke-width="4" />
+  <text x="1940" y="750" class="section-title" text-anchor="middle" fill="#0369a1">Data &amp; Intelligence</text>
+  <text x="1720" y="800" class="body">• Event Ingest – Kafka Connect → S3/Lakehouse</text>
+  <text x="1720" y="840" class="body">• AnalyticsWarehouse – Presto/Trino, dashboards</text>
+  <text x="1720" y="880" class="body">• ML Platform – matching, fraud models</text>
+  <text x="1720" y="920" class="caption">Data lake, feature store, model registry</text>
+
+  <!-- Data plane -->
+  <rect x="200" y="1080" width="2080" height="220" rx="36" ry="36" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3" />
+  <text x="1240" y="1140" class="section-title" text-anchor="middle" fill="#0f172a">Shared Infrastructure</text>
+  <text x="240" y="1190" class="body">• Service Mesh (mTLS, retries, circuit breaking)</text>
+  <text x="240" y="1230" class="body">• Container Platform (Kubernetes, Helm releases)</text>
+  <text x="1220" y="1190" class="body">• Secrets: Vault, KMS integration</text>
+  <text x="1220" y="1230" class="body">• Observability: Prometheus, Grafana, Jaeger</text>
+  <text x="1800" y="1190" class="body">• Data Stores: PostgreSQL clusters, Redis, Kafka, RabbitMQ</text>
+  <text x="1800" y="1230" class="body">• CI/CD: GitHub Actions → Artifact Registry → ArgoCD</text>
+
+  <!-- Connections -->
+  <line x1="520" y1="460" x2="780" y2="460" stroke="#2563eb" stroke-width="4" marker-end="url(#sync)" />
+  <text x="650" y="430" class="caption" text-anchor="middle">REST/gRPC APIs</text>
+
+  <line x1="1200" y1="460" x2="1240" y2="460" stroke="#2563eb" stroke-width="4" marker-end="url(#sync)" />
+  <text x="1220" y="430" class="caption" text-anchor="middle">ride APIs</text>
+
+  <line x1="1700" y1="460" x2="1740" y2="460" stroke="#2563eb" stroke-width="4" marker-end="url(#sync)" />
+  <text x="1720" y="430" class="caption" text-anchor="middle">geo RPC</text>
+
+  <line x1="1480" y1="620" x2="1480" y2="700" stroke="#f97316" stroke-width="4" marker-end="url(#async)" />
+  <text x="1510" y="660" class="caption" text-anchor="start">ride.status events</text>
+
+  <line x1="980" y1="620" x2="980" y2="700" stroke="#f97316" stroke-width="4" marker-end="url(#async)" />
+  <text x="1010" y="660" class="caption" text-anchor="start">user.created</text>
+
+  <line x1="1980" y1="620" x2="1980" y2="700" stroke="#f97316" stroke-width="4" marker-end="url(#async)" />
+  <text x="2010" y="660" class="caption" text-anchor="start">driver.location</text>
+
+  <line x1="1040" y1="860" x2="1100" y2="860" stroke="#2563eb" stroke-width="4" marker-end="url(#sync)" />
+  <text x="1070" y="830" class="caption" text-anchor="middle">notifications API</text>
+
+  <line x1="1540" y1="860" x2="1680" y2="860" stroke="#2563eb" stroke-width="4" marker-end="url(#sync)" />
+  <text x="1610" y="830" class="caption" text-anchor="middle">analytics exports</text>
+
+  <line x1="1100" y1="860" x2="1040" y2="860" stroke="#f97316" stroke-width="4" marker-end="url(#async)" />
+  <text x="1060" y="900" class="caption" text-anchor="middle">alert webhooks</text>
+
+  <!-- Legend -->
+  <g transform="translate(1800,220)">
+    <rect width="360" height="120" rx="24" ry="24" fill="#ffffff" stroke="#1e293b" stroke-width="3" />
+    <g transform="translate(20,30)">
+      <line x1="0" y1="20" x2="80" y2="20" stroke="#2563eb" stroke-width="4" marker-end="url(#sync)" />
+      <text x="100" y="26" class="body">Synchronous API contract</text>
+    </g>
+    <g transform="translate(20,70)">
+      <line x1="0" y1="20" x2="80" y2="20" stroke="#f97316" stroke-width="4" marker-end="url(#async)" />
+      <text x="100" y="26" class="body">Async events / streaming</text>
+    </g>
+  </g>
+</svg>
