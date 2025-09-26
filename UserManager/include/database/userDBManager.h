@@ -31,6 +31,11 @@ namespace UberBackend
         bool deleteUserById(int id);
 
         [[nodiscard]] nlohmann::json searchUsersByUsername(const std::string &username);
+        [[nodiscard]] nlohmann::json getUsersPaginated(int offset, int limit);
+        [[nodiscard]] nlohmann::json getUserStats();
+
+        bool usernameExists(const std::string &username);
+        bool emailExists(const std::string &email);
 
     private:
         SingletonLogger &logger_;

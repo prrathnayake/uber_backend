@@ -1,4 +1,5 @@
 #include <jwt-cpp/jwt.h>
+
 #include "../include/jwt.h"
 
 using namespace UberBackend;
@@ -47,3 +48,29 @@ bool JWTUtils::verifyToken(const std::string &token, std::string &userId) {
 
     return false;
 }
+
+std::optional<std::string> JWTUtils::extractSubject(const std::string &token) {
+    try {
+        using json_traits = jwt::traits::nlohmann_json;
+        auto decoded = jwt::decode<json_traits>(token);
+
+        if (decoded.has_payload_claim("sub")) {
+            return decoded.get_payload_claim("sub").as_string();
+        }
+    } catch (const std::exception &e) {
+        logger_.logMeta(utils::SingletonLogger::ERROR, "JWT decode failed: " + std::string(e.what()), __FILE__, __LINE__, __func__);
+    }
+
+    return std::nullopt;
+}
+
+std::string JWTUtils::refreshToken(const std::string &token, int expirySeconds) {
+    std::string userId;
+    if (!verifyToken(token, userId)) {
+        logger_.logMeta(utils::SingletonLogger::WARNING, "Refresh denied due to invalid token", __FILE__, __LINE__, __func__);
+        return "";
+    }
+
+    return generateToken(userId, expirySeconds);
+}
+

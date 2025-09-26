@@ -18,7 +18,11 @@ void HttpHandler::createServers()
 {
     logger_.logMeta(SingletonLogger::INFO, "Creating a lightweight HTTP server.", __FILE__, __LINE__, __func__);
     
-    auto httpUserHandler_ = std::make_unique<UberBackend::HttpUserServer>( "httpUserHandler","localhost", UberUtils::CONFIG::USER_MANAGER_HTTP_USER_HANDLER_PORT, database_);
+    auto httpUserHandler_ = std::make_unique<UberBackend::HttpUserServer>(
+        "httpUserHandler",
+        UberUtils::CONFIG::getUserManagerHost(),
+        static_cast<int>(UberUtils::CONFIG::getUserManagerHttpPort()),
+        database_);
     httpUserHandler_->createServerMethods();
 
     logger_.logMeta(SingletonLogger::INFO, "Added lightweight server to vector.", __FILE__, __LINE__, __func__);
