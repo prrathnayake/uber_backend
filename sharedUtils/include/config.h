@@ -128,6 +128,26 @@ namespace UberBackend
                 return ConfigManager::instance().getUnsigned("USER_MANAGER_HTTP_USER_HANDLER_PORT", USER_MANAGER_HTTP_USER_HANDLER_PORT);
             }
 
+            static std::string getLocationManagerHost()
+            {
+                return ConfigManager::instance().getString("LOCATION_MANAGER_HOST", LOCATION_MANAGER_HOST);
+            }
+
+            static std::string getLocationManagerDatabase()
+            {
+                return ConfigManager::instance().getString("LOCATION_MANAGER_DATABASE_NAME", LOCATION_MANAGER_DATABASE_NAME);
+            }
+
+            static unsigned int getLocationManagerDatabasePort()
+            {
+                return ConfigManager::instance().getUnsigned("LOCATION_MANAGER_DATABASE_PORT", LOCATION_MANAGER_DATABASE_PORT);
+            }
+
+            static unsigned int getLocationManagerHttpPort()
+            {
+                return ConfigManager::instance().getUnsigned("LOCATION_MANAGER_HTTP_LOCATION_HANDLER_PORT", LOCATION_MANAGER_HTTP_LOCATION_HANDLER_PORT);
+            }
+
             static std::string getKafkaHost()
             {
                 return ConfigManager::instance().getString("KAFKA_HOST", KAFKA_HOST);
@@ -141,6 +161,36 @@ namespace UberBackend
             static unsigned int getLocationManagerGrpcPort()
             {
                 return ConfigManager::instance().getUnsigned("LOCATION_MANAGER_GRPC_PORT", LOCATION_MANAGER_GRPC_PORT);
+            }
+
+            static std::string getRideManagerHost()
+            {
+                return ConfigManager::instance().getString("RIDE_MANAGER_HOST", RIDE_MANAGER_HOST);
+            }
+
+            static unsigned int getRideManagerDatabasePort()
+            {
+                return ConfigManager::instance().getUnsigned("RIDE_MANAGER_DATABASE_PORT", RIDE_MANAGER_DATABASE_PORT);
+            }
+
+            static std::string getRideManagerDatabase()
+            {
+                return ConfigManager::instance().getString("RIDE_MANAGER_DATABASE_NAME", RIDE_MANAGER_DATABASE_NAME);
+            }
+
+            static std::string getRideManagerUsername()
+            {
+                return ConfigManager::instance().getString("RIDE_MANAGER_USERNAME", RIDE_MANAGER_USERNAME);
+            }
+
+            static std::string getRideManagerPassword()
+            {
+                return ConfigManager::instance().getString("RIDE_MANAGER_PASSWORD", RIDE_MANAGER_PASSWORD);
+            }
+
+            static unsigned int getRideManagerHttpPort()
+            {
+                return ConfigManager::instance().getUnsigned("RIDE_MANAGER_HTTP_RIDE_HANDLER_PORT", RIDE_MANAGER_HTTP_RIDE_HANDLER_PORT);
             }
 
             static std::string getRabbitMQHost()
