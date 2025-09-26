@@ -1,6 +1,6 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
-conan build . --build=missing -s build_type=Release
+conan build . --output-folder=build --build=missing -s build_type=Release
 
 ./build/Release/bin/RideManager

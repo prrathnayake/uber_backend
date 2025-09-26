@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS payments (
     method ENUM('card', 'cash', 'wallet') NOT NULL,
     status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (ride_id) REFERENCES rides(id) ON DELETE CASCADE
+    FOREIGN KEY (ride_id) REFERENCES rides(id) ON DELETE CASCADE,
+    UNIQUE KEY idx_payments_ride (ride_id)
 );
 
 -- Locations (optional live tracking or saved places)

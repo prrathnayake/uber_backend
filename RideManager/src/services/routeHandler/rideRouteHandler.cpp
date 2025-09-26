@@ -1,6 +1,7 @@
 #include "../../../include/services/routeHandler/rideRouteHandler.h"
 
 #include <chrono>
+#include <cctype>
 #include <ctime>
 #include <iomanip>
 #include <sstream>
@@ -111,6 +112,13 @@ namespace UberBackend
             payload["status_reason"] = record.statusReason;
         }
 
+        if (record.fareRecorded)
+        {
+            payload["fare"] = {{"amount", record.fareAmount}, {"currency", record.currency}};
+            payload["payment"] = {{"method", record.paymentMethod},
+                                    {"status", record.paymentRecorded ? "completed" : "pending"}};
+        }
+
         return payload;
     }
 
@@ -213,26 +221,231 @@ namespace UberBackend
             }
         };
 
+        std::string fareValue = "NULL";
+        if (record.fareRecorded)
+        {
+            std::ostringstream fareStream;
+            fareStream << std::fixed << std::setprecision(2) << record.fareAmount;
+            fareValue = fareStream.str();
+        }
+
+        const auto rideIdEscaped = database_->escapeString(record.id);
+        const auto pickupEscaped = database_->escapeString(record.pickupAddress);
+        const auto dropoffEscaped = database_->escapeString(record.dropoffAddress);
+        const auto requestedAtEscaped = database_->escapeString(record.requestedAt);
+        const auto updatedAtEscaped = database_->escapeString(record.updatedAt);
+        const auto statusEscaped = database_->escapeString(statusToString(record.status));
+        const auto reasonEscaped = database_->escapeString(record.statusReason);
+
         std::ostringstream query;
-        query << "INSERT INTO rides(ride_identifier, user_id, driver_id, pickup_location, dropoff_location, pickup_lat, pickup_lng, dropoff_lat, dropoff_lng, requested_at, updated_at, status, status_reason) VALUES ("
-              << "'" << database_->escapeString(record.id) << "',"
+        query << "INSERT INTO rides(ride_identifier, user_id, driver_id, pickup_location, dropoff_location, pickup_lat, pickup_lng, dropoff_lat, dropoff_lng, requested_at, updated_at, status, status_reason, fare) VALUES ("
+              << "'" << rideIdEscaped << "',"
               << toInteger(record.riderId) << ","
               << (record.driverId.empty() ? std::string("NULL") : std::to_string(toInteger(record.driverId))) << ","
-              << "'" << database_->escapeString(record.pickupAddress) << "',"
-              << "'" << database_->escapeString(record.dropoffAddress) << "',"
+              << "'" << pickupEscaped << "',"
+              << "'" << dropoffEscaped << "',"
               << record.pickupLat << ","
               << record.pickupLng << ","
               << record.dropoffLat << ","
               << record.dropoffLng << ","
-              << "'" << database_->escapeString(record.requestedAt) << "',"
-              << "'" << database_->escapeString(record.updatedAt) << "',"
-              << "'" << database_->escapeString(statusToString(record.status)) << "',"
-              << "'" << database_->escapeString(record.statusReason) << "')"
-              << " ON DUPLICATE KEY UPDATE status='" << database_->escapeString(statusToString(record.status)) << "',"
-              << " status_reason='" << database_->escapeString(record.statusReason) << "',"
-              << " updated_at='" << database_->escapeString(record.updatedAt) << "'";
+              << "'" << requestedAtEscaped << "',"
+              << "'" << updatedAtEscaped << "',"
+              << "'" << statusEscaped << "',"
+              << "'" << reasonEscaped << "',"
+              << fareValue << ")"
+              << " ON DUPLICATE KEY UPDATE status='" << statusEscaped << "',"
+              << " status_reason='" << reasonEscaped << "',"
+              << " updated_at='" << updatedAtEscaped << "',"
+              << " fare=" << fareValue;
 
         database_->executeInsert(query.str());
+    }
+
+    std::optional<double> RideRouteHandler::parseFareAmount(const nlohmann::json &payload) const
+    {
+        if (!payload.contains("fare"))
+        {
+            return std::nullopt;
+        }
+
+        const auto &fareNode = payload.at("fare");
+        double amount = 0.0;
+
+        if (fareNode.is_number_float() || fareNode.is_number_integer())
+        {
+            amount = fareNode.get<double>();
+        }
+        else if (fareNode.is_string())
+        {
+            const auto raw = fareNode.get<std::string>();
+            std::string normalized;
+            bool decimalEncountered = false;
+            for (char ch : raw)
+            {
+                if (std::isdigit(static_cast<unsigned char>(ch)))
+                {
+                    normalized.push_back(ch);
+                }
+                else if ((ch == '.' || ch == ',') && !decimalEncountered)
+                {
+                    normalized.push_back('.');
+                    decimalEncountered = true;
+                }
+            }
+
+            if (normalized.empty())
+            {
+                return std::nullopt;
+            }
+
+            try
+            {
+                amount = std::stod(normalized);
+            }
+            catch (...)
+            {
+                return std::nullopt;
+            }
+        }
+        else
+        {
+            return std::nullopt;
+        }
+
+        if (amount < 0.0)
+        {
+            return std::nullopt;
+        }
+
+        return amount;
+    }
+
+    void RideRouteHandler::creditDriverWallet(const std::string &driverId, double amount, const RideRecord &record)
+    {
+        if (driverId.empty() || amount <= 0.0)
+        {
+            logger_.logMeta(utils::SingletonLogger::WARNING,
+                            "Skipping wallet credit because of missing driver or non-positive fare", __FILE__, __LINE__, __func__);
+            return;
+        }
+
+        {
+            std::scoped_lock lock(mutex_);
+            auto &state = drivers_[driverId];
+            state.walletBalance += amount;
+            state.lifetimeEarnings += amount;
+        }
+
+        std::ostringstream oss;
+        oss << "Credited driver " << driverId << " wallet with " << std::fixed << std::setprecision(2) << amount
+            << " for ride " << record.id;
+        logger_.logMeta(utils::SingletonLogger::INFO, oss.str(), __FILE__, __LINE__, __func__);
+    }
+
+    double RideRouteHandler::getDriverWalletBalance(const std::string &driverId) const
+    {
+        std::scoped_lock lock(mutex_);
+        auto it = drivers_.find(driverId);
+        return it == drivers_.end() ? 0.0 : it->second.walletBalance;
+    }
+
+    bool RideRouteHandler::recordPaymentInDatabase(const RideRecord &record, double amount, const std::string &method)
+    {
+        if (!database_)
+        {
+            logger_.logMeta(utils::SingletonLogger::WARNING,
+                            "Cannot persist payment without an active database connection", __FILE__, __LINE__, __func__);
+            return false;
+        }
+
+        auto ridePrimaryKey = lookupRidePrimaryKey(record.id);
+        if (!ridePrimaryKey)
+        {
+            logger_.logMeta(utils::SingletonLogger::WARNING,
+                            "Ride primary key lookup failed while recording payment for " + record.id,
+                            __FILE__,
+                            __LINE__,
+                            __func__);
+            return false;
+        }
+
+        std::ostringstream amountStream;
+        amountStream << std::fixed << std::setprecision(2) << amount;
+
+        std::string methodToPersist = method.empty() ? std::string{"wallet"} : method;
+        const auto escapedMethod = database_->escapeString(methodToPersist);
+
+        std::ostringstream query;
+        query << "INSERT INTO payments (ride_id, amount, method, status) VALUES ("
+              << *ridePrimaryKey << ", " << amountStream.str() << ", '" << escapedMethod
+              << "', 'completed') ON DUPLICATE KEY UPDATE amount=VALUES(amount), method=VALUES(method), status='completed'";
+
+        if (!database_->executeInsert(query.str()))
+        {
+            logger_.logMeta(utils::SingletonLogger::ERROR,
+                            "Failed to persist payment record for ride " + record.id,
+                            __FILE__,
+                            __LINE__,
+                            __func__);
+            return false;
+        }
+
+        logger_.logMeta(utils::SingletonLogger::INFO,
+                        "Recorded payment of " + amountStream.str() + " for ride " + record.id + " using method " + methodToPersist,
+                        __FILE__,
+                        __LINE__,
+                        __func__);
+        return true;
+    }
+
+    std::optional<long long> RideRouteHandler::lookupRidePrimaryKey(const std::string &rideIdentifier) const
+    {
+        if (!database_)
+        {
+            return std::nullopt;
+        }
+
+        const auto escapedIdentifier = database_->escapeString(rideIdentifier);
+        std::ostringstream query;
+        query << "SELECT id FROM rides WHERE ride_identifier='" << escapedIdentifier << "' LIMIT 1";
+
+        auto rows = database_->fetchRows(query.str());
+        if (rows.empty())
+        {
+            return std::nullopt;
+        }
+
+        const auto &row = rows.front();
+        auto it = row.find("id");
+        if (it == row.end())
+        {
+            return std::nullopt;
+        }
+
+        try
+        {
+            return std::stoll(it->second);
+        }
+        catch (...)
+        {
+            logger_.logMeta(utils::SingletonLogger::ERROR,
+                            "Failed to parse ride primary key from database response for ride " + rideIdentifier,
+                            __FILE__,
+                            __LINE__,
+                            __func__);
+            return std::nullopt;
+        }
+    }
+
+    RideRouteHandler::DriverState RideRouteHandler::snapshotDriverState(const std::string &driverId) const
+    {
+        std::scoped_lock lock(mutex_);
+        auto it = drivers_.find(driverId);
+        if (it == drivers_.end())
+        {
+            return {};
+        }
+        return it->second;
     }
 
     nlohmann::json RideRouteHandler::handleRideRequest(const nlohmann::json &payload)
@@ -253,6 +466,8 @@ namespace UberBackend
         const double pickupLng = payload.value("pickup_lng", 0.0);
         const double dropoffLat = payload.value("dropoff_lat", 0.0);
         const double dropoffLng = payload.value("dropoff_lng", 0.0);
+        const std::string currency = payload.value("currency", std::string{"USD"});
+        const std::string paymentMethod = payload.value("payment_method", std::string{"wallet"});
 
         std::vector<std::string> nearbyDrivers;
         if (locationGateway_)
@@ -302,6 +517,8 @@ namespace UberBackend
         record.status = RideStatus::PendingDriverDecision;
         record.requestedAt = currentTimestamp();
         record.updatedAt = record.requestedAt;
+        record.currency = currency;
+        record.paymentMethod = paymentMethod;
 
         {
             std::scoped_lock lock(mutex_);
@@ -351,7 +568,44 @@ namespace UberBackend
             break;
         case RideStatus::Completed:
             record.status = RideStatus::Completed;
-            record.statusReason = payload.value("fare", std::string{});
+            record.statusReason = payload.value("reason", record.statusReason);
+            record.currency = payload.value("currency", record.currency);
+            record.paymentMethod = payload.value("payment_method", record.paymentMethod);
+            if (record.fareRecorded)
+            {
+                logger_.logMeta(utils::SingletonLogger::WARNING,
+                                "Ride completion received but fare already recorded; skipping duplicate settlement for ride " + rideId,
+                                __FILE__,
+                                __LINE__,
+                                __func__);
+            }
+            else
+            {
+                auto fareAmount = parseFareAmount(payload);
+                if (fareAmount)
+                {
+                    record.fareAmount = *fareAmount;
+                    record.fareRecorded = true;
+                    if (!record.driverId.empty())
+                    {
+                        creditDriverWallet(record.driverId, record.fareAmount, record);
+                    }
+                    record.paymentRecorded = recordPaymentInDatabase(record, record.fareAmount, record.paymentMethod);
+                    if (!record.paymentRecorded)
+                    {
+                        logger_.logMeta(utils::SingletonLogger::WARNING,
+                                        "Ride payment persistence failed; wallet credit was performed in-memory", __FILE__, __LINE__, __func__);
+                    }
+                }
+                else
+                {
+                    logger_.logMeta(utils::SingletonLogger::WARNING,
+                                    "Ride completion missing fare amount; skipping wallet credit for ride " + rideId,
+                                    __FILE__,
+                                    __LINE__,
+                                    __func__);
+                }
+            }
             setDriverAvailability(record.driverId, true);
             break;
         case RideStatus::Cancelled:
@@ -394,7 +648,12 @@ namespace UberBackend
 
         setDriverAvailability(driverId, available, rideId);
 
-        nlohmann::json driverState{{"driver_id", driverId}, {"available", available}};
+        const auto stateSnapshot = snapshotDriverState(driverId);
+
+        nlohmann::json driverState{{"driver_id", driverId},
+                                   {"available", available},
+                                   {"wallet_balance", stateSnapshot.walletBalance},
+                                   {"lifetime_earnings", stateSnapshot.lifetimeEarnings}};
         if (rideId)
         {
             driverState["ride_id"] = *rideId;
@@ -453,6 +712,9 @@ namespace UberBackend
 
         nlohmann::json response{{"status", "success"}, {"http_status", 200}};
         response["data"] = *profile;
+        const auto stateSnapshot = snapshotDriverState(driverId);
+        response["wallet"] = {{"balance", stateSnapshot.walletBalance},
+                               {"lifetime_earnings", stateSnapshot.lifetimeEarnings}};
         return response;
     }
 }

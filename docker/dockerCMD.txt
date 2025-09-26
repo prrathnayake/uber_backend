@@ -1,9 +1,7 @@
 docker build -f docker/Dockerfile.base -t uber_base:latest .
 
-docker build -f docker/Dockerfile.UserManager -t usermanager:latest .
+docker compose -f docker/docker-compose.test-deploy.yml --env-file .env build
 
-docker build -f docker/Dockerfile.RideManager -t ridemanager:latest .
+docker compose -f docker/docker-compose.test-deploy.yml --env-file .env up -d
 
-docker build -f docker/Dockerfile.LocationManager -t locationmanager:latest .
-
-docker compose --env-file .env up -d
+docker compose -f docker/docker-compose.test-deploy.yml down

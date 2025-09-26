@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
 
@@ -40,7 +38,7 @@ void stopApplication()
 int main()
 {
     startApplication();
-    std::cout << "Press Enter to stop server...\n";
+    logger_.logMeta(SingletonLogger::INFO, "Press Enter to stop server...", __FILE__, __LINE__, __func__);
     std::cin.get();
     stopApplication();
     return 0;

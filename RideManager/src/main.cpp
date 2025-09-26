@@ -1,5 +1,4 @@
 #include <filesystem>
-#include <iostream>
 
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
@@ -51,7 +50,7 @@ namespace
 int main()
 {
     startApplication();
-    std::cout << "RideManager service running. Press Enter to exit..." << std::endl;
+    logger.logMeta(SingletonLogger::INFO, "RideManager service running. Press Enter to exit...", __FILE__, __LINE__, __func__);
     std::cin.get();
     stopApplication();
     return 0;
