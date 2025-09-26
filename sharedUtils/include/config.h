@@ -73,6 +73,7 @@ namespace UberBackend
             static constexpr unsigned int LOCATION_MANAGER_DATABASE_PORT = 3037;
 
             static constexpr unsigned int LOCATION_MANAGER_HTTP_LOCATION_HANDLER_PORT = 8082;
+            static constexpr unsigned int LOCATION_MANAGER_GRPC_PORT = 50051;
 
             static constexpr const char *RIDE_MANAGER_HOST = "localhost";
             static constexpr const char *RIDE_MANAGER_USERNAME = "pasan";
@@ -87,6 +88,12 @@ namespace UberBackend
 
             static constexpr const char *KAFKA_HOST = "localhost";
             static constexpr unsigned int KAFKA_PORT = 9092;
+
+            static constexpr const char *RABBITMQ_HOST = "localhost";
+            static constexpr unsigned int RABBITMQ_PORT = 5672;
+            static constexpr const char *RABBITMQ_USERNAME = "guest";
+            static constexpr const char *RABBITMQ_PASSWORD = "guest";
+            static constexpr const char *RABBITMQ_VHOST = "/";
 
             static constexpr const char *JWT_SECRET = "localguwgfowgi8fgwkurvrtgwnlgeghrihtu98ynvuhfnauxehnchgecturvtigfiwgiikvb"
                                                       "cjkbsvgwegfwfwefhofewefswefwft";
@@ -129,6 +136,36 @@ namespace UberBackend
             static unsigned int getKafkaPort()
             {
                 return ConfigManager::instance().getUnsigned("KAFKA_PORT", KAFKA_PORT);
+            }
+
+            static unsigned int getLocationManagerGrpcPort()
+            {
+                return ConfigManager::instance().getUnsigned("LOCATION_MANAGER_GRPC_PORT", LOCATION_MANAGER_GRPC_PORT);
+            }
+
+            static std::string getRabbitMQHost()
+            {
+                return ConfigManager::instance().getString("RABBITMQ_HOST", RABBITMQ_HOST);
+            }
+
+            static unsigned int getRabbitMQPort()
+            {
+                return ConfigManager::instance().getUnsigned("RABBITMQ_PORT", RABBITMQ_PORT);
+            }
+
+            static std::string getRabbitMQUsername()
+            {
+                return ConfigManager::instance().getString("RABBITMQ_USERNAME", RABBITMQ_USERNAME);
+            }
+
+            static std::string getRabbitMQPassword()
+            {
+                return ConfigManager::instance().getString("RABBITMQ_PASSWORD", RABBITMQ_PASSWORD);
+            }
+
+            static std::string getRabbitMQVHost()
+            {
+                return ConfigManager::instance().getString("RABBITMQ_VHOST", RABBITMQ_VHOST);
             }
 
             static std::string getJwtSecret()

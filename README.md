@@ -18,11 +18,12 @@ A **modular C++ backend system** inspired by Uber’s architecture. This project
 - 🔐 **JWT Authentication**: Secure login/session using JSON Web Tokens
 - 📬 **Message Brokers**:
   - Kafka: For inter-service events (`user_created`, etc.)
-  - RabbitMQ: For async job/event delegation
+  - RabbitMQ: For async job/event delegation with an in-memory fallback to simplify local testing
 - 📦 **Shared Libraries** via [`cpp_base`](https://github.com/prrathnayake/cpp-base)
 - ⚙️ **Secure Configuration**: Via `.env` file + environment variables
 - 🐳 **Dockerized**: Each microservice has its own Dockerfile & entrypoint
 - 🔁 **CI/CD Ready**: GitHub Actions build and push Docker images
+- 🌐 **gRPC Services**: LocationManager boots its own gRPC endpoint alongside HTTP handlers
 
 ---
 
@@ -161,7 +162,8 @@ Each microservice follows this initialization flow:
 - 🗃️ **Dedicated SQL Database** (MySQL/PostgreSQL/SQLite)
 - 🌐 **HTTP Server** for exposing REST APIs
 - 📡 **Kafka Handler** for event messaging (Producer + Consumer)
-- 📬 **RabbitMQ Handler** (optional command queue)
+- 📬 **RabbitMQ Handler** (optional command queue with thread-safe in-memory fallback)
+- 🌐 **gRPC Bootstrap Helpers** (background server lifecycle management)
 - 🔁 **gRPC Client/Server** (optional internal communication)
 - 🧵 **Thread Pool** for async task execution
 - 📋 **Singleton Logger** with colored output
@@ -241,6 +243,16 @@ LOCATIONMANAGER_PORT=3309
 USERMANAGER_APP_PORT=8081
 RIDEMANAGER_APP_PORT=8082
 LOCATIONMANAGER_APP_PORT=8083
+
+# gRPC Ports
+LOCATION_MANAGER_GRPC_PORT=50051
+
+# RabbitMQ
+RABBITMQ_HOST=localhost
+RABBITMQ_PORT=5672
+RABBITMQ_USERNAME=guest
+RABBITMQ_PASSWORD=guest
+RABBITMQ_VHOST=/
 ```
 
 ### 🔧 Run Docker Compose

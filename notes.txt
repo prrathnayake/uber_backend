@@ -98,9 +98,9 @@ Support live location-based services like maps or driver tracking
 
 🔄 Kafka Handler: For event-based communication (Pub/Sub model).
 
-📬 RabbitMQ Handler (Optional): For command/request messaging.
+📬 RabbitMQ Handler (Optional): For command/request messaging. Falls back to an in-memory queue for local workflows.
 
-🎛️ gRPC (Optional): For efficient internal service-to-service communication.
+🎛️ gRPC (Optional): For efficient internal service-to-service communication. Managed through a background bootstrapper in SharedServer.
 
 🧵 Thread Pool: Handles background jobs and async task execution.
 

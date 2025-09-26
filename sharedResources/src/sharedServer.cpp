@@ -40,7 +40,15 @@ SharedServer::SharedServer(
     logger_.logMeta(SingletonLogger::INFO, "SharedServer initialized Successfully", __FILE__, __LINE__, __func__);
 }
 
-SharedServer::~SharedServer() = default;
+SharedServer::~SharedServer()
+{
+    stopConsumers();
+    stopGrpcServer();
+    if (httpServerHandler_)
+    {
+        stopHttpServers();
+    }
+}
 
 // This function runs a SQL scriptse
 void SharedServer::runScript(const std::string &path)
@@ -86,8 +94,69 @@ void SharedServer::startHttpServers()
 
 void SharedServer::stopHttpServers()
 {
+    if (!httpServerHandler_)
+    {
+        return;
+    }
+
     httpServerHandler_->stopServers();
     logger_.logMeta(SingletonLogger::INFO, "HTTP server stopped", __FILE__, __LINE__, __func__);
+}
+
+void SharedServer::ensureGrpcServer(const std::string &address)
+{
+    if (address.empty())
+    {
+        logger_.logMeta(SingletonLogger::ERROR, "gRPC server address cannot be empty", __FILE__, __LINE__, __func__);
+        return;
+    }
+
+    if (!grpcServer_)
+    {
+        grpcServer_ = std::make_unique<SharedgPRCServer>(address);
+        logger_.logMeta(SingletonLogger::INFO, "gRPC server configured for address " + address, __FILE__, __LINE__, __func__);
+    }
+}
+
+void SharedServer::startGrpcServer()
+{
+    if (!grpcServer_)
+    {
+        logger_.logMeta(SingletonLogger::ERROR,
+                        "Cannot start gRPC server before calling ensureGrpcServer",
+                        __FILE__,
+                        __LINE__,
+                        __func__);
+        return;
+    }
+
+    if (grpcServer_->isRunning())
+    {
+        logger_.logMeta(SingletonLogger::WARNING, "gRPC server is already running", __FILE__, __LINE__, __func__);
+        return;
+    }
+
+    auto *server = grpcServer_.get();
+    grpcFuture_ = thread_pool_->enqueue([server]()
+                                        { server->Run(); });
+    logger_.logMeta(SingletonLogger::INFO, "gRPC server startup dispatched", __FILE__, __LINE__, __func__);
+}
+
+void SharedServer::stopGrpcServer()
+{
+    if (!grpcServer_)
+    {
+        return;
+    }
+
+    grpcServer_->Shutdown();
+
+    if (grpcFuture_.valid())
+    {
+        grpcFuture_.get();
+    }
+
+    grpcServer_.reset();
 }
 
 std::shared_ptr<SharedDatabase> SharedServer::getDatabase()
@@ -98,5 +167,13 @@ std::shared_ptr<SharedDatabase> SharedServer::getDatabase()
 
 void SharedServer::stopConsumers()
 {
-    sharedKafkaHandler_->stopConsumers();
+    if (sharedKafkaHandler_)
+    {
+        sharedKafkaHandler_->stopConsumers();
+    }
+
+    if (sharedRabbitHandler_)
+    {
+        sharedRabbitHandler_->stopConsumers();
+    }
 }
