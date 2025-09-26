@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
 #include "../../sharedResources/include/sharedRabbitMQConsumer.h"
@@ -39,8 +37,14 @@ void Server::startConsumers()
     auto kafkaConsumer = sharedKafkaHandler_->createConsumer("user_manager_profile_events", "user_profile_updated");
     if (kafkaConsumer)
     {
-        kafkaConsumer->setCallback([](const std::string &payload)
-                                   { std::cout << "[Kafka][UserManager] profile update event -> " << payload << std::endl; });
+        kafkaConsumer->setCallback([this](const std::string &payload)
+                                   {
+                                       logger_.logMeta(SingletonLogger::INFO,
+                                                       std::string{"[Kafka][UserManager] profile update event -> "} + payload,
+                                                       __FILE__,
+                                                       __LINE__,
+                                                       __func__);
+                                   });
     }
 
     sharedKafkaHandler_->runConsumers();
@@ -60,8 +64,14 @@ void Server::startConsumers()
     auto taskConsumer = sharedRabbitHandler_->createConsumer("user_manager_tasks", "user_tasks");
     if (taskConsumer)
     {
-        taskConsumer->setCallback([](const std::string &task)
-                                  { std::cout << "[RabbitMQ][UserManager] task received -> " << task << std::endl; });
+        taskConsumer->setCallback([this](const std::string &task)
+                                  {
+                                      logger_.logMeta(SingletonLogger::INFO,
+                                                      std::string{"[RabbitMQ][UserManager] task received -> "} + task,
+                                                      __FILE__,
+                                                      __LINE__,
+                                                      __func__);
+                                  });
     }
 
     sharedRabbitHandler_->runConsumers();

@@ -1,5 +1,4 @@
 #include <filesystem>
-#include <iostream>
 
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
@@ -65,7 +64,7 @@ int main()
 {
     startApplication();
     // Wait for user input to stop the server just for debugging purposes
-    std::cout << "Press Enter to stop server...\n";
+    logger_.logMeta(SingletonLogger::INFO, "Press Enter to stop server...", __FILE__, __LINE__, __func__);
     std::cin.get();
     stopApplication();
     return 0;
