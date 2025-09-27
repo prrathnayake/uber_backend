@@ -7,6 +7,7 @@ add_library(uber_shared_utils
     src/jwt.cpp
     src/utils.cpp
     src/algorithms_sha256.cpp
+    src/time.cpp
 )
 
 target_include_directories(uber_shared_utils
