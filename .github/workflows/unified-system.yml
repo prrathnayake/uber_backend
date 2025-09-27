@@ -281,7 +281,7 @@ jobs:
           timeout 600 bash -c "until nc -z localhost 50051; do sleep 5; done"
 
       - name: ✅ Execute gRPC connectivity test
-        run: |2
+        run: |
           set -euo pipefail
           report_dir="reports"
           mkdir -p "${report_dir}"
@@ -291,16 +291,17 @@ jobs:
           echo >> "${report_file}"
 
           python3 - <<'PY' > grpc-test.log
-  import grpc
-  import sys
-  try:
-      channel = grpc.insecure_channel("localhost:50051")
-      grpc.channel_ready_future(channel).result(timeout=60)
-      print("gRPC channel to localhost:50051 is ready.")
-  except Exception as exc:
-      print(f"Failed to establish gRPC channel: {exc}", file=sys.stderr)
-      sys.exit(1)
-  PY
+          import grpc
+          import sys
+
+          try:
+              channel = grpc.insecure_channel("localhost:50051")
+              grpc.channel_ready_future(channel).result(timeout=60)
+              print("gRPC channel to localhost:50051 is ready.")
+          except Exception as exc:
+              print(f"Failed to establish gRPC channel: {exc}", file=sys.stderr)
+              sys.exit(1)
+          PY
 
           cat grpc-test.log >> "${report_file}"
 
