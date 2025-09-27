@@ -513,7 +513,13 @@ jobs:
           path: reports/post-test-report.md
 
       - name: 📧 Email post-test report
-        if: ${{ secrets.REPORT_EMAIL_SERVER != '' && secrets.REPORT_EMAIL_PORT != '' && secrets.REPORT_EMAIL_USERNAME != '' && secrets.REPORT_EMAIL_PASSWORD != '' && secrets.REPORT_EMAIL_TO != '' && secrets.REPORT_EMAIL_FROM != '' }}
+        if: ${{ secrets.REPORT_EMAIL_SERVER != '' &&
+            secrets.REPORT_EMAIL_PORT != '' &&
+            secrets.REPORT_EMAIL_USERNAME != '' &&
+            secrets.REPORT_EMAIL_PASSWORD != '' &&
+            secrets.REPORT_EMAIL_TO != '' &&
+            secrets.REPORT_EMAIL_FROM != '' }}
+
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.REPORT_EMAIL_SERVER }}
