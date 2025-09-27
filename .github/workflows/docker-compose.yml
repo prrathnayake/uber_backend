@@ -8,6 +8,8 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      HAS_DOCKERHUB_CREDS: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
 
     steps:
       - name: ⬇️ Checkout repository
@@ -22,10 +24,19 @@ jobs:
           sudo apt-get install -y netcat-openbsd
 
       - name: 🔐 Log in to DockerHub
+        if: env.HAS_DOCKERHUB_CREDS == 'true'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: ℹ️ DockerHub credentials status
+        run: |
+          if [ "${HAS_DOCKERHUB_CREDS}" = "true" ]; then
+            echo "DockerHub credentials detected."
+          else
+            echo "DockerHub credentials not provided. Proceeding without registry login."
+          fi
 
       - name: 🐳 Start Docker Compose stack
         run: docker compose --env-file .env -f docker/docker-compose.yml up --build -d
