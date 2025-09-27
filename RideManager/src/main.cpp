@@ -1,6 +1,7 @@
 #include <csignal>
 #include <chrono>
 #include <filesystem>
+#include <memory>
 #include <thread>
 
 #include "../include/server.h"
@@ -11,7 +12,11 @@ using namespace utils;
 
 namespace
 {
-    SingletonLogger &logger = SingletonLogger::instance();
+    const std::filesystem::path kSourceDir = std::filesystem::path(__FILE__).parent_path();
+    const std::filesystem::path kProjectRoot = (kSourceDir / "../../").lexically_normal();
+    const std::filesystem::path kLogPath = (kProjectRoot / "log/ride_manager.log").lexically_normal();
+
+    SingletonLogger &logger = SingletonLogger::instance(kLogPath.string());
     std::unique_ptr<RideServer> server;
 
     volatile std::sig_atomic_t shuttingDown = 0;
@@ -27,9 +32,7 @@ namespace
     {
         logger.logMeta(SingletonLogger::INFO, "Starting Uber Ride Manager Server...", __FILE__, __LINE__, __func__);
 
-        const auto sourceDir = std::filesystem::path(__FILE__).parent_path();
-        const auto projectRoot = (sourceDir / "../../").lexically_normal();
-        const auto envPath = (projectRoot / ".env").lexically_normal();
+        const auto envPath = (kProjectRoot / ".env").lexically_normal();
         ConfigManager::instance().loadFromFile(envPath.string());
 
         server = std::make_unique<RideServer>("RideManager",
@@ -39,7 +42,7 @@ namespace
                                               UberUtils::CONFIG::getRideManagerDatabase(),
                                               UberUtils::CONFIG::getRideManagerDatabasePort());
 
-        const auto initScript = (projectRoot / "RideManager/sql_scripts/database_init.sql").lexically_normal();
+        const auto initScript = (kProjectRoot / "RideManager/sql_scripts/database_init.sql").lexically_normal();
         server->initiateDatabase(initScript.string());
         server->createHttpServers();
         server->startHttpServers();
