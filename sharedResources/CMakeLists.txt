@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.25.2)
 
-find_package(nlohmann_json CONFIG REQUIRED)
+if(NOT TARGET nlohmann_json::nlohmann_json)
+    find_package(nlohmann_json CONFIG REQUIRED)
+endif()
 
 add_library(uber_shared_resources
     src/sharedDatabase.cpp
