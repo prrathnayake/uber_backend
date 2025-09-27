@@ -12,7 +12,11 @@ using namespace UberBackend;
 
 namespace
 {
-    SingletonLogger &logger = SingletonLogger::instance();
+    const std::filesystem::path kSourceDir = std::filesystem::path(__FILE__).parent_path();
+    const std::filesystem::path kProjectRoot = (kSourceDir / "../../").lexically_normal();
+    const std::filesystem::path kLogPath = (kProjectRoot / "log/location_manager.log").lexically_normal();
+
+    SingletonLogger &logger = SingletonLogger::instance(kLogPath.string());
     std::unique_ptr<Server> server;
 
     volatile std::sig_atomic_t shuttingDown = 0;
@@ -32,9 +36,7 @@ void startApplication()
 {
     logger.logMeta(SingletonLogger::INFO, "Starting Uber Location Manager Server......", __FILE__, __LINE__, __func__);
 
-    const auto sourceDir = std::filesystem::path(__FILE__).parent_path();
-    const auto projectRoot = (sourceDir / "../../").lexically_normal();
-    const auto envPath = (projectRoot / ".env").lexically_normal();
+    const auto envPath = (kProjectRoot / ".env").lexically_normal();
 
     ConfigManager::instance().loadFromFile(envPath.string());
 
@@ -45,7 +47,7 @@ void startApplication()
                                       UberUtils::CONFIG::getLocationManagerDatabase(),
                                       UberUtils::CONFIG::getLocationManagerDatabasePort());
 
-    const auto initScript = (projectRoot / "LocationManager/sql_scripts/database_init.sql").lexically_normal();
+    const auto initScript = (kProjectRoot / "LocationManager/sql_scripts/database_init.sql").lexically_normal();
     server->initiateDatabase(initScript.string());
     server->createHttpServers();
     server->startHttpServers();
