@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(nlohmann_json CONFIG REQUIRED)
+if(NOT TARGET nlohmann_json::nlohmann_json)
+    find_package(nlohmann_json CONFIG REQUIRED)
+endif()
 
 # --- Source Files ---
 file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS src/*.cpp)
