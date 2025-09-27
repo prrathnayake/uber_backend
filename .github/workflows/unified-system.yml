@@ -513,12 +513,6 @@ jobs:
           path: reports/post-test-report.md
 
       - name: 📧 Email post-test report
-        if: ${{ secrets.REPORT_EMAIL_SERVER }} != '' &&
-            ${{ secrets.REPORT_EMAIL_PORT }} != '' &&
-            ${{ secrets.REPORT_EMAIL_USERNAME }} != '' &&
-            ${{ secrets.REPORT_EMAIL_PASSWORD }} != '' &&
-            ${{ secrets.REPORT_EMAIL_TO }} != '' &&
-            ${{ secrets.REPORT_EMAIL_FROM }} != '' 
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.REPORT_EMAIL_SERVER }}
@@ -528,7 +522,6 @@ jobs:
           subject: "Post-Test Report"
           to: ${{ secrets.REPORT_EMAIL_TO }}
           from: ${{ secrets.REPORT_EMAIL_FROM }}
-          content_type: text/plain
           body: |
             Post-test validation is complete. The consolidated report is attached.
           attachments: reports/post-test-report.md
@@ -646,12 +639,7 @@ jobs:
           path: reports/final-workflow-report.md
 
       - name: 📧 Email final workflow report
-        if: ${{ secrets.REPORT_EMAIL_SERVER != '' &&
-              secrets.REPORT_EMAIL_PORT != '' &&
-              secrets.REPORT_EMAIL_USERNAME != '' &&
-              secrets.REPORT_EMAIL_PASSWORD != '' &&
-              secrets.REPORT_EMAIL_TO != '' &&
-              secrets.REPORT_EMAIL_FROM != '' }}
+
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.REPORT_EMAIL_SERVER }}
@@ -661,7 +649,7 @@ jobs:
           subject: "Final Workflow Report"
           to: ${{ secrets.REPORT_EMAIL_TO }}
           from: ${{ secrets.REPORT_EMAIL_FROM }}
-          content_type: text/plain
+          
           body: |
             All automated tests and Docker image publication tasks have completed. The final consolidated report is attached.
           attachments: reports/final-workflow-report.md
