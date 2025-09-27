@@ -1,6 +1,7 @@
 #include <csignal>
 #include <chrono>
 #include <filesystem>
+#include <memory>
 #include <thread>
 
 #include "../include/server.h"
@@ -9,11 +10,14 @@
 using namespace utils;
 using namespace UberBackend;
 
-// Getting instance of the Singleton logger
-auto &logger_ = SingletonLogger::instance();
-
 namespace
 {
+    const std::filesystem::path kSourceDir = std::filesystem::path(__FILE__).parent_path();
+    const std::filesystem::path kProjectRoot = (kSourceDir / "../../").lexically_normal();
+    const std::filesystem::path kLogPath = (kProjectRoot / "log/user_manager.log").lexically_normal();
+
+    SingletonLogger &logger = SingletonLogger::instance(kLogPath.string());
+
     volatile std::sig_atomic_t shuttingDown = 0;
     volatile std::sig_atomic_t lastSignal = 0;
 
@@ -22,57 +26,52 @@ namespace
         shuttingDown = 1;
         lastSignal = signal;
     }
-}
 
-// Creating a unique pointer for the Server instance
-std::unique_ptr<Server> server_;
+    std::unique_ptr<Server> server;
+}
 
 // Staring the application
 void startApplication()
 {
-    logger_.logMeta(SingletonLogger::INFO, "Starting Uber User Manager Server......", __FILE__, __LINE__, __func__);
-    const auto sourceDir = std::filesystem::path(__FILE__).parent_path();
-    const auto projectRoot = (sourceDir / "../../").lexically_normal();
+    logger.logMeta(SingletonLogger::INFO, "Starting Uber User Manager Server......", __FILE__, __LINE__, __func__);
 
-    const auto envPath = (projectRoot / ".env").lexically_normal();
+    const auto envPath = (kProjectRoot / ".env").lexically_normal();
     UberBackend::ConfigManager::instance().loadFromFile(envPath.string());
 
-    logger_.logMeta(SingletonLogger::DEBUG, "creating server instance for user Manager", __FILE__, __LINE__, __func__);
+    logger.logMeta(SingletonLogger::DEBUG, "creating server instance for user Manager", __FILE__, __LINE__, __func__);
 
-    server_ = std::make_unique<Server>("UserManager",
-                                       UberUtils::CONFIG::getUserManagerDatabaseHost(),
-                                       UberUtils::CONFIG::getUserManagerUsername(),
-                                       UberUtils::CONFIG::getUserManagerPassword(),
-                                       UberUtils::CONFIG::getUserManagerDatabase(),
-                                       UberUtils::CONFIG::getUserManagerDatabasePort());
+    server = std::make_unique<Server>("UserManager",
+                                      UberUtils::CONFIG::getUserManagerDatabaseHost(),
+                                      UberUtils::CONFIG::getUserManagerUsername(),
+                                      UberUtils::CONFIG::getUserManagerPassword(),
+                                      UberUtils::CONFIG::getUserManagerDatabase(),
+                                      UberUtils::CONFIG::getUserManagerDatabasePort());
 
-    const auto initScript = (projectRoot / "UserManager/sql_scripts/database_init.sql").lexically_normal();
+    const auto initScript = (kProjectRoot / "UserManager/sql_scripts/database_init.sql").lexically_normal();
 
-    server_->initiateDatabase(initScript.string());
-    server_->createHttpServers();
-    logger_.logMeta(SingletonLogger::DEBUG, "run : server_->startHttpServers();", __FILE__, __LINE__, __func__);
-    server_->startHttpServers();
+    server->initiateDatabase(initScript.string());
+    server->createHttpServers();
+    logger.logMeta(SingletonLogger::DEBUG, "run : server->startHttpServers();", __FILE__, __LINE__, __func__);
+    server->startHttpServers();
 }
 
 /// stopping the application
 void stopApplication()
 {
-    logger_.logMeta(SingletonLogger::INFO, "Stoping Uber User Manager Server......", __FILE__, __LINE__, __func__);
-    if (!server_)
+    logger.logMeta(SingletonLogger::INFO, "Stoping Uber User Manager Server......", __FILE__, __LINE__, __func__);
+    if (!server)
     {
-        logger_.logMeta(SingletonLogger::WARNING, "Server instance was not initialised before stop call", __FILE__, __LINE__, __func__);
+        logger.logMeta(SingletonLogger::WARNING, "Server instance was not initialised before stop call", __FILE__, __LINE__, __func__);
         return;
     }
 
-    server_->stopHttpServers();
+    server->stopHttpServers();
 
-    const auto sourceDir = std::filesystem::path(__FILE__).parent_path();
-    const auto projectRoot = (sourceDir / "../../").lexically_normal();
-    const auto dropScript = (projectRoot / "UserManager/sql_scripts/database_del.sql").lexically_normal();
-    logger_.logMeta(SingletonLogger::INFO, "distroying server instance for user Manager", __FILE__, __LINE__, __func__);
+    const auto dropScript = (kProjectRoot / "UserManager/sql_scripts/database_del.sql").lexically_normal();
+    logger.logMeta(SingletonLogger::INFO, "distroying server instance for user Manager", __FILE__, __LINE__, __func__);
 
     // Distorying the database - this will drop all the tables and data just for debugging purposes
-    server_->distoryDatabase(dropScript.string());
+    server->distoryDatabase(dropScript.string());
 }
 
 int main()
@@ -89,11 +88,11 @@ int main()
 
     if (lastSignal != 0)
     {
-        logger_.logMeta(SingletonLogger::INFO,
-                        "Received shutdown signal: " + std::to_string(lastSignal),
-                        __FILE__,
-                        __LINE__,
-                        __func__);
+        logger.logMeta(SingletonLogger::INFO,
+                       "Received shutdown signal: " + std::to_string(lastSignal),
+                       __FILE__,
+                       __LINE__,
+                       __func__);
     }
 
     stopApplication();
