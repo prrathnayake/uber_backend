@@ -11,6 +11,7 @@ jobs:
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      HAS_DOCKERHUB_CREDS: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
 
     steps:
       - name: Checkout repository
@@ -21,12 +22,12 @@ jobs:
 
       - name: Validate DockerHub credentials
         run: |
-          if [ -z "${DOCKERHUB_USERNAME}" ] || [ -z "${DOCKERHUB_TOKEN}" ]; then
-            echo "DockerHub credentials are required to build and push images." >&2
-            exit 1
+          if [ "${HAS_DOCKERHUB_CREDS}" != "true" ]; then
+            echo "DockerHub credentials are not configured. Docker images will be built but not pushed." >&2
           fi
 
       - name: Login to DockerHub
+        if: env.HAS_DOCKERHUB_CREDS == 'true'
         uses: docker/login-action@v3
         with:
           username: ${{ env.DOCKERHUB_USERNAME }}
@@ -35,13 +36,21 @@ jobs:
       - name: Build and push service images
         env:
           DOCKERHUB_USERNAME: ${{ env.DOCKERHUB_USERNAME }}
+          HAS_DOCKERHUB_CREDS: ${{ env.HAS_DOCKERHUB_CREDS }}
         run: |
           set -euo pipefail
           while read -r dockerfile image_name; do
-            tag="${DOCKERHUB_USERNAME}/${image_name}:latest"
-            echo "Building ${tag} from ${dockerfile}"
-            docker build -f "${dockerfile}" -t "${tag}" .
-            docker push "${tag}"
+            local_tag="${image_name}:ci"
+            echo "Building ${dockerfile} as ${local_tag}"
+            docker build -f "${dockerfile}" -t "${local_tag}" .
+            if [ "${HAS_DOCKERHUB_CREDS}" = "true" ]; then
+              remote_tag="${DOCKERHUB_USERNAME}/${image_name}:latest"
+              echo "Pushing ${remote_tag}"
+              docker tag "${local_tag}" "${remote_tag}"
+              docker push "${remote_tag}"
+            else
+              echo "Skipping push for ${image_name}; DockerHub credentials not available."
+            fi
           done <<'EOF'
 docker/Dockerfile.base uber-base
 docker/Dockerfile.UserManager usermanager
