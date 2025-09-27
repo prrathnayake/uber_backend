@@ -38,6 +38,9 @@ jobs:
       - name: ♻️ Prepare test user credentials
         run: echo "TEST_USERNAME=testuser-$RANDOM" >> "$GITHUB_ENV"
 
+      - name: 😴 Allow services to settle
+        run: sleep 300
+
       - name: ⏱️ Wait for services to initialize
         run: |
           timeout 420 bash -c '
@@ -60,7 +63,8 @@ jobs:
           deadline=$((SECONDS + 420))
 
           while [ "$SECONDS" -lt "$deadline" ]; do
-            if response=$(curl --silent --show-error --fail --connect-timeout 5 http://localhost:8081/health 2>/dev/null); then
+            if response=$(docker compose --env-file .env -f docker/docker-compose.test-deploy.yml exec -T usermanager \
+                curl --silent --show-error --fail --connect-timeout 5 http://localhost:8081/health 2>/dev/null); then
               if python3 -c "import json,sys; data=json.load(sys.stdin); sys.exit(0 if data.get('database', {}).get('healthy') else 1)" <<<"${response}"; then
                 echo "UserManager health check passed."
                 exit 0
@@ -73,7 +77,8 @@ jobs:
             sleep 5
           done
 
-          echo "Timed out waiting for UserManager health endpoint to become healthy." >&2
+          echo "Timed out waiting for UserManager health endpoint to become healthy. Capturing service logs..." >&2
+          docker compose --env-file .env -f docker/docker-compose.test-deploy.yml logs usermanager >&2 || true
           exit 1
 
       - name: ✅ Verify application containers
