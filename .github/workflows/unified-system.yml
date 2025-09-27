@@ -198,21 +198,19 @@ jobs:
             echo "## Signup and Login Flow" >> "${report_file}"
 
             username="gha-${RANDOM}"
-            signup_payload=$(cat <<'JSON'
-{
-  "firstName": "CI",
-  "middleName": "Automation",
-  "lastName": "User",
-  "mobileNumber": "1234567890",
-  "address": "123 Test St",
-  "email": "ci@example.com",
-  "username": "__USERNAME__",
-  "password": "StrongPass123",
-  "role": "rider"
-}
-JSON
-)
-            signup_payload=${signup_payload/__USERNAME__/${username}}
+            signup_payload=$(jq -n \
+              --arg username "${username}" \
+              '{
+                "firstName": "CI",
+                "middleName": "Automation",
+                "lastName": "User",
+                "mobileNumber": "1234567890",
+                "address": "123 Test St",
+                "email": "ci@example.com",
+                "username": $username,
+                "password": "StrongPass123",
+                "role": "rider"
+              }')
 
             signup_status=$(curl -s -o signup-response.json -w "%{http_code}" \
               -H "Content-Type: application/json" \
