@@ -25,7 +25,7 @@ void startApplication()
     logger_.logMeta(SingletonLogger::DEBUG, "creating server instance for user Manager", __FILE__, __LINE__, __func__);
 
     server_ = std::make_unique<Server>("UserManager",
-                                       UberUtils::CONFIG::getUserManagerHost(),
+                                       UberUtils::CONFIG::getUserManagerDatabaseHost(),
                                        UberUtils::CONFIG::getUserManagerUsername(),
                                        UberUtils::CONFIG::getUserManagerPassword(),
                                        UberUtils::CONFIG::getUserManagerDatabase(),

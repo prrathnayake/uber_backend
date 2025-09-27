@@ -1,44 +1,60 @@
+#include <filesystem>
+#include <memory>
+
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
 
 using namespace utils;
 using namespace UberBackend;
 
-auto &logger_ = SingletonLogger::instance();
-
-std::unique_ptr<Server> server_ = std::make_unique<Server>("LocationManager",
-                                                           UberUtils::CONFIG::LOCATION_MANAGER_HOST,
-                                                           UberUtils::CONFIG::LOCATION_MANAGER_USERNAME,
-                                                           UberUtils::CONFIG::LOCATION_MANAGER_PASSWORD,
-                                                           UberUtils::CONFIG::LOCATION_MANAGER_DATABASE_NAME,
-                                                           UberUtils::CONFIG::LOCATION_MANAGER_DATABASE_PORT);
+namespace
+{
+    SingletonLogger &logger = SingletonLogger::instance();
+    std::unique_ptr<Server> server;
+}
 
 void startApplication()
 {
-    logger_.logMeta(SingletonLogger::INFO, "Starting Uber Location Manager Server......", __FILE__, __LINE__, __func__);
-    std::string path = "../../LocationManager/sql_scripts/database_init.sql";
+    logger.logMeta(SingletonLogger::INFO, "Starting Uber Location Manager Server......", __FILE__, __LINE__, __func__);
 
-    logger_.logMeta(SingletonLogger::DEBUG, "creating server instance for user Manager", __FILE__, __LINE__, __func__);
+    const auto sourceDir = std::filesystem::path(__FILE__).parent_path();
+    const auto projectRoot = (sourceDir / "../../").lexically_normal();
+    const auto envPath = (projectRoot / ".env").lexically_normal();
 
-    server_->initiateDatabase(path);
-    server_->createHttpServers();
-    logger_.logMeta(SingletonLogger::DEBUG, "run : server_->startHttpServers();", __FILE__, __LINE__, __func__);
-    server_->startHttpServers();
-    logger_.logMeta(SingletonLogger::DEBUG, "run : server_->startConsumers();", __FILE__, __LINE__, __func__);
-    server_->startConsumers();
+    ConfigManager::instance().loadFromFile(envPath.string());
+
+    server = std::make_unique<Server>("LocationManager",
+                                      UberUtils::CONFIG::getLocationManagerDatabaseHost(),
+                                      UberUtils::CONFIG::getLocationManagerUsername(),
+                                      UberUtils::CONFIG::getLocationManagerPassword(),
+                                      UberUtils::CONFIG::getLocationManagerDatabase(),
+                                      UberUtils::CONFIG::getLocationManagerDatabasePort());
+
+    const auto initScript = (projectRoot / "LocationManager/sql_scripts/database_init.sql").lexically_normal();
+    server->initiateDatabase(initScript.string());
+    server->createHttpServers();
+    server->startHttpServers();
+    logger.logMeta(SingletonLogger::DEBUG, "run : server->startConsumers();", __FILE__, __LINE__, __func__);
+    server->startConsumers();
 }
 
 void stopApplication()
 {
-    logger_.logMeta(SingletonLogger::INFO, "Stoping Uber Location Manager Server......", __FILE__, __LINE__, __func__);
-    server_->stopHttpServers();
-    server_->stopConsumers();
+    logger.logMeta(SingletonLogger::INFO, "Stopping Uber Location Manager Server......", __FILE__, __LINE__, __func__);
+
+    if (!server)
+    {
+        return;
+    }
+
+    server->stopHttpServers();
+    server->stopConsumers();
 }
 
 int main()
 {
     startApplication();
-    logger_.logMeta(SingletonLogger::INFO, "Press Enter to stop server...", __FILE__, __LINE__, __func__);
+    logger.logMeta(SingletonLogger::INFO, "Press Enter to stop server...", __FILE__, __LINE__, __func__);
     std::cin.get();
     stopApplication();
     return 0;

@@ -1,16 +1,14 @@
-# Dockerfile
-FROM uber_base:latest
+FROM ubuntu:22.04
 
-# Set working directory
+COPY docker/install_dependencies.sh /tmp/install_dependencies.sh
+RUN bash /tmp/install_dependencies.sh && rm /tmp/install_dependencies.sh
+
 WORKDIR /UberBackend
-
-# Copy all your source code into container
 COPY . .
 
-# Add and set entrypoint
 COPY entrypointLocationManager.sh /entrypointLocationManager.sh
 RUN chmod +x /entrypointLocationManager.sh
 
-EXPOSE 8083
+EXPOSE 8083 50051
 
 ENTRYPOINT ["/entrypointLocationManager.sh"]

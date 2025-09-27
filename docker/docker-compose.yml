@@ -1,119 +1,200 @@
 version: "3.9"
 
+x-mysql-env: &mysql-env
+  MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+  MYSQL_USER: ${MYSQL_USER}
+  MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+x-mysql-healthcheck: &mysql-healthcheck
+  test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u${MYSQL_USER} -p${MYSQL_PASSWORD}"]
+  interval: 5s
+  timeout: 5s
+  retries: 20
+  start_period: 15s
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  usermanager-mysql-data:
+  ridemanager-mysql-data:
+  locationmanager-mysql-data:
+
 services:
-  mysql_userManagerDatabase:
-    image: mysql:8
-    container_name: userManagerDatabase
-    restart: always
+  usermanager-db:
+    image: mysql:8.0
+    container_name: usermanager-db
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      <<: *mysql-env
       MYSQL_DATABASE: ${USERMANAGER_DB}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "${USERMANAGER_PORT}:3306"
     volumes:
-      - mysql_user_data:/var/lib/mysql
+      - usermanager-mysql-data:/var/lib/mysql
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    healthcheck: *mysql-healthcheck
     networks:
-      - userManagerNetwork
-    
-  kafka:
-    image: bitnami/kafka:latest
-    container_name: kafka
-    environment:
-      - KAFKA_KRAFT_MODE=true
-      - KAFKA_CFG_NODE_ID=1
-      - KAFKA_CFG_PROCESS_ROLES=broker,controller
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-      - KAFKA_CFG_LOG_DIRS=/tmp/kraft-combined-logs
-    ports:
-      - "9092:9092"
+      - backend
 
-  redis:
-    image: redis:latest
-    container_name: redis-server
-    ports:
-      - "6379:6379"
-
-  mysql_rideManagerDatabase:
-    image: mysql:8
-    container_name: rideManagerDatabase
-    restart: always
+  ridemanager-db:
+    image: mysql:8.0
+    container_name: ridemanager-db
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      <<: *mysql-env
       MYSQL_DATABASE: ${RIDEMANAGER_DB}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "${RIDEMANAGER_PORT}:3306"
     volumes:
-      - mysql_ride_data:/var/lib/mysql
+      - ridemanager-mysql-data:/var/lib/mysql
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    healthcheck: *mysql-healthcheck
     networks:
-      - rideManagerNetwork
+      - backend
 
-  mysql_locationManagerDatabase:
-    image: mysql:8
-    container_name: locationManagerDatabase
-    restart: always
+  locationmanager-db:
+    image: mysql:8.0
+    container_name: locationmanager-db
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      <<: *mysql-env
       MYSQL_DATABASE: ${LOCATIONMANAGER_DB}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "${LOCATIONMANAGER_PORT}:3306"
     volumes:
-      - mysql_location_data:/var/lib/mysql
+      - locationmanager-mysql-data:/var/lib/mysql
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    healthcheck: *mysql-healthcheck
     networks:
-      - locationManagerNetwork
+      - backend
 
-  UserManager:
-    image: pasanaa/usermanager
-    container_name: UserManager
+  kafka:
+    image: bitnami/kafka:3.7.0
+    container_name: kafka
+    restart: unless-stopped
+    environment:
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,EXTERNAL://:29092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:29092
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
+      - KAFKA_CFG_LOG_DIRS=/tmp/kraft-combined-logs
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    networks:
+      - backend
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    networks:
+      - backend
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
+    ports:
+      - "${RABBITMQ_AMQP_PORT:-5672}:5672"
+      - "${RABBITMQ_HTTP_PORT:-15672}:15672"
+    networks:
+      - backend
+
+  usermanager:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.UserManager
+    container_name: usermanager
+    restart: unless-stopped
     depends_on:
-      - mysql_userManagerDatabase
-      - kafka
+      usermanager-db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      USER_MANAGER_DATABASE_HOST: usermanager-db
+      USER_MANAGER_DATABASE_PORT: 3306
+      USER_MANAGER_HOST: usermanager
+      RIDE_MANAGER_HOST: ridemanager
+      LOCATION_MANAGER_HOST: locationmanager
+      KAFKA_HOST: kafka
+      RABBITMQ_HOST: rabbitmq
+      RIDE_MANAGER_HTTP_RIDE_HANDLER_PORT: 8082
+      LOCATION_MANAGER_HTTP_LOCATION_HANDLER_PORT: 8083
+      LOCATION_MANAGER_GRPC_PORT: 50051
     ports:
       - "${USERMANAGER_APP_PORT}:8081"
-    volumes:
-      - .:/app
     networks:
-      - userManagerNetwork
+      - backend
 
-  RideManager:
-    image: pasanaa/ridemanager
-    container_name: RideManager
+  ridemanager:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.RideManager
+    container_name: ridemanager
+    restart: unless-stopped
     depends_on:
-      - mysql_rideManagerDatabase
+      ridemanager-db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+      usermanager:
+        condition: service_started
+      locationmanager:
+        condition: service_started
+    environment:
+      RIDE_MANAGER_DATABASE_HOST: ridemanager-db
+      RIDE_MANAGER_DATABASE_PORT: 3306
+      RIDE_MANAGER_HOST: ridemanager
+      USER_MANAGER_HOST: usermanager
+      USER_MANAGER_HTTP_USER_HANDLER_PORT: 8081
+      LOCATION_MANAGER_HOST: locationmanager
+      LOCATION_MANAGER_HTTP_LOCATION_HANDLER_PORT: 8083
+      LOCATION_MANAGER_GRPC_PORT: 50051
+      KAFKA_HOST: kafka
+      RABBITMQ_HOST: rabbitmq
     ports:
-      - "${RIDEMANAGER_APP_PORT}:8081"
-    volumes:
-      - .:/app
+      - "${RIDEMANAGER_APP_PORT}:8082"
     networks:
-      - rideManagerNetwork
+      - backend
 
-  LocationManager:
-    image: pasanaa/locationmanager
-    container_name: LocationManager
+  locationmanager:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.LocationManager
+    container_name: locationmanager
+    restart: unless-stopped
     depends_on:
-      - mysql_locationManagerDatabase
+      locationmanager-db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      LOCATION_MANAGER_DATABASE_HOST: locationmanager-db
+      LOCATION_MANAGER_DATABASE_PORT: 3306
+      LOCATION_MANAGER_HOST: locationmanager
+      KAFKA_HOST: kafka
+      RABBITMQ_HOST: rabbitmq
     ports:
-      - "${LOCATIONMANAGER_APP_PORT}:8081"
-    volumes:
-      - .:/app
+      - "${LOCATIONMANAGER_APP_PORT}:8083"
+      - "${LOCATIONMANAGER_GRPC_PORT:-50051}:50051"
     networks:
-      - locationManagerNetwork
-
-networks:
-  userManagerNetwork:
-  rideManagerNetwork:
-  locationManagerNetwork:
-
-volumes:
-  mysql_user_data:
-  mysql_ride_data:
-  mysql_location_data:
+      - backend
