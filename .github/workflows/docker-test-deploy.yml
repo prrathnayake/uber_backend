@@ -9,6 +9,13 @@ on:
       - 'docker/docker-compose.test-deploy.yml'
       - 'docker/Dockerfile.*'
       - '.github/workflows/docker-test-deploy.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'docker/docker-compose.test-deploy.yml'
+      - 'docker/Dockerfile.*'
+      - '.github/workflows/docker-test-deploy.yml'
 
 jobs:
   test-deploy:
@@ -46,6 +53,35 @@ jobs:
             echo "Waiting for port ${port}..."
             timeout 420 bash -c "until nc -z localhost ${port}; do sleep 5; done"
           done
+
+      - name: ✅ Wait for UserManager health endpoint
+        run: |
+          python3 - <<'PY'
+import json
+import sys
+import time
+import urllib.error
+import urllib.request
+
+url = "http://localhost:8081/health"
+deadline = time.time() + 420
+
+while time.time() < deadline:
+    try:
+        with urllib.request.urlopen(url, timeout=5) as response:
+            payload = json.load(response)
+        if payload.get("database", {}).get("healthy"):
+            print("UserManager health check passed.")
+            sys.exit(0)
+        print("Health endpoint reachable but database not yet healthy.", file=sys.stderr)
+    except Exception as exc:  # noqa: BLE001
+        print(f"Waiting for health endpoint: {exc}", file=sys.stderr)
+
+    time.sleep(5)
+
+print("Timed out waiting for UserManager health endpoint to become healthy.", file=sys.stderr)
+sys.exit(1)
+PY
 
       - name: ✅ Verify application containers
         run: |
