@@ -1,14 +1,18 @@
-name: Uber_Backend_Workflow (Docker Compose)
+name: Docker Test Deploy
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
+    paths:
+      - 'docker/docker-compose.test-deploy.yml'
+      - 'docker/Dockerfile.*'
+      - '.github/workflows/docker-test-deploy.yml'
 
 jobs:
-  build-and-test:
+  test-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v4
@@ -21,14 +25,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y netcat-openbsd
 
-      - name: 🔐 Log in to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: 🐳 Start Docker Compose stack
-        run: docker compose --env-file .env -f docker/docker-compose.yml up --build -d
+      - name: 🐳 Start test deploy stack
+        run: docker compose --env-file .env -f docker/docker-compose.test-deploy.yml up --build -d
 
       - name: ♻️ Prepare test user credentials
         run: echo "TEST_USERNAME=testuser-$RANDOM" >> "$GITHUB_ENV"
@@ -36,46 +34,27 @@ jobs:
       - name: ⏱️ Wait for services to initialize
         run: |
           timeout 420 bash -c '
-            until [ "$(docker compose --env-file .env -f docker/docker-compose.yml ps --status running --services | wc -l)" -ge 9 ]; do
-              echo "Waiting for application services to enter the running state..."
+            until [ "$(docker compose --env-file .env -f docker/docker-compose.test-deploy.yml ps --status running --services | wc -l)" -ge 9 ]; do
+              echo "Waiting for test deploy services to enter the running state..."
               sleep 10
             done
           '
 
-      - name: 🔎 Wait for critical ports
+      - name: 🔎 Wait for exposed ports
         run: |
           for port in 3307 3308 3309 5672 8081 8082 8083 9092; do
             echo "Waiting for port ${port}..."
             timeout 420 bash -c "until nc -z localhost ${port}; do sleep 5; done"
           done
 
-      - name: ✅ Test - All containers are running
+      - name: ✅ Verify application containers
         run: |
-          docker ps
-          docker ps --format '{{.Names}}' | grep -Fx usermanager
-          docker ps --format '{{.Names}}' | grep -Fx ridemanager
-          docker ps --format '{{.Names}}' | grep -Fx locationmanager
+          docker compose --env-file .env -f docker/docker-compose.test-deploy.yml ps
+          docker ps --format '{{.Names}}' | grep -F usermanager
+          docker ps --format '{{.Names}}' | grep -F ridemanager
+          docker ps --format '{{.Names}}' | grep -F locationmanager
 
-      - name: 🪵 Print MySQL logs (debug)
-        if: failure()
-        run: |
-          docker logs usermanager-db
-          docker logs ridemanager-db
-          docker logs locationmanager-db
-
-      - name: ✅ Test - MySQL ports open
-        run: |
-          nc -z localhost 3307
-          nc -z localhost 3308
-          nc -z localhost 3309
-
-      - name: ✅ Test - Application ports open
-        run: |
-          nc -z localhost 8081
-          nc -z localhost 8082
-          nc -z localhost 8083
-
-      - name: ✅ Test - POST /signup HTTP endpoint
+      - name: ✅ Smoke test user signup
         run: |
           curl --fail --retry 5 --retry-delay 5 --retry-connrefused -X POST http://localhost:8081/signup \
             -H "Content-Type: application/json" \
@@ -91,15 +70,17 @@ jobs:
               "role": "rider"
             }'
 
-      - name: ✅ Test - POST /login HTTP endpoint
+      - name: ✅ Smoke test user login
         run: |
           curl --fail --retry 5 --retry-delay 5 --retry-connrefused -X POST http://localhost:8081/login \
             -H "Content-Type: application/json" \
             -d '{"username": "'"${TEST_USERNAME}"'", "password": "testpass"}'
 
-      - name: ✅ Test - Kafka port
-        run: nc -z localhost 9092
+      - name: 🪵 Capture service logs on failure
+        if: failure()
+        run: |
+          docker compose --env-file .env -f docker/docker-compose.test-deploy.yml logs
 
       - name: 📦 Clean up
         if: always()
-        run: docker compose --env-file .env -f docker/docker-compose.yml down -v
+        run: docker compose --env-file .env -f docker/docker-compose.test-deploy.yml down -v
