@@ -1,5 +1,8 @@
+#include <csignal>
+#include <chrono>
 #include <filesystem>
 #include <memory>
+#include <thread>
 
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
@@ -11,6 +14,18 @@ namespace
 {
     SingletonLogger &logger = SingletonLogger::instance();
     std::unique_ptr<Server> server;
+
+    volatile std::sig_atomic_t shuttingDown = 0;
+    volatile std::sig_atomic_t lastSignal = 0;
+}
+
+namespace
+{
+    void handleShutdownSignal(int signal)
+    {
+        shuttingDown = 1;
+        lastSignal = signal;
+    }
 }
 
 void startApplication()
@@ -47,15 +62,32 @@ void stopApplication()
         return;
     }
 
-    server->stopHttpServers();
     server->stopConsumers();
+    server->stopGrpcServer();
+    server->stopHttpServers();
 }
 
 int main()
 {
+    std::signal(SIGINT, handleShutdownSignal);
+    std::signal(SIGTERM, handleShutdownSignal);
+
     startApplication();
-    logger.logMeta(SingletonLogger::INFO, "Press Enter to stop server...", __FILE__, __LINE__, __func__);
-    std::cin.get();
+
+    while (shuttingDown == 0)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    }
+
+    if (lastSignal != 0)
+    {
+        logger.logMeta(SingletonLogger::INFO,
+                       "Received shutdown signal: " + std::to_string(lastSignal),
+                       __FILE__,
+                       __LINE__,
+                       __func__);
+    }
+
     stopApplication();
     return 0;
 }
