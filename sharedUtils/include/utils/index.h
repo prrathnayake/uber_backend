@@ -1,15 +1,11 @@
 #pragma once
 
-#include <chrono>
 #include <condition_variable>
 #include <functional>
-#include <iomanip>
-#include <iostream>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <queue>
-#include <sstream>
-#include <future>
 #include <stdexcept>
 #include <string>
 #include <thread>
@@ -28,8 +24,9 @@ public:
         ERROR
     };
 
-    static SingletonLogger &instance();
+    static SingletonLogger &instance(const std::string &logFilePath = "log/log.txt");
 
+    void log(Level level, const std::string &message);
     void logMeta(Level level,
                  const std::string &message,
                  const char *file,
@@ -37,12 +34,14 @@ public:
                  const char *function);
 
 private:
-    SingletonLogger() = default;
-    ~SingletonLogger() = default;
+    explicit SingletonLogger(const std::string &logFilePath);
+    ~SingletonLogger();
 
-    std::string levelToString(Level level) const;
+    void printLog(const std::string &message);
+    void printConsole(Level level, const std::string &message);
 
-    std::mutex mutex_;
+    static std::mutex logMutex_;
+    std::string logFilePath_;
 };
 
 class ThreadPool {
