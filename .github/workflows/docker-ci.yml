@@ -43,10 +43,21 @@ jobs:
           HAS_DOCKERHUB_CREDS: ${{ env.HAS_DOCKERHUB_CREDS }}
         run: |
           set -euo pipefail
-          while read -r dockerfile image_name; do
+
+          images=(
+            "docker/Dockerfile.base uber-base"
+            "docker/Dockerfile.UserManager usermanager"
+            "docker/Dockerfile.RideManager ridemanager"
+            "docker/Dockerfile.LocationManager locationmanager"
+          )
+
+          for entry in "${images[@]}"; do
+            IFS=' ' read -r dockerfile image_name <<< "${entry}"
+
             local_tag="${image_name}:ci"
             echo "Building ${dockerfile} as ${local_tag}"
             docker build -f "${dockerfile}" -t "${local_tag}" .
+
             if [ "${HAS_DOCKERHUB_CREDS}" = "true" ]; then
               remote_tag="${DOCKERHUB_USERNAME}/${image_name}:latest"
               echo "Pushing ${remote_tag}"
@@ -55,9 +66,4 @@ jobs:
             else
               echo "Skipping push for ${image_name}; DockerHub credentials not available."
             fi
-          done <<'EOF'
-docker/Dockerfile.base uber-base
-docker/Dockerfile.UserManager usermanager
-docker/Dockerfile.RideManager ridemanager
-docker/Dockerfile.LocationManager locationmanager
-EOF
+          done

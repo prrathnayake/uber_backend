@@ -66,32 +66,25 @@ jobs:
 
       - name: ✅ Wait for UserManager health endpoint
         run: |
-          python3 - <<'PY'
-import json
-import sys
-import time
-import urllib.error
-import urllib.request
+          set -euo pipefail
+          deadline=$((SECONDS + 420))
 
-url = "http://localhost:8081/health"
-deadline = time.time() + 420
+          while [ "$SECONDS" -lt "$deadline" ]; do
+            if response=$(curl --silent --show-error --fail --connect-timeout 5 http://localhost:8081/health 2>/dev/null); then
+              if python3 -c "import json,sys; data=json.load(sys.stdin); sys.exit(0 if data.get('database', {}).get('healthy') else 1)" <<<"${response}"; then
+                echo "UserManager health check passed."
+                exit 0
+              fi
+              echo "Health endpoint reachable but database not yet healthy." >&2
+            else
+              echo "Waiting for health endpoint..." >&2
+            fi
 
-while time.time() < deadline:
-    try:
-        with urllib.request.urlopen(url, timeout=5) as response:
-            payload = json.load(response)
-        if payload.get("database", {}).get("healthy"):
-            print("UserManager health check passed.")
-            sys.exit(0)
-        print("Health endpoint reachable but database not yet healthy.", file=sys.stderr)
-    except Exception as exc:  # noqa: BLE001
-        print(f"Waiting for health endpoint: {exc}", file=sys.stderr)
+            sleep 5
+          done
 
-    time.sleep(5)
-
-print("Timed out waiting for UserManager health endpoint to become healthy.", file=sys.stderr)
-sys.exit(1)
-PY
+          echo "Timed out waiting for UserManager health endpoint to become healthy." >&2
+          exit 1
 
       - name: ✅ Test - All containers are running
         run: |
