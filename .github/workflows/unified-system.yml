@@ -1,0 +1,658 @@
+name: Unified System Delivery Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DOCKER_COMPOSE_FILE: docker/docker-compose.yml
+  ENV_FILE: .env
+
+jobs:
+  system-readiness:
+    name: System Readiness Validation
+    runs-on: ubuntu-latest
+    env:
+      HAS_DOCKERHUB_CREDS: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
+      WAIT_DURATION: 600
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 📦 Install diagnostic utilities
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y netcat-openbsd jq
+
+      - name: 🐳 Start full stack
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" up --build -d
+
+      - name: ⏳ Mandatory warm-up period
+        run: |
+          echo "Waiting ${WAIT_DURATION} seconds for the full system to stabilize..."
+          sleep "${WAIT_DURATION}"
+
+      - name: ✅ Verify container health
+        run: |
+          set -euo pipefail
+
+          expected_services=(
+            usermanager-db
+            ridemanager-db
+            locationmanager-db
+            kafka
+            redis
+            rabbitmq
+            usermanager
+            ridemanager
+            locationmanager
+          )
+
+          echo "Gathering container status information..."
+          docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" ps
+
+          report_dir="reports"
+          mkdir -p "${report_dir}"
+          report_file="${report_dir}/system-readiness.md"
+
+          {
+            echo "# System Readiness Report"
+            echo
+            echo "Warm-up duration: ${WAIT_DURATION} seconds"
+            echo
+            echo "## Container Status"
+            docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" ps --status running
+          } > "${report_file}"
+
+          running_services=(
+            $(docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" ps --status running --services)
+          )
+
+          missing=()
+          for service in "${expected_services[@]}"; do
+            if ! printf '%s\n' "${running_services[@]}" | grep -qx "${service}"; then
+              missing+=("${service}")
+            fi
+          done
+
+          if [ "${#missing[@]}" -gt 0 ]; then
+            {
+              echo
+              echo "## Missing Services"
+              printf '%s\n' "${missing[@]}"
+            } >> "${report_file}"
+            echo "The following services are not running: ${missing[*]}" >&2
+            exit 1
+          fi
+
+          {
+            echo
+            echo "All expected services are running."
+          } >> "${report_file}"
+
+      - name: 🗂️ Upload readiness report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: system-readiness-report
+          path: reports/system-readiness.md
+
+      - name: 🧹 Tear down stack
+        if: always()
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" down -v
+
+  http-tests:
+    name: HTTP Validation (${{ matrix.label }})
+    needs: system-readiness
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: usermanager
+            label: User Manager
+            port: 8081
+            requires-signup: 'true'
+          - service: ridemanager
+            label: Ride Manager
+            port: 8082
+            requires-signup: 'false'
+          - service: locationmanager
+            label: Location Manager
+            port: 8083
+            requires-signup: 'false'
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Install HTTP test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y netcat-openbsd jq
+
+      - name: 🐳 Start service stack
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" up --build -d
+
+      - name: ⏱️ Wait for service port
+        run: |
+          set -euo pipefail
+          port=${{ matrix.port }}
+          echo "Waiting for port ${port} to become available..."
+          timeout 600 bash -c "until nc -z localhost ${port}; do sleep 5; done"
+
+      - name: ✅ Execute HTTP checks
+        env:
+          SERVICE_NAME: ${{ matrix.service }}
+          SERVICE_LABEL: ${{ matrix.label }}
+          SERVICE_PORT: ${{ matrix.port }}
+          REQUIRE_SIGNUP: ${{ matrix['requires-signup'] }}
+        run: |
+          set -euo pipefail
+
+          report_dir="reports"
+          mkdir -p "${report_dir}"
+          report_file="${report_dir}/http-${SERVICE_NAME}.md"
+
+          echo "# HTTP Test Report - ${SERVICE_LABEL}" > "${report_file}"
+          echo >> "${report_file}"
+
+          echo "## Port Availability" >> "${report_file}"
+          if nc -z localhost "${SERVICE_PORT}"; then
+            echo "- ✅ Port ${SERVICE_PORT} is accepting connections." >> "${report_file}"
+          else
+            echo "- ❌ Port ${SERVICE_PORT} did not open as expected." >> "${report_file}"
+            exit 1
+          fi
+
+          echo >> "${report_file}"
+          echo "## Root Endpoint Response" >> "${report_file}"
+          http_status=$(curl -s -o response.txt -w "%{http_code}" "http://localhost:${SERVICE_PORT}/") || http_status=0
+          if [ "${http_status}" -eq 000 ]; then
+            echo "- ❌ No HTTP response received from the root endpoint." >> "${report_file}"
+            cat response.txt >> "${report_file}"
+            exit 1
+          elif [ "${http_status}" -ge 500 ]; then
+            echo "- ❌ Received server error status ${http_status}." >> "${report_file}"
+            cat response.txt >> "${report_file}"
+            exit 1
+          else
+            echo "- ✅ Received HTTP status ${http_status}." >> "${report_file}"
+            if [ -s response.txt ]; then
+              echo '```' >> "${report_file}"
+              cat response.txt >> "${report_file}"
+              echo '```' >> "${report_file}"
+            fi
+          fi
+          rm -f response.txt
+
+          if [ "${REQUIRE_SIGNUP}" = "true" ]; then
+            echo >> "${report_file}"
+            echo "## Signup and Login Flow" >> "${report_file}"
+
+            username="gha-${RANDOM}"
+            signup_payload=$(cat <<'JSON'
+{
+  "firstName": "CI",
+  "middleName": "Automation",
+  "lastName": "User",
+  "mobileNumber": "1234567890",
+  "address": "123 Test St",
+  "email": "ci@example.com",
+  "username": "__USERNAME__",
+  "password": "StrongPass123",
+  "role": "rider"
+}
+JSON
+)
+            signup_payload=${signup_payload/__USERNAME__/${username}}
+
+            signup_status=$(curl -s -o signup-response.json -w "%{http_code}" \
+              -H "Content-Type: application/json" \
+              -X POST "http://localhost:${SERVICE_PORT}/signup" \
+              -d "${signup_payload}")
+
+            if [ "${signup_status}" -ge 200 ] && [ "${signup_status}" -lt 300 ]; then
+              echo "- ✅ Signup endpoint returned status ${signup_status}." >> "${report_file}"
+              echo '```json' >> "${report_file}"
+              cat signup-response.json >> "${report_file}"
+              echo '```' >> "${report_file}"
+            else
+              echo "- ❌ Signup endpoint failed with status ${signup_status}." >> "${report_file}"
+              cat signup-response.json >> "${report_file}"
+              exit 1
+            fi
+
+            login_status=$(curl -s -o login-response.json -w "%{http_code}" \
+              -H "Content-Type: application/json" \
+              -X POST "http://localhost:${SERVICE_PORT}/login" \
+              -d "{\"username\": \"${username}\", \"password\": \"StrongPass123\"}")
+
+            if [ "${login_status}" -ge 200 ] && [ "${login_status}" -lt 300 ]; then
+              echo "- ✅ Login endpoint returned status ${login_status}." >> "${report_file}"
+              echo '```json' >> "${report_file}"
+              cat login-response.json >> "${report_file}"
+              echo '```' >> "${report_file}"
+            else
+              echo "- ❌ Login endpoint failed with status ${login_status}." >> "${report_file}"
+              cat login-response.json >> "${report_file}"
+              exit 1
+            fi
+
+            rm -f signup-response.json login-response.json
+          fi
+
+      - name: 🗂️ Upload HTTP report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: http-${{ matrix.service }}-report
+          path: reports/http-${{ matrix.service }}.md
+
+      - name: 🧹 Tear down stack
+        if: always()
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" down -v
+
+  grpc-tests:
+    name: gRPC Validation
+    needs: http-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Install gRPC test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y netcat-openbsd python3-pip
+          python3 -m pip install --upgrade pip grpcio
+
+      - name: 🐳 Start service stack
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" up --build -d
+
+      - name: ⏱️ Wait for gRPC port
+        run: |
+          set -euo pipefail
+          timeout 600 bash -c "until nc -z localhost 50051; do sleep 5; done"
+
+      - name: ✅ Execute gRPC connectivity test
+        run: |
+          set -euo pipefail
+          report_dir="reports"
+          mkdir -p "${report_dir}"
+          report_file="${report_dir}/grpc.md"
+
+          echo "# gRPC Connectivity Report" > "${report_file}"
+          echo >> "${report_file}"
+
+          python3 - <<'PY' > grpc-test.log
+import grpc
+import sys
+try:
+    channel = grpc.insecure_channel("localhost:50051")
+    grpc.channel_ready_future(channel).result(timeout=60)
+    print("gRPC channel to localhost:50051 is ready.")
+except Exception as exc:
+    print(f"Failed to establish gRPC channel: {exc}", file=sys.stderr)
+    sys.exit(1)
+PY
+
+          cat grpc-test.log >> "${report_file}"
+
+      - name: 🗂️ Upload gRPC report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: grpc-report
+          path: reports/grpc.md
+
+      - name: 🧹 Tear down stack
+        if: always()
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" down -v
+
+  kafka-tests:
+    name: Kafka Validation
+    needs: http-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Install Kafka test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y netcat-openbsd
+
+      - name: 🐳 Start service stack
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" up --build -d
+
+      - name: ⏱️ Wait for Kafka port
+        run: |
+          set -euo pipefail
+          timeout 600 bash -c "until nc -z localhost 9092; do sleep 5; done"
+
+      - name: ✅ Execute Kafka broker check
+        run: |
+          set -euo pipefail
+          report_dir="reports"
+          mkdir -p "${report_dir}"
+          report_file="${report_dir}/kafka.md"
+
+          echo "# Kafka Validation Report" > "${report_file}"
+          echo >> "${report_file}"
+
+          if docker exec kafka kafka-topics.sh --bootstrap-server kafka:9092 --list > kafka-topics.log 2>&1; then
+            echo "- ✅ Successfully queried Kafka topics." >> "${report_file}"
+            echo >> "${report_file}"
+            echo '```' >> "${report_file}"
+            cat kafka-topics.log >> "${report_file}"
+            echo '```' >> "${report_file}"
+          else
+            echo "- ❌ Failed to query Kafka topics." >> "${report_file}"
+            cat kafka-topics.log >> "${report_file}"
+            exit 1
+          fi
+
+      - name: 🗂️ Upload Kafka report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kafka-report
+          path: reports/kafka.md
+
+      - name: 🧹 Tear down stack
+        if: always()
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" down -v
+
+  rabbitmq-tests:
+    name: RabbitMQ Validation
+    needs: http-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Install RabbitMQ test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y netcat-openbsd jq
+
+      - name: 🐳 Start service stack
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" up --build -d
+
+      - name: ⏱️ Wait for RabbitMQ port
+        run: |
+          set -euo pipefail
+          timeout 600 bash -c "until nc -z localhost 5672; do sleep 5; done"
+
+      - name: ✅ Execute RabbitMQ diagnostics
+        run: |
+          set -euo pipefail
+          report_dir="reports"
+          mkdir -p "${report_dir}"
+          report_file="${report_dir}/rabbitmq.md"
+
+          echo "# RabbitMQ Validation Report" > "${report_file}"
+          echo >> "${report_file}"
+
+          username=$(grep '^RABBITMQ_USERNAME=' "${ENV_FILE}" | cut -d'=' -f2)
+          password=$(grep '^RABBITMQ_PASSWORD=' "${ENV_FILE}" | cut -d'=' -f2)
+          username=${username:-guest}
+          password=${password:-guest}
+
+          if nc -z localhost 15672; then
+            echo "- ✅ Management interface port 15672 is open." >> "${report_file}"
+          else
+            echo "- ❌ Management interface port 15672 is not accessible." >> "${report_file}"
+            exit 1
+          fi
+
+          if curl -s -u "${username}:${password}" http://localhost:15672/api/overview | jq '.' > rabbitmq-overview.json; then
+            echo >> "${report_file}"
+            echo "- ✅ Retrieved RabbitMQ overview." >> "${report_file}"
+            echo '```json' >> "${report_file}"
+            cat rabbitmq-overview.json >> "${report_file}"
+            echo '```' >> "${report_file}"
+          else
+            echo "- ❌ Failed to retrieve RabbitMQ overview." >> "${report_file}"
+            exit 1
+          fi
+
+      - name: 🗂️ Upload RabbitMQ report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: rabbitmq-report
+          path: reports/rabbitmq.md
+
+      - name: 🧹 Tear down stack
+        if: always()
+        run: docker compose --env-file "${ENV_FILE}" -f "${DOCKER_COMPOSE_FILE}" down -v
+
+  post-test-report:
+    name: Post-Test Reporting
+    needs:
+      - grpc-tests
+      - kafka-tests
+      - rabbitmq-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Download readiness report
+        uses: actions/download-artifact@v4
+        with:
+          name: system-readiness-report
+          path: collected/system
+          merge-multiple: true
+
+      - name: 📥 Download HTTP reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: http-*-report
+          path: collected/http
+          merge-multiple: true
+
+      - name: 📥 Download gRPC report
+        uses: actions/download-artifact@v4
+        with:
+          name: grpc-report
+          path: collected/protocols
+          merge-multiple: true
+
+      - name: 📥 Download Kafka report
+        uses: actions/download-artifact@v4
+        with:
+          name: kafka-report
+          path: collected/protocols
+          merge-multiple: true
+
+      - name: 📥 Download RabbitMQ report
+        uses: actions/download-artifact@v4
+        with:
+          name: rabbitmq-report
+          path: collected/protocols
+          merge-multiple: true
+
+      - name: 📝 Compile consolidated report
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          output="reports/post-test-report.md"
+
+          {
+            echo "# Post-Test Summary"
+            echo
+            echo "## System Readiness"
+            readiness_report=$(find collected/system -name 'system-readiness.md' -print -quit)
+            if [ -n "${readiness_report}" ]; then
+              cat "${readiness_report}"
+            fi
+            echo
+            echo "## HTTP Validation"
+            find collected/http -name 'http-*.md' -print | sort | while read -r report; do
+              echo
+              cat "${report}"
+            done
+            echo
+            echo "## Protocol Validation"
+            find collected/protocols -name '*.md' -print | sort | while read -r report; do
+              echo
+              cat "${report}"
+            done
+          } > "${output}"
+
+      - name: 🗂️ Upload post-test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: post-test-report
+          path: reports/post-test-report.md
+
+      - name: 📧 Email post-test report
+        if: ${{ secrets.REPORT_EMAIL_SERVER != '' && secrets.REPORT_EMAIL_PORT != '' && secrets.REPORT_EMAIL_USERNAME != '' && secrets.REPORT_EMAIL_PASSWORD != '' && secrets.REPORT_EMAIL_TO != '' && secrets.REPORT_EMAIL_FROM != '' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.REPORT_EMAIL_SERVER }}
+          server_port: ${{ secrets.REPORT_EMAIL_PORT }}
+          username: ${{ secrets.REPORT_EMAIL_USERNAME }}
+          password: ${{ secrets.REPORT_EMAIL_PASSWORD }}
+          subject: "Post-Test Report"
+          to: ${{ secrets.REPORT_EMAIL_TO }}
+          from: ${{ secrets.REPORT_EMAIL_FROM }}
+          content_type: text/plain
+          body: |
+            Post-test validation is complete. The consolidated report is attached.
+          attachments: reports/post-test-report.md
+
+  publish-images:
+    name: Publish Docker Images
+    needs: post-test-report
+    runs-on: ubuntu-latest
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      HAS_DOCKERHUB_CREDS: ${{ secrets.DOCKERHUB_USERNAME != '' && secrets.DOCKERHUB_TOKEN != '' }}
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 🔐 Log in to DockerHub
+        if: env.HAS_DOCKERHUB_CREDS == 'true'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_TOKEN }}
+
+      - name: 📦 Build and push images
+        env:
+          DOCKERHUB_USERNAME: ${{ env.DOCKERHUB_USERNAME }}
+          HAS_DOCKERHUB_CREDS: ${{ env.HAS_DOCKERHUB_CREDS }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p reports
+          report="reports/image-publish.md"
+          echo "# Docker Image Publish Report" > "${report}"
+          echo >> "${report}"
+
+          images=(
+            "docker/Dockerfile.base uber-base"
+            "docker/Dockerfile.UserManager usermanager"
+            "docker/Dockerfile.RideManager ridemanager"
+            "docker/Dockerfile.LocationManager locationmanager"
+          )
+
+          for entry in "${images[@]}"; do
+            IFS=' ' read -r dockerfile image_name <<< "${entry}"
+            local_tag="${image_name}:ci"
+            echo "Building ${dockerfile} as ${local_tag}" | tee -a "${report}"
+            docker build -f "${dockerfile}" -t "${local_tag}" .
+
+            if [ "${HAS_DOCKERHUB_CREDS}" = "true" ]; then
+              remote_tag="${DOCKERHUB_USERNAME}/${image_name}:latest"
+              echo "Pushing ${remote_tag}" | tee -a "${report}"
+              docker tag "${local_tag}" "${remote_tag}"
+              docker push "${remote_tag}"
+            else
+              echo "Skipping push for ${image_name}; DockerHub credentials not available." | tee -a "${report}"
+            fi
+
+            echo >> "${report}"
+          done
+
+      - name: 🗂️ Upload image publish report
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-publish-report
+          path: reports/image-publish.md
+
+  final-report:
+    name: Final Workflow Report
+    needs: publish-images
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Download post-test report
+        uses: actions/download-artifact@v4
+        with:
+          name: post-test-report
+          path: collected/post-test
+          merge-multiple: true
+
+      - name: 📥 Download image publish report
+        uses: actions/download-artifact@v4
+        with:
+          name: image-publish-report
+          path: collected/publish
+          merge-multiple: true
+
+      - name: 📝 Compile final workflow report
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          summary="reports/final-workflow-report.md"
+
+          {
+            echo "# Final Workflow Report"
+            echo
+            echo "## Test Summary"
+            post_test_report=$(find collected/post-test -name 'post-test-report.md' -print -quit)
+            if [ -n "${post_test_report}" ]; then
+              cat "${post_test_report}"
+            fi
+            echo
+            echo "## Docker Image Publication"
+            image_publish_report=$(find collected/publish -name 'image-publish.md' -print -quit)
+            if [ -n "${image_publish_report}" ]; then
+              cat "${image_publish_report}"
+            fi
+          } > "${summary}"
+
+      - name: 🗂️ Upload final workflow report
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-workflow-report
+          path: reports/final-workflow-report.md
+
+      - name: 📧 Email final workflow report
+        if: ${{ secrets.REPORT_EMAIL_SERVER != '' && secrets.REPORT_EMAIL_PORT != '' && secrets.REPORT_EMAIL_USERNAME != '' && secrets.REPORT_EMAIL_PASSWORD != '' && secrets.REPORT_EMAIL_TO != '' && secrets.REPORT_EMAIL_FROM != '' }}
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.REPORT_EMAIL_SERVER }}
+          server_port: ${{ secrets.REPORT_EMAIL_PORT }}
+          username: ${{ secrets.REPORT_EMAIL_USERNAME }}
+          password: ${{ secrets.REPORT_EMAIL_PASSWORD }}
+          subject: "Final Workflow Report"
+          to: ${{ secrets.REPORT_EMAIL_TO }}
+          from: ${{ secrets.REPORT_EMAIL_FROM }}
+          content_type: text/plain
+          body: |
+            All automated tests and Docker image publication tasks have completed. The final consolidated report is attached.
+          attachments: reports/final-workflow-report.md
