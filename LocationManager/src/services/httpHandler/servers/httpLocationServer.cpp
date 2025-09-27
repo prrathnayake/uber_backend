@@ -20,6 +20,15 @@ HttpLocationServer::HttpLocationServer(const std::string &name,
 
 void HttpLocationServer::createServerMethods()
 {
+    server_->Get("/", [](const httplib::Request &, httplib::Response &res)
+    {
+        res.status = 200;
+        res.set_content(nlohmann::json{{"status", "ok"},
+                                        {"service", "LocationManager"},
+                                        {"message", "Location Manager HTTP interface is running"}}.dump(),
+                        "application/json");
+    });
+
     server_->Post("/location/update", [this](const httplib::Request &req, httplib::Response &res) {
         json payload;
         try

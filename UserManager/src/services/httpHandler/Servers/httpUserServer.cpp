@@ -76,6 +76,14 @@ void HttpUserServer::createServerMethods()
         }
     };
 
+    server_->Get("/", [respondJson](const httplib::Request &, httplib::Response &res)
+    {
+        respondJson(res,
+                    json{{"status", "ok"},
+                         {"service", "UserManager"},
+                         {"message", "User Manager HTTP interface is running"}});
+    });
+
     server_->Post("/login", [this, respondJson, parseBody](const httplib::Request &req, httplib::Response &res)
     {
         auto jsonDataOpt = parseBody(req, res);
