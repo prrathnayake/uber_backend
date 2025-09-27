@@ -44,6 +44,14 @@ namespace UberBackend
 
     void HttpRideServer::createServerMethods()
     {
+        server_->Get("/", [this](const httplib::Request &, httplib::Response &res)
+                    {
+                        respondJson(res,
+                                    json{{"status", "ok"},
+                                         {"service", "RideManager"},
+                                         {"message", "Ride Manager HTTP interface is running"}});
+                    });
+
         server_->Post("/rides/request", [this](const httplib::Request &req, httplib::Response &res)
                       {
                           auto payload = parseJsonBody(req, res);
