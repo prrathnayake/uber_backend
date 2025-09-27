@@ -1,4 +1,7 @@
+#include <csignal>
+#include <chrono>
 #include <filesystem>
+#include <thread>
 
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
@@ -8,6 +11,18 @@ using namespace UberBackend;
 
 // Getting instance of the Singleton logger
 auto &logger_ = SingletonLogger::instance();
+
+namespace
+{
+    volatile std::sig_atomic_t shuttingDown = 0;
+    volatile std::sig_atomic_t lastSignal = 0;
+
+    void handleShutdownSignal(int signal)
+    {
+        shuttingDown = 1;
+        lastSignal = signal;
+    }
+}
 
 // Creating a unique pointer for the Server instance
 std::unique_ptr<Server> server_;
@@ -62,10 +77,25 @@ void stopApplication()
 
 int main()
 {
+    std::signal(SIGINT, handleShutdownSignal);
+    std::signal(SIGTERM, handleShutdownSignal);
+
     startApplication();
-    // Wait for user input to stop the server just for debugging purposes
-    logger_.logMeta(SingletonLogger::INFO, "Press Enter to stop server...", __FILE__, __LINE__, __func__);
-    std::cin.get();
+
+    while (shuttingDown == 0)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    }
+
+    if (lastSignal != 0)
+    {
+        logger_.logMeta(SingletonLogger::INFO,
+                        "Received shutdown signal: " + std::to_string(lastSignal),
+                        __FILE__,
+                        __LINE__,
+                        __func__);
+    }
+
     stopApplication();
     return 0;
 }
