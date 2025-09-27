@@ -1,12 +1,4 @@
 #pragma once
 
-#include <cstddef>
-#include <string>
-
-namespace algorithms {
-
-std::string toBinary(const std::string &input);
-std::string hashComputation(const std::string &binaryData);
-
-} // namespace algorithms
-
+// Adapter header that forwards to cpp-base's SHA-256 implementation.
+#include_next <algorithms/sha256/index.h>
