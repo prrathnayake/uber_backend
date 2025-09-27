@@ -8,6 +8,23 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(${CMAKE_BINARY_DIR}/conan_toolchain.cmake OPTIONAL)
 
+include(FetchContent)
+
+# Ensure the cpp-base repository is available so we can reuse its
+# foundational libraries instead of maintaining local duplicates.
+FetchContent_Declare(
+    cpp_base
+    GIT_REPOSITORY https://github.com/prrathnayake/cpp-base.git
+    GIT_TAG main
+)
+
+FetchContent_GetProperties(cpp_base)
+if(NOT cpp_base_POPULATED)
+    FetchContent_Populate(cpp_base)
+endif()
+
+set(CCP_BASE_SOURCE_DIR "${cpp_base_SOURCE_DIR}" CACHE PATH "cpp-base source directory")
+
 # Output directories for all targets
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

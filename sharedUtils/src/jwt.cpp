@@ -1,6 +1,6 @@
 #include "../include/jwt.h"
 
-#include "../include/algorithms/sha256/index.h"
+#include <algorithms/sha256/index.h>
 
 #include <chrono>
 #include <random>
