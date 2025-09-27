@@ -21,7 +21,7 @@ namespace
         ConfigManager::instance().loadFromFile(envPath.string());
 
         server = std::make_unique<RideServer>("RideManager",
-                                              UberUtils::CONFIG::getRideManagerHost(),
+                                              UberUtils::CONFIG::getRideManagerDatabaseHost(),
                                               UberUtils::CONFIG::getRideManagerUsername(),
                                               UberUtils::CONFIG::getRideManagerPassword(),
                                               UberUtils::CONFIG::getRideManagerDatabase(),

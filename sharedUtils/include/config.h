@@ -61,6 +61,7 @@ namespace UberBackend
             static constexpr const char *USER_MANAGER_HOST = "localhost";
             static constexpr const char *USER_MANAGER_USERNAME = "pasan";
             static constexpr const char *USER_MANAGER_PASSWORD = "pasan";
+            static constexpr const char *USER_MANAGER_DATABASE_HOST = "localhost";
             static constexpr const char *USER_MANAGER_DATABASE_NAME = "userManagerDatabase";
             static constexpr unsigned int USER_MANAGER_DATABASE_PORT = 3036;
 
@@ -69,6 +70,7 @@ namespace UberBackend
             static constexpr const char *LOCATION_MANAGER_HOST = "localhost";
             static constexpr const char *LOCATION_MANAGER_USERNAME = "pasan";
             static constexpr const char *LOCATION_MANAGER_PASSWORD = "pasan";
+            static constexpr const char *LOCATION_MANAGER_DATABASE_HOST = "localhost";
             static constexpr const char *LOCATION_MANAGER_DATABASE_NAME = "locationManagerDatabase";
             static constexpr unsigned int LOCATION_MANAGER_DATABASE_PORT = 3037;
 
@@ -78,6 +80,7 @@ namespace UberBackend
             static constexpr const char *RIDE_MANAGER_HOST = "localhost";
             static constexpr const char *RIDE_MANAGER_USERNAME = "pasan";
             static constexpr const char *RIDE_MANAGER_PASSWORD = "pasan";
+            static constexpr const char *RIDE_MANAGER_DATABASE_HOST = "localhost";
             static constexpr const char *RIDE_MANAGER_DATABASE_NAME = "rideManagerDatabase";
             static constexpr unsigned int RIDE_MANAGER_DATABASE_PORT = 3038;
 
@@ -113,6 +116,11 @@ namespace UberBackend
                 return ConfigManager::instance().getString("USER_MANAGER_PASSWORD", USER_MANAGER_PASSWORD);
             }
 
+            static std::string getUserManagerDatabaseHost()
+            {
+                return ConfigManager::instance().getString("USER_MANAGER_DATABASE_HOST", USER_MANAGER_DATABASE_HOST);
+            }
+
             static std::string getUserManagerDatabase()
             {
                 return ConfigManager::instance().getString("USER_MANAGER_DATABASE_NAME", USER_MANAGER_DATABASE_NAME);
@@ -131,6 +139,21 @@ namespace UberBackend
             static std::string getLocationManagerHost()
             {
                 return ConfigManager::instance().getString("LOCATION_MANAGER_HOST", LOCATION_MANAGER_HOST);
+            }
+
+            static std::string getLocationManagerUsername()
+            {
+                return ConfigManager::instance().getString("LOCATION_MANAGER_USERNAME", LOCATION_MANAGER_USERNAME);
+            }
+
+            static std::string getLocationManagerPassword()
+            {
+                return ConfigManager::instance().getString("LOCATION_MANAGER_PASSWORD", LOCATION_MANAGER_PASSWORD);
+            }
+
+            static std::string getLocationManagerDatabaseHost()
+            {
+                return ConfigManager::instance().getString("LOCATION_MANAGER_DATABASE_HOST", LOCATION_MANAGER_DATABASE_HOST);
             }
 
             static std::string getLocationManagerDatabase()
@@ -168,6 +191,11 @@ namespace UberBackend
                 return ConfigManager::instance().getString("RIDE_MANAGER_HOST", RIDE_MANAGER_HOST);
             }
 
+            static std::string getRideManagerDatabaseHost()
+            {
+                return ConfigManager::instance().getString("RIDE_MANAGER_DATABASE_HOST", RIDE_MANAGER_DATABASE_HOST);
+            }
+
             static unsigned int getRideManagerDatabasePort()
             {
                 return ConfigManager::instance().getUnsigned("RIDE_MANAGER_DATABASE_PORT", RIDE_MANAGER_DATABASE_PORT);
@@ -191,6 +219,16 @@ namespace UberBackend
             static unsigned int getRideManagerHttpPort()
             {
                 return ConfigManager::instance().getUnsigned("RIDE_MANAGER_HTTP_RIDE_HANDLER_PORT", RIDE_MANAGER_HTTP_RIDE_HANDLER_PORT);
+            }
+
+            static std::string getRedisHost()
+            {
+                return ConfigManager::instance().getString("REDIS_HOST", REDIS_HOST);
+            }
+
+            static unsigned int getRedisPort()
+            {
+                return ConfigManager::instance().getUnsigned("REDIS_PORT", REDIS_PORT);
             }
 
             static std::string getRabbitMQHost()
