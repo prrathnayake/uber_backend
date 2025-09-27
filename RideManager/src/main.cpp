@@ -1,4 +1,7 @@
+#include <csignal>
+#include <chrono>
 #include <filesystem>
+#include <thread>
 
 #include "../include/server.h"
 #include "../../sharedUtils/include/config.h"
@@ -10,6 +13,15 @@ namespace
 {
     SingletonLogger &logger = SingletonLogger::instance();
     std::unique_ptr<RideServer> server;
+
+    volatile std::sig_atomic_t shuttingDown = 0;
+    volatile std::sig_atomic_t lastSignal = 0;
+
+    void handleShutdownSignal(int signal)
+    {
+        shuttingDown = 1;
+        lastSignal = signal;
+    }
 
     void startApplication()
     {
@@ -49,9 +61,25 @@ namespace
 
 int main()
 {
+    std::signal(SIGINT, handleShutdownSignal);
+    std::signal(SIGTERM, handleShutdownSignal);
+
     startApplication();
-    logger.logMeta(SingletonLogger::INFO, "RideManager service running. Press Enter to exit...", __FILE__, __LINE__, __func__);
-    std::cin.get();
+
+    while (shuttingDown == 0)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
+    }
+
+    if (lastSignal != 0)
+    {
+        logger.logMeta(SingletonLogger::INFO,
+                       "Received shutdown signal: " + std::to_string(lastSignal),
+                       __FILE__,
+                       __LINE__,
+                       __func__);
+    }
+
     stopApplication();
     return 0;
 }
