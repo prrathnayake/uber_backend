@@ -25,6 +25,17 @@ endif()
 
 set(CCP_BASE_SOURCE_DIR "${cpp_base_SOURCE_DIR}" CACHE PATH "cpp-base source directory")
 
+# nlohmann_json is consumed as an imported target inside sharedUtils. The
+# project previously expected the dependency to be provided by the host
+# toolchain, which is not true in CI. Fetching it ensures consistent builds
+# everywhere without requiring a pre-installed package.
+FetchContent_Declare(
+    nlohmann_json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+)
+FetchContent_MakeAvailable(nlohmann_json)
+
 # Output directories for all targets
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)

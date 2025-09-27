@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.25.2)
 
-find_package(nlohmann_json CONFIG REQUIRED)
+if(NOT TARGET nlohmann_json::nlohmann_json)
+    find_package(nlohmann_json CONFIG REQUIRED)
+endif()
 
 if(NOT CCP_BASE_SOURCE_DIR)
     message(FATAL_ERROR "CCP_BASE_SOURCE_DIR is not defined. Did you forget to populate cpp-base?")
