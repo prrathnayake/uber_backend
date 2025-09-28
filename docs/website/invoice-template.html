@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MobilityOS Invoice — Preview</title>
+    <link rel="stylesheet" href="invoice.css" />
+  </head>
+  <body>
+    <div class="invoice-wrapper">
+      <header class="invoice-header">
+        <div class="invoice-brand">
+          <h1>INVOICE</h1>
+          <span>crafted with mobilityos</span>
+        </div>
+        <div class="invoice-meta">
+          <strong>Invoice #</strong>
+          <span class="meta-id">INV-000807</span>
+          <p><strong>Amount Due:</strong> $870.00</p>
+          <p>Issued: 28/09/2025</p>
+          <p>Due: 12/10/2025</p>
+        </div>
+      </header>
+
+      <section class="invoice-details">
+        <div class="detail-block">
+          <h2>Bill To</h2>
+          <p><strong>Kathasyaake Pty Ltd</strong></p>
+          <p>02/44 Porter Street</p>
+          <p>Chadstone VIC 3148</p>
+          <p>Australia</p>
+          <p>rams.rath@gmail.com</p>
+        </div>
+        <div class="detail-block">
+          <h2>Issued By</h2>
+          <p><strong>MobilityOS</strong></p>
+          <p>120 Market Street</p>
+          <p>San Francisco, CA 94105</p>
+          <p>+1 (415) 555-2048</p>
+          <p>billing@mobilityos.dev</p>
+        </div>
+        <div class="detail-block">
+          <h2>Project</h2>
+          <p><strong>Technical Support &amp; Dispatch Advisory</strong></p>
+          <p>Billing Period: September 2025</p>
+          <p>Payment Terms: Net 14</p>
+          <p>Bank Ref: MOB-294502</p>
+        </div>
+      </section>
+
+      <table class="invoice-table" aria-label="Invoice line items">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Item &amp; Description</th>
+            <th scope="col">Qty</th>
+            <th scope="col">Rate</th>
+            <th scope="col">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>001</td>
+            <td>
+              Technical Support Retainer
+              <div class="line-description">
+                Dedicated senior engineer support and release readiness reviews.
+              </div>
+            </td>
+            <td>12 hrs</td>
+            <td>$70.00</td>
+            <td>$840.00</td>
+          </tr>
+          <tr>
+            <td>002</td>
+            <td>
+              Platform Diagnostics
+              <div class="line-description">
+                Comprehensive fleet diagnostics, uptime checks, and QA validation.
+              </div>
+            </td>
+            <td>2 hrs</td>
+            <td>$15.00</td>
+            <td>$30.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="invoice-summary">
+        <table aria-label="Invoice totals">
+          <tr>
+            <td>Subtotal</td>
+            <td style="text-align: right;">$870.00</td>
+          </tr>
+          <tr>
+            <td>Tax (0%)</td>
+            <td style="text-align: right;">$0.00</td>
+          </tr>
+          <tr>
+            <td>Amount Paid</td>
+            <td style="text-align: right;">$0.00</td>
+          </tr>
+          <tr class="total-row">
+            <td>Total Due</td>
+            <td style="text-align: right;">$870.00</td>
+          </tr>
+        </table>
+      </div>
+
+      <section class="invoice-notes">
+        <div class="notes-block">
+          <h3>Notes</h3>
+          <p>Thank you for trusting MobilityOS to power your rider experience.</p>
+          <p>Have questions? Reach out to your engagement manager.</p>
+        </div>
+        <div class="notes-block">
+          <h3>Payment</h3>
+          <p>Payment is due within 14 days of the invoice date.</p>
+          <div class="payment-options">
+            Payment Options:
+            <span>Bank Transfer</span>
+            <span>PayPal</span>
+            <span>Card</span>
+          </div>
+        </div>
+      </section>
+
+      <p class="invoice-footer">
+        Crafted with ease using MobilityOS invoices. Visit
+        <a href="https://mobilityos.dev">mobilityos.dev</a> to create professionally
+        branded invoices.
+      </p>
+    </div>
+  </body>
+</html>
