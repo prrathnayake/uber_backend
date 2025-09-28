@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MobilityOS Pricing — Plans for every fleet size</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="nav-container">
+        <a class="logo" href="index.html">MobilityOS</a>
+        <nav aria-label="Primary Navigation">
+          <ul>
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#features">Features</a></li>
+            <li><a href="team.html">Team</a></li>
+            <li><a class="active" href="pricing.html">Pricing</a></li>
+            <li><a href="invoice-template.html">Invoice Template</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" style="padding-bottom: 3rem;" aria-labelledby="pricing-hero">
+        <h1 id="pricing-hero">Pricing built around transparent growth</h1>
+        <p>
+          Choose the plan that meets your fleet goals. Every subscription includes
+          full access to mobility compliance, analytics, and billing automation.
+        </p>
+        <div class="btn-group">
+          <a class="btn primary" href="#plans">Compare plans</a>
+          <a class="btn secondary" href="invoice-template.html">Preview invoice</a>
+        </div>
+      </section>
+
+      <section class="section" id="plans" aria-labelledby="plan-heading">
+        <div class="container">
+          <h2 id="plan-heading">Simple, scalable pricing</h2>
+          <p class="section-intro">
+            Each plan includes 24/7 support, SOC 2 compliant infrastructure, and per
+            market localization tooling.
+          </p>
+          <div class="pricing-grid">
+            <article class="pricing-card">
+              <h3>Launch</h3>
+              <p class="price">$249<span style="font-size: 1rem;">/mo</span></p>
+              <ul>
+                <li>Up to 500 monthly trips</li>
+                <li>Driver onboarding workflows</li>
+                <li>Email-based support</li>
+              </ul>
+              <a class="btn secondary" href="#">Start trial</a>
+            </article>
+            <article class="pricing-card highlight">
+              <h3>Growth</h3>
+              <p class="price">$599<span style="font-size: 1rem;">/mo</span></p>
+              <ul>
+                <li>Unlimited trips &amp; dynamic pricing</li>
+                <li>Advanced analytics dashboards</li>
+                <li>Dedicated success manager</li>
+              </ul>
+              <a class="btn primary" href="#">Talk to sales</a>
+            </article>
+            <article class="pricing-card">
+              <h3>Enterprise</h3>
+              <p class="price">Let’s talk</p>
+              <ul>
+                <li>Custom compliance workflows</li>
+                <li>Multi-region settlement</li>
+                <li>Private roadmap alignment</li>
+              </ul>
+              <a class="btn secondary" href="#">Book a workshop</a>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="invoice-heading">
+        <div class="container">
+          <h2 id="invoice-heading">Invoice preview</h2>
+          <p class="section-intro">
+            Itemized charges appear on the left for quick scanning, while payment
+            details and totals live in a focused summary column.
+          </p>
+          <div class="invoice-layout">
+            <article class="invoice-table" aria-label="Invoice line items">
+              <h3 style="margin-top: 0;">Line items</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Item &amp; Description</th>
+                    <th scope="col">Qty</th>
+                    <th scope="col">Rate</th>
+                    <th scope="col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>01</td>
+                    <td>
+                      Dispatch Optimization
+                      <div style="color: var(--muted); font-size: 0.85rem;">
+                        Automated rider-driver matching algorithms
+                      </div>
+                    </td>
+                    <td>1</td>
+                    <td>$450.00</td>
+                    <td>$450.00</td>
+                  </tr>
+                  <tr>
+                    <td>02</td>
+                    <td>
+                      Compliance Toolkit
+                      <div style="color: var(--muted); font-size: 0.85rem;">
+                        Regional tax reporting + document storage
+                      </div>
+                    </td>
+                    <td>1</td>
+                    <td>$220.00</td>
+                    <td>$220.00</td>
+                  </tr>
+                  <tr>
+                    <td>03</td>
+                    <td>
+                      Analytics Workspace
+                      <div style="color: var(--muted); font-size: 0.85rem;">
+                        Real-time KPIs and anomaly detection dashboards
+                      </div>
+                    </td>
+                    <td>1</td>
+                    <td>$130.00</td>
+                    <td>$130.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </article>
+            <aside class="invoice-totals" aria-label="Invoice summary">
+              <h3>Billing summary</h3>
+              <dl>
+                <dt>Subtotal</dt>
+                <dd>$800.00</dd>
+                <dt>Mobility tax (8%)</dt>
+                <dd>$64.00</dd>
+                <dt>Credits applied</dt>
+                <dd>-$50.00</dd>
+                <dt>Total</dt>
+                <dd>$814.00</dd>
+              </dl>
+              <p style="color: var(--muted); font-size: 0.92rem;">
+                Payment is due within 14 days. Pay securely via bank transfer or card.
+              </p>
+              <a class="btn primary" href="invoice-template.html">Download PDF</a>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      Need a custom quote? Email <a href="mailto:pricing@mobilityos.dev">pricing@mobilityos.dev</a>
+    </footer>
+  </body>
+</html>
