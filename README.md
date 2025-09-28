@@ -158,6 +158,27 @@ Each microservice follows this initialization flow:
 
 ---
 
+## 🧪 UserManager workflow smoke test
+
+Before committing, run the automated UserManager workflow script to ensure the
+core CRUD paths behave as expected and that transient files are handled safely:
+
+```bash
+scripts/test_usermanager_workflow.sh
+```
+
+The helper waits for the service to accept TCP connections on
+`USER_SERVICE_HOST:USER_SERVICE_PORT` (defaults to `localhost:8081`), then
+executes a signup → login → profile update → password change → delete flow. It
+fails fast when HTTP responses deviate from the expected contracts or when the
+response body is missing, preventing `cat: response.txt: No such file or
+directory` style errors.
+
+Set `USER_SERVICE_HOST`/`USER_SERVICE_PORT` to target a remote deployment if
+needed.
+
+---
+
 ## 🔧 Common Subsystems Used in All Servers
 
 - 🗃️ **Dedicated SQL Database** (MySQL/PostgreSQL/SQLite)
